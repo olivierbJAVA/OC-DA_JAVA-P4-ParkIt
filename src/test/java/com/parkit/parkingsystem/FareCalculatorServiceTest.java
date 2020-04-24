@@ -70,7 +70,10 @@ public class FareCalculatorServiceTest {
         ticket.setParkingSpot(parkingSpot);
         assertThrows(NullPointerException.class, () -> fareCalculatorService.calculateFare(ticket));
     }
-
+    // OB : default: renvoie throw new IllegalArgumentException("Unkown Parking Type");
+    // Le test devrait échouer ? Ou c'est le null qui est problèmatique ?
+    // Pourquoi ligne pas en vert ?
+    
     @Test
     public void calculateFareBikeWithFutureInTime(){
         Date inTime = new Date();
@@ -83,6 +86,7 @@ public class FareCalculatorServiceTest {
         ticket.setParkingSpot(parkingSpot);
         assertThrows(IllegalArgumentException.class, () -> fareCalculatorService.calculateFare(ticket));
     }
+    // OB : test à faire cas où ticket.getOutTime() == null  -> doit renvoyer IllegalArgumentException
 
     @Test
     public void calculateFareBikeWithLessThanOneHourParkingTime(){

@@ -57,5 +57,7 @@ public class ParkingServiceTest {
         parkingService.processExitingVehicle();
         verify(parkingSpotDAO, Mockito.times(1)).updateParking(any(ParkingSpot.class));
     }
-
+    // OB : pas besoin de vérifier les autres méthodes appelées : ticketDAO.getTicket(vehicleRegNumber ? Ni ticketDAO.updateTicket(ticket) ?
+    // Car parkingSpotDAO.updateParking(parkingSpot est la dernière méthode appelée ?
+    // Est-ce que l'on pourrait vérifier que les arguements utilisés sont les bons ?
 }

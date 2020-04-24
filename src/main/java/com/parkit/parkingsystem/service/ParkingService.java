@@ -26,7 +26,7 @@ public class ParkingService {
         this.parkingSpotDAO = parkingSpotDAO;
         this.ticketDAO = ticketDAO;
     }
-
+    // !!! OB : parcouru dans ParkingDataBaseIT mais pas vraiment testée -> à tester en test unitaire en plus de test intégration
     public void processIncomingVehicle() {
         try{
             ParkingSpot parkingSpot = getNextParkingNumberIfAvailable();
@@ -54,6 +54,7 @@ public class ParkingService {
         }
     }
 
+    // OB : tester toutes les autres méthode ? Ou redondant si on a testé processIncomingVehicle ?
     private String getVehichleRegNumber() throws Exception {
         System.out.println("Please type the vehicle registration number and press enter key");
         return inputReaderUtil.readVehicleRegistrationNumber();
