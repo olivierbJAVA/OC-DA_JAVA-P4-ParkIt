@@ -21,7 +21,6 @@ public class FareCalculatorService {
         
         double durationDouble = durationLong / 3600.0;
         
-        // Not rounded version - pass original tests
         switch (ticket.getParkingSpot().getParkingType()){
         	case CAR: {
         		ticket.setPrice(durationDouble * Fare.CAR_RATE_PER_HOUR);
@@ -34,27 +33,5 @@ public class FareCalculatorService {
         	default: throw new IllegalArgumentException("Unkown Parking Type");
     	}
         
-        /*
-        // Rounded version - pass modified tests
-        switch (ticket.getParkingSpot().getParkingType()){
-            case CAR: {
-                double price = durationDouble* Fare.CAR_RATE_PER_HOUR;
-                BigDecimal bd = new BigDecimal(price);
-                bd= bd.setScale(2,BigDecimal.ROUND_HALF_UP);
-                double roundedPrice = bd.doubleValue();
-                ticket.setPrice(roundedPrice);
-                break;
-            }
-            case BIKE: {
-            	double price = durationDouble* Fare.BIKE_RATE_PER_HOUR;
-                BigDecimal bd = new BigDecimal(price);
-                bd= bd.setScale(2,BigDecimal.ROUND_HALF_UP);
-                double roundedPrice = bd.doubleValue();
-                ticket.setPrice(roundedPrice);
-                break;
-            }
-            default: throw new IllegalArgumentException("Unkown Parking Type");
-        }
-        */
     }
 }

@@ -116,7 +116,7 @@ public class ParkingService {
                 df.setRoundingMode(RoundingMode.HALF_UP);
                 System.out.println("Please pay the parking fare:" + df.format(ticket.getPrice()));
                 
-                System.out.println("Please pay the parking fare:" + ticket.getPrice());
+                System.out.println("Full parking fare for info:" + ticket.getPrice());
                 System.out.println("Recorded out-time for vehicle number:" + ticket.getVehicleRegNumber() + " is:" + outTime);
             }else{
                 System.out.println("Unable to update ticket information. Error occurred");

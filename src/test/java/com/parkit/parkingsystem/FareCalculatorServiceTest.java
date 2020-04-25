@@ -112,22 +112,7 @@ public class FareCalculatorServiceTest {
 
         assertEquals( (0.75 * Fare.CAR_RATE_PER_HOUR) , ticket.getPrice());
     }
-    /*
-    @Disabled("Rounded version")
-    @Test
-    public void calculateFareCarWithLessThanOneHourParkingTimeRounded(){
-    	LocalDateTime inTime = LocalDateTime.now().minusMinutes(45);//45 minutes parking time should give 3/4th parking fare
-        //inTime.setTime( System.currentTimeMillis() - (  45 * 60 * 1000) );//45 minutes parking time should give 3/4th parking fare
-    	LocalDateTime outTime = LocalDateTime.now();
-        ParkingSpot parkingSpot = new ParkingSpot(1, ParkingType.CAR,false);
 
-        ticket.setInTime(inTime);
-        ticket.setOutTime(outTime);
-        ticket.setParkingSpot(parkingSpot);
-        fareCalculatorService.calculateFare(ticket);
-        assertEquals( (1.13) , ticket.getPrice()); // 1.13 = rounded (0.75 * Fare.CAR_RATE_PER_HOUR)
-    }
-    */
     @Test
     public void calculateFareCarWithMoreThanADayParkingTime(){
     	LocalDateTime inTime = LocalDateTime.now().minusDays(1);// 1 day (= 24 hours) parking time should give 24 * parking fare per hour

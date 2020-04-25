@@ -32,7 +32,7 @@ public class TicketDAO {
             ps.setTimestamp(4, Timestamp.valueOf(ticket.getInTime()));
             ps.setTimestamp(5, (ticket.getOutTime() == null)?null: (Timestamp.valueOf(ticket.getOutTime())));
             ps.execute();
-            //Missing in original version
+            //Missing in original version :
             dataBaseConfig.closePreparedStatement(ps);
             return true;
         }catch (Exception ex){
@@ -84,7 +84,7 @@ public class TicketDAO {
             ps.setTimestamp(2, Timestamp.valueOf(ticket.getOutTime()));
             ps.setInt(3,ticket.getId());
             ps.execute();
-            //Missing in original version
+            //Missing in original version :
             dataBaseConfig.closePreparedStatement(ps);
             return true;
         }catch (Exception ex){
