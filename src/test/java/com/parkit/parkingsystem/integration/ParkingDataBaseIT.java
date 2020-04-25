@@ -47,14 +47,11 @@ public class ParkingDataBaseIT {
 
     }
 
-    // OB : Tests d'intégration système car utilise la BDD
-    // Faudrait-il faire des tests unitaire sur les classes TicketDAO et ParkingSpotDAO ?
-    // Si les tests ci-dessous passent et ceux sur ParkingSergice également alors TicketDAO et ParkingSpotDAO sont nécessairement OK
-    @Test
+   @Test
     public void testParkingACar(){
         ParkingService parkingService = new ParkingService(inputReaderUtil, parkingSpotDAO, ticketDAO);
         parkingService.processIncomingVehicle();
-        //TODO: check that a ticket is actualy saved in DB and Parking table is updated with availability
+        //TODO: check that a ticket is actually saved in DB and Parking table is updated with availability
     }
 
     @Test

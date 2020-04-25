@@ -3,34 +3,24 @@ package com.parkit.parkingsystem.service;
 import com.parkit.parkingsystem.constants.Fare;
 import com.parkit.parkingsystem.model.Ticket;
 
-import java.math.BigDecimal;
+//import java.math.BigDecimal;
 import java.time.*;
-import java.util.Date;
 
 public class FareCalculatorService {
 
     public void calculateFare(Ticket ticket){
-        if( (ticket.getOutTime() == null) || (ticket.getOutTime().before(ticket.getInTime())) ){
+        if( (ticket.getOutTime() == null) || (ticket.getOutTime().isBefore(ticket.getInTime())) ){
             throw new IllegalArgumentException("Out time provided is incorrect:"+ticket.getOutTime().toString());
         }
+        LocalDateTime inTime = ticket.getInTime();
+        LocalDateTime outTime = ticket.getOutTime();
 
-        //TODO: Some tests are failing here. Need to check if this logic is correct
+        Duration duration = Duration.between(inTime,outTime);
 
-        // ORIGINAL
-        //int inHour = ticket.getInTime().getHours();
-        //int outHour = ticket.getOutTime().getHours();
-        Date inTime = ticket.getInTime();
-        Date outTime = ticket.getOutTime();
+        long durationLong = duration.getSeconds();
         
-        long durationLong = ((outTime.getTime() -  inTime.getTime()));
+        double durationDouble = durationLong / 3600.0;
         
-        // Avec cast
-        //double durationDouble =  (double)durationLong / 3600000;
-        
-        // Sans cast
-        double durationDouble =  durationLong / 3600000.0;
-        
-        /*
         // Not rounded version - pass original tests
         switch (ticket.getParkingSpot().getParkingType()){
         	case CAR: {
@@ -42,8 +32,9 @@ public class FareCalculatorService {
             	break;
         	}
         	default: throw new IllegalArgumentException("Unkown Parking Type");
-    	}*/
+    	}
         
+        /*
         // Rounded version - pass modified tests
         switch (ticket.getParkingSpot().getParkingType()){
             case CAR: {
@@ -64,6 +55,6 @@ public class FareCalculatorService {
             }
             default: throw new IllegalArgumentException("Unkown Parking Type");
         }
-        
+        */
     }
 }
