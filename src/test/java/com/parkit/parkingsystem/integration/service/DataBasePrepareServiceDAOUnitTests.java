@@ -9,8 +9,8 @@ import java.sql.ResultSet;
 
 public class DataBasePrepareServiceDAOUnitTests {
 	
-    //DataBaseTestConfig dataBaseTestConfig = new DataBaseTestConfig();
-	DataBaseConfig dataBaseTestConfig = new DataBaseConfig();
+    DataBaseTestConfig dataBaseTestConfig = new DataBaseTestConfig();
+	//DataBaseConfig dataBaseTestConfig = new DataBaseConfig();
 	
     public void updateParkingSpotDAOTest_Parking1ToTrue(){
         Connection connection = null;
