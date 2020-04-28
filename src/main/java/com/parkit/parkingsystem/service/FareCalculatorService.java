@@ -3,7 +3,6 @@ package com.parkit.parkingsystem.service;
 import com.parkit.parkingsystem.constants.Fare;
 import com.parkit.parkingsystem.model.Ticket;
 
-//import java.math.BigDecimal;
 import java.time.*;
 
 public class FareCalculatorService {
@@ -24,7 +23,7 @@ public class FareCalculatorService {
         double durationDoubleToPay;
         
         /*
-        //TDD Initial version
+        //TDD - Initial version :
         if(durationDouble < 0.5) {
         	durationDoubleToPay = 0.0;
         }
@@ -33,7 +32,7 @@ public class FareCalculatorService {
         }
         */
         
-        //TDD Refactored version
+        //TDD - Refactoring version :
         durationDoubleToPay = (durationDouble < 0.5) ? 0.0 : durationDouble;
         
         switch (ticket.getParkingSpot().getParkingType()){
