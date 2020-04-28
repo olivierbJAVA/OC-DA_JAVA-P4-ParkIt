@@ -27,7 +27,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
-public class ParkingServiceTest {
+public class ParkingServiceTestBike {
 
 	private static ParkingService parkingService;
 	private static LocalDateTime inTimeTest = LocalDateTime.now().minusHours(1);
@@ -45,7 +45,7 @@ public class ParkingServiceTest {
 		try {
 			when(inputReaderUtil.readVehicleRegistrationNumber()).thenReturn("ABCDEF");
 
-			ParkingSpot parkingSpot = new ParkingSpot(1, ParkingType.CAR, false);
+			ParkingSpot parkingSpot = new ParkingSpot(1, ParkingType.BIKE, false);
 
 			ticket = new Ticket();
 			// ticket.setInTime(LocalDateTime.now().minusHours(1));
@@ -69,7 +69,7 @@ public class ParkingServiceTest {
 	@Test
 	public void processIncomingVehicleTest_WhenAllIsOK() {
 		// ARRANGE
-		when(inputReaderUtil.readSelection()).thenReturn(1);
+		when(inputReaderUtil.readSelection()).thenReturn(2);
 		when(parkingSpotDAO.getNextAvailableSlot(any(ParkingType.class))).thenReturn(1);
 		when(parkingSpotDAO.updateParking(any(ParkingSpot.class))).thenReturn(true);
 		when(ticketDAO.saveTicket(any(Ticket.class))).thenReturn(true);
@@ -84,9 +84,9 @@ public class ParkingServiceTest {
 
 	@Disabled("Ne fonctionne pas ?")
 	@Test
-	public void processIncomingVehicleTest_WhenNoParkingSpotIsAvailable_AndThrowAnExceptionn() {
+	public void processIncomingVehicleTest_WhenNoParkingSpotIsAvailable_AndThrowAnException() {
 		// ARRANGE
-		when(inputReaderUtil.readSelection()).thenReturn(1);
+		when(inputReaderUtil.readSelection()).thenReturn(2);
 		when(parkingSpotDAO.getNextAvailableSlot(any(ParkingType.class))).thenReturn(-1);
 		
 		// OB : Pas besoin de mocker les méthodes ci-dessous qui ne sont pas appelées
@@ -117,7 +117,7 @@ public class ParkingServiceTest {
 	@Test
 	public void processIncomingVehicleTest_WhenNoParkingSpotIsAvailable() {
 		// ARRANGE
-		when(inputReaderUtil.readSelection()).thenReturn(1);
+		when(inputReaderUtil.readSelection()).thenReturn(2);
 		when(parkingSpotDAO.getNextAvailableSlot(any(ParkingType.class))).thenReturn(-1);
 		
 		// OB : Pas besoin de mocker les méthodes ci-dessous qui ne sont pas appelées
@@ -140,7 +140,7 @@ public class ParkingServiceTest {
 	public void processIncomingVehicleTest_WhenReadVehicleRegistrationNumberThrowAnException() {
 		try {
 			// ARRANGE
-			when(inputReaderUtil.readSelection()).thenReturn(1);
+			when(inputReaderUtil.readSelection()).thenReturn(2);
 			when(parkingSpotDAO.getNextAvailableSlot(any(ParkingType.class))).thenReturn(1);
 
 			// OB : Pas besoin de mocker les méthodes appelées après que l'exception a été lancée 
@@ -183,13 +183,13 @@ public class ParkingServiceTest {
 		verify(parkingSpotDAO, Mockito.times(1)).updateParking(argumentCaptorParkingSpot.capture());
 		ParkingSpot parkingSpotTest = argumentCaptorParkingSpot.getValue();
 		assertEquals(1, parkingSpotTest.getId());
-		assertEquals(ParkingType.CAR, parkingSpotTest.getParkingType());
+		assertEquals(ParkingType.BIKE, parkingSpotTest.getParkingType());
 		assertTrue(parkingSpotTest.isAvailable());
 
 		verify(ticketDAO, Mockito.times(1)).updateTicket(argumentCaptorticket.capture());
 		Ticket ticketTest = argumentCaptorticket.getValue();
 		assertEquals(inTimeTest, ticketTest.getInTime());
-		assertEquals(new ParkingSpot(1, ParkingType.CAR, false), ticketTest.getParkingSpot());
+		assertEquals(new ParkingSpot(1, ParkingType.BIKE, false), ticketTest.getParkingSpot());
 		assertEquals("ABCDEF", ticketTest.getVehicleRegNumber());
 	}
 
@@ -245,7 +245,7 @@ public class ParkingServiceTest {
 	}
 
 	@Test
-	public void processExitingVehicleTest_WhenReadVehicleRegistrationNumberThrowAnExceptio() {
+	public void processExitingVehicleTest_WhenReadVehicleRegistrationNumberThrowAnException() {
 		try {
 			// ARRANGE
 			when(inputReaderUtil.readVehicleRegistrationNumber()).thenThrow(new Exception("Test illegal"));
