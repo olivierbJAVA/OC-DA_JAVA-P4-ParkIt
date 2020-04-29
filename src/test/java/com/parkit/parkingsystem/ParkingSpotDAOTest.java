@@ -23,16 +23,16 @@ import com.parkit.parkingsystem.integration.service.DataBasePrepareServiceTestsP
 
 public class ParkingSpotDAOTest {
 
-	private static DataBasePrepareServiceTestsParkingDAO dataBasePrepareServiceDAOUnitTest;
+	private static DataBasePrepareServiceTestsParkingDAO dataBasePrepareServiceTestsParkingDAO;
 	
     @BeforeAll
     private static void setUp() throws Exception{
-    	dataBasePrepareServiceDAOUnitTest = new DataBasePrepareServiceTestsParkingDAO();
+    	dataBasePrepareServiceTestsParkingDAO = new DataBasePrepareServiceTestsParkingDAO();
     }
 
     @BeforeEach
     private void setUpPerTest() throws Exception {
-    	dataBasePrepareServiceDAOUnitTest.clearDataBaseEntries();
+    	dataBasePrepareServiceTestsParkingDAO.clearDataBaseEntries();
     }
 
     @AfterAll
@@ -48,13 +48,13 @@ public class ParkingSpotDAOTest {
 		parkingSpotDAOUnderTest.dataBaseConfig = new DataBaseTestConfig();
 
 		ParkingSpot parkingSpotTest = new ParkingSpot(1, ParkingType.CAR, true);
-		dataBasePrepareServiceDAOUnitTest.updateParkingSpotDAOTest_SetParkingOneToFalse();
+		dataBasePrepareServiceTestsParkingDAO.updateParkingSpotDAOTest_SetParkingOneAvailabilityToFalse();
 
 		// ACT
 		boolean resultFromMethodUnderTest = parkingSpotDAOUnderTest.updateParking(parkingSpotTest);
 
 		// ASSERT
-		boolean resultFromDB = dataBasePrepareServiceDAOUnitTest.getParkingSpotDAOTest();
+		boolean resultFromDB = dataBasePrepareServiceTestsParkingDAO.getParkingSpotDAOTest_GetAvailabilityParkingOne();
 		
 		Assertions.assertTrue(resultFromDB);
 
@@ -69,13 +69,13 @@ public class ParkingSpotDAOTest {
 		parkingSpotDAOUnderTest.dataBaseConfig = new DataBaseTestConfigReturnNullConnection();
 
 		ParkingSpot parkingSpotTest = new ParkingSpot(1, ParkingType.CAR, true);
-		dataBasePrepareServiceDAOUnitTest.updateParkingSpotDAOTest_SetParkingOneToFalse();
+		dataBasePrepareServiceTestsParkingDAO.updateParkingSpotDAOTest_SetParkingOneAvailabilityToFalse();
 
 		// ACT
 		boolean resultFromMethodUnderTest = parkingSpotDAOUnderTest.updateParking(parkingSpotTest);
 
 		// ASSERT
-		boolean resultFromDB = dataBasePrepareServiceDAOUnitTest.getParkingSpotDAOTest();
+		boolean resultFromDB = dataBasePrepareServiceTestsParkingDAO.getParkingSpotDAOTest_GetAvailabilityParkingOne();
 		
 		Assertions.assertFalse(resultFromDB);
 
@@ -90,13 +90,13 @@ public class ParkingSpotDAOTest {
 		parkingSpotDAOUnderTest.dataBaseConfig = new DataBaseTestConfig();
 
 		ParkingSpot parkingSpotTest = new ParkingSpot(1, ParkingType.CAR, false);
-		dataBasePrepareServiceDAOUnitTest.updateParkingSpotDAOTest_SetParkingOneToTrue();
+		dataBasePrepareServiceTestsParkingDAO.updateParkingSpotDAOTest_SetParkingOneAvailabilityToTrue();
 
 		// ACT
 		boolean resultFromMethodUnderTest = parkingSpotDAOUnderTest.updateParking(parkingSpotTest);
 
 		// ASSERT
-		boolean resultFromDB = dataBasePrepareServiceDAOUnitTest.getParkingSpotDAOTest();
+		boolean resultFromDB = dataBasePrepareServiceTestsParkingDAO.getParkingSpotDAOTest_GetAvailabilityParkingOne();
 		
 		Assertions.assertFalse(resultFromDB);
 
@@ -113,13 +113,13 @@ public class ParkingSpotDAOTest {
 		parkingSpotDAOUnderTest.dataBaseConfig = new DataBaseTestConfigReturnNullConnection();
 	
 		ParkingSpot parkingSpotTest = new ParkingSpot(1, ParkingType.CAR, false);
-		dataBasePrepareServiceDAOUnitTest.updateParkingSpotDAOTest_SetParkingOneToTrue();
+		dataBasePrepareServiceTestsParkingDAO.updateParkingSpotDAOTest_SetParkingOneAvailabilityToTrue();
 
 		// ACT
 		boolean resultFromMethodUnderTest = parkingSpotDAOUnderTest.updateParking(parkingSpotTest);
 
 		// ASSERT
-		boolean resultFromDB = dataBasePrepareServiceDAOUnitTest.getParkingSpotDAOTest();
+		boolean resultFromDB = dataBasePrepareServiceTestsParkingDAO.getParkingSpotDAOTest_GetAvailabilityParkingOne();
 		
 		Assertions.assertTrue(resultFromDB);
 
@@ -134,7 +134,7 @@ public class ParkingSpotDAOTest {
 		ParkingSpotDAO parkingSpotDAOUnderTest = new ParkingSpotDAO();
 		parkingSpotDAOUnderTest.dataBaseConfig = new DataBaseTestConfig();
 
-		dataBasePrepareServiceDAOUnitTest.updateParkingSpotDAOTest_SetAllToTrue();
+		dataBasePrepareServiceTestsParkingDAO.updateParkingSpotDAOTest_SetAllToTrue();
 
 		// ACT
 		int result = parkingSpotDAOUnderTest.getNextAvailableSlot(ParkingType.CAR);
@@ -150,7 +150,7 @@ public class ParkingSpotDAOTest {
 		ParkingSpotDAO parkingSpotDAOUnderTest = new ParkingSpotDAO();
 		parkingSpotDAOUnderTest.dataBaseConfig = new DataBaseTestConfigReturnNullConnection();
 
-		dataBasePrepareServiceDAOUnitTest.updateParkingSpotDAOTest_SetAllToTrue();
+		dataBasePrepareServiceTestsParkingDAO.updateParkingSpotDAOTest_SetAllToTrue();
 
 		// ACT
 		int result = parkingSpotDAOUnderTest.getNextAvailableSlot(ParkingType.CAR);
@@ -182,7 +182,7 @@ public class ParkingSpotDAOTest {
 		ParkingSpotDAO parkingSpotDAOUnderTest = new ParkingSpotDAO();
 		parkingSpotDAOUnderTest.dataBaseConfig = new DataBaseTestConfig();
 
-		dataBasePrepareServiceDAOUnitTest.updateParkingSpotDAOTest_SetAllToFalse();
+		dataBasePrepareServiceTestsParkingDAO.updateParkingSpotDAOTest_SetAllToFalse();
 
 		// ACT
 		result = parkingSpotDAOUnderTest.getNextAvailableSlot(ParkingType.CAR);
@@ -200,7 +200,7 @@ public class ParkingSpotDAOTest {
 		ParkingSpotDAO parkingSpotDAOUnderTest = new ParkingSpotDAO();
 		parkingSpotDAOUnderTest.dataBaseConfig = new DataBaseTestConfigReturnNullConnection();
 
-		dataBasePrepareServiceDAOUnitTest.updateParkingSpotDAOTest_SetAllToFalse();
+		dataBasePrepareServiceTestsParkingDAO.updateParkingSpotDAOTest_SetAllToFalse();
 
 		// ACT
 		result = parkingSpotDAOUnderTest.getNextAvailableSlot(ParkingType.CAR);

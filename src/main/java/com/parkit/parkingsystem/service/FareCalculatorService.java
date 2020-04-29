@@ -20,8 +20,6 @@ public class FareCalculatorService {
     
         double durationDouble = durationLong / 3600.0;
         
-        double durationDoubleToPay;
-        
         /*
         //TDD - Initial version :
         if(durationDouble < 0.5) {
@@ -33,8 +31,8 @@ public class FareCalculatorService {
         */
         
         //TDD - Refactoring version :
-        durationDoubleToPay = (durationDouble < 0.5) ? 0.0 : durationDouble;
-        
+        double durationDoubleToPay = (durationDouble < 0.5) ? 0.0 : durationDouble;
+
         switch (ticket.getParkingSpot().getParkingType()){
         	case CAR: {
         		ticket.setPrice(durationDoubleToPay * Fare.CAR_RATE_PER_HOUR);

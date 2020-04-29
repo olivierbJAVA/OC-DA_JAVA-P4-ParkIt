@@ -12,7 +12,7 @@ public class DataBasePrepareServiceTestsParkingDAO {
     DataBaseTestConfig dataBaseTestConfig = new DataBaseTestConfig();
 	//DataBaseConfig dataBaseTestConfig = new DataBaseConfig();
 	
-    public void updateParkingSpotDAOTest_SetParkingOneToTrue(){
+    public void updateParkingSpotDAOTest_SetParkingOneAvailabilityToTrue(){
         Connection connection = null;
         try{
             connection = dataBaseTestConfig.getConnection();
@@ -30,7 +30,7 @@ public class DataBasePrepareServiceTestsParkingDAO {
         }
     }
     
-    public void updateParkingSpotDAOTest_SetParkingOneToFalse(){
+    public void updateParkingSpotDAOTest_SetParkingOneAvailabilityToFalse(){
         Connection connection = null;
         try{
             connection = dataBaseTestConfig.getConnection();
@@ -48,7 +48,7 @@ public class DataBasePrepareServiceTestsParkingDAO {
         }
     }
 
-    public boolean getParkingSpotDAOTest(){
+    public boolean getParkingSpotDAOTest_GetAvailabilityParkingOne(){
         Connection connection = null;
         boolean result=false;
         try{
