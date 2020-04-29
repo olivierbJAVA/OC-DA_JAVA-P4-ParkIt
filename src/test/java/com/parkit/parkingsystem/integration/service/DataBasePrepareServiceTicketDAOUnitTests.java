@@ -22,22 +22,22 @@ public class DataBasePrepareServiceTicketDAOUnitTests {
 	public static final String GET_TICKET_TEST = "select t.PARKING_NUMBER, t.ID, t.PRICE, t.IN_TIME, t.OUT_TIME, p.TYPE from ticket t,parking p where p.parking_number = t.parking_number and t.VEHICLE_REG_NUMBER=? order by t.IN_TIME DESC limit 1";
 
 	DataBaseTestConfig dataBaseTestConfig = new DataBaseTestConfig();
-	//DataBaseConfig dataBaseTestConfig = new DataBaseConfig();
+	// DataBaseConfig dataBaseTestConfig = new DataBaseConfig();
 
-	@Test
 	public Ticket ticketDAOTest_SaveATicketInDB() {
 
-		Ticket ticket = new Ticket();
+		Ticket ticketTest = new Ticket();
 		ParkingSpot parkingSpot = new ParkingSpot(1, ParkingType.CAR, true);
 		double price = 123.0;
 		LocalDateTime inTime = LocalDateTime.of(2019, 4, 26, 3, 6, 9);
-		LocalDateTime outTime = LocalDateTime.of(2019, 4, 26, 7, 6, 9);
-		ticket.setParkingSpot(parkingSpot);
+		// LocalDateTime outTime = LocalDateTime.of(2019, 4, 26, 7, 6, 9);
+		LocalDateTime outTime = null;
+		ticketTest.setParkingSpot(parkingSpot);
 		// ticket.setId(1);
-		ticket.setVehicleRegNumber("TESTABC");
-		ticket.setPrice(price);
-		ticket.setInTime(inTime);
-		ticket.setOutTime(outTime);
+		ticketTest.setVehicleRegNumber("TEST");
+		ticketTest.setPrice(price);
+		ticketTest.setInTime(inTime);
+		ticketTest.setOutTime(outTime);
 
 		Connection connection = null;
 		try {
@@ -46,11 +46,13 @@ public class DataBasePrepareServiceTicketDAOUnitTests {
 			PreparedStatement ps = connection.prepareStatement(SAVE_TICKET_TEST);
 			// PARKING_NUMBER, VEHICLE_REG_NUMBER, PRICE, IN_TIME, OUT_TIME)
 			// values(?,?,?,?,?)";
-			ps.setInt(1, ticket.getParkingSpot().getId());
-			ps.setString(2, ticket.getVehicleRegNumber());
-			ps.setDouble(3, ticket.getPrice());
-			ps.setTimestamp(4, Timestamp.valueOf(ticket.getInTime()));
-			ps.setTimestamp(5, Timestamp.valueOf(ticket.getOutTime()));
+			ps.setInt(1, ticketTest.getParkingSpot().getId());
+			ps.setString(2, ticketTest.getVehicleRegNumber());
+			ps.setDouble(3, ticketTest.getPrice());
+			ps.setTimestamp(4, Timestamp.valueOf(ticketTest.getInTime()));
+			// ps.setTimestamp(5, Timestamp.valueOf(ticketTest.getOutTime()));
+			ps.setTimestamp(5, ticketTest.getOutTime() == null ? null : Timestamp.valueOf(ticketTest.getOutTime()));
+
 			ps.execute();
 
 			// clear ticket entries;
@@ -62,10 +64,9 @@ public class DataBasePrepareServiceTicketDAOUnitTests {
 		} finally {
 			dataBaseTestConfig.closeConnection(connection);
 		}
-		return ticket;
+		return ticketTest;
 	}
 
-	@Test
 	public void ticketDAOTest_ClearTicketDB() {
 
 		Connection connection = null;
@@ -85,7 +86,6 @@ public class DataBasePrepareServiceTicketDAOUnitTests {
 		}
 	}
 
-	@Test
 	public Ticket ticketDAOTest_GetATicketFromDB(String vehicleRegNumber) {
 
 		Ticket ticket = null;
@@ -95,7 +95,8 @@ public class DataBasePrepareServiceTicketDAOUnitTests {
 			connection = dataBaseTestConfig.getConnection();
 
 			PreparedStatement ps = connection.prepareStatement(GET_TICKET_TEST);
-			// PARKING_NUMBER, VEHICLE_REG_NUMBER, PRICE, IN_TIME, OUT_TIME) values(?,?,?,?,?)";
+			// PARKING_NUMBER, VEHICLE_REG_NUMBER, PRICE, IN_TIME, OUT_TIME)
+			// values(?,?,?,?,?)";
 
 			ps.setString(1, vehicleRegNumber);
 			ResultSet rs = ps.executeQuery();
@@ -119,4 +120,23 @@ public class DataBasePrepareServiceTicketDAOUnitTests {
 		}
 		return ticket;
 	}
+
+	public void clearDataBaseEntries() {
+		Connection connection = null;
+		try {
+			connection = dataBaseTestConfig.getConnection();
+
+			// set parking entries to available
+			connection.prepareStatement("update parking set available = true").execute();
+
+			// clear ticket entries;
+			connection.prepareStatement("truncate table ticket").execute();
+
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			dataBaseTestConfig.closeConnection(connection);
+		}
+	}
+
 }

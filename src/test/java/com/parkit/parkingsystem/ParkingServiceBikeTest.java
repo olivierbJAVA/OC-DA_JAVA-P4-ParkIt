@@ -27,7 +27,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
-public class ParkingServiceTestBike {
+public class ParkingServiceBikeTest {
 
 	private static ParkingService parkingService;
 	private static LocalDateTime inTimeTest = LocalDateTime.now().minusHours(1);

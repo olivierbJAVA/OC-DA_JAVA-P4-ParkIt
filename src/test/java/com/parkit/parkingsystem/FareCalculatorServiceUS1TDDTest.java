@@ -20,7 +20,7 @@ import com.parkit.parkingsystem.model.ParkingSpot;
 import com.parkit.parkingsystem.model.Ticket;
 import com.parkit.parkingsystem.service.FareCalculatorService;
 
-public class FareCalculatorServiceTestUS2TDD {
+public class FareCalculatorServiceUS1TDDTest {
 
 	private static FareCalculatorService fareCalculatorService;
 	private Ticket ticket;
@@ -38,6 +38,7 @@ public class FareCalculatorServiceTestUS2TDD {
 	//NORMAL CASES
 	@Test
 	public void calculateFareCar_LessThanThirtyMinutes() {
+		//ARRANGE
 		LocalDateTime inTime = LocalDateTime.now().minusMinutes(25);
 		LocalDateTime outTime = LocalDateTime.now();
 		ParkingSpot parkingSpot = new ParkingSpot(1, ParkingType.CAR, false);
@@ -45,12 +46,17 @@ public class FareCalculatorServiceTestUS2TDD {
 		ticket.setInTime(inTime);
 		ticket.setOutTime(outTime);
 		ticket.setParkingSpot(parkingSpot);
+		
+		//ACT
 		fareCalculatorService.calculateFare(ticket);
+		
+		//ASSERT
 		assertEquals(0, ticket.getPrice());
 	}
 
 	@Test
 	public void calculateFareCar_MoreThanThirtyMinutes() {
+		//ARRANGE
 		LocalDateTime inTime = LocalDateTime.now().minusMinutes(45);
 		LocalDateTime outTime = LocalDateTime.now();
 		ParkingSpot parkingSpot = new ParkingSpot(1, ParkingType.CAR, false);
@@ -58,7 +64,11 @@ public class FareCalculatorServiceTestUS2TDD {
 		ticket.setInTime(inTime);
 		ticket.setOutTime(outTime);
 		ticket.setParkingSpot(parkingSpot);
+		
+		//ACT
 		fareCalculatorService.calculateFare(ticket);
+		
+		//ASSERT
 		assertEquals(0.75 * Fare.CAR_RATE_PER_HOUR, ticket.getPrice());
 	}
 	
@@ -66,6 +76,7 @@ public class FareCalculatorServiceTestUS2TDD {
 	//EDGE CASES
 	@Test
 	public void calculateFareCar_LessThanThirtyMinutes_ThirtyMinutesMinusOneSecond() {
+		//ARRANGE
 		LocalDateTime inTime = LocalDateTime.now().minusMinutes(30).plusSeconds(1);
 		LocalDateTime outTime = LocalDateTime.now();
 		ParkingSpot parkingSpot = new ParkingSpot(1, ParkingType.CAR, false);
@@ -73,12 +84,17 @@ public class FareCalculatorServiceTestUS2TDD {
 		ticket.setInTime(inTime);
 		ticket.setOutTime(outTime);
 		ticket.setParkingSpot(parkingSpot);
+		
+		//ACT
 		fareCalculatorService.calculateFare(ticket);
+		
+		//ASSERT
 		assertEquals(0, ticket.getPrice());
 	}
 
 	@Test
 	public void calculateFareCar_ThirtyMinutes() {
+		//ARRANGE
 		LocalDateTime inTime = LocalDateTime.now().minusMinutes(30);
 		LocalDateTime outTime = LocalDateTime.now();
 		ParkingSpot parkingSpot = new ParkingSpot(1, ParkingType.CAR, false);
@@ -86,12 +102,17 @@ public class FareCalculatorServiceTestUS2TDD {
 		ticket.setInTime(inTime);
 		ticket.setOutTime(outTime);
 		ticket.setParkingSpot(parkingSpot);
+		
+		//ACT
 		fareCalculatorService.calculateFare(ticket);
+		
+		//ASSERT
 		assertEquals(0.5 * Fare.CAR_RATE_PER_HOUR, ticket.getPrice());
 	}
 		
 	@Test
 	public void calculateFareCar_MoreThanThirtyMinutes_ThirtyMinutesPlusOneSecond() {
+		//ARRANGE
 		LocalDateTime inTime = LocalDateTime.now().minusMinutes(30).minusSeconds(1);
 		LocalDateTime outTime = LocalDateTime.now();
 		ParkingSpot parkingSpot = new ParkingSpot(1, ParkingType.CAR, false);
@@ -99,7 +120,11 @@ public class FareCalculatorServiceTestUS2TDD {
 		ticket.setInTime(inTime);
 		ticket.setOutTime(outTime);
 		ticket.setParkingSpot(parkingSpot);
+		
+		//ACT
 		fareCalculatorService.calculateFare(ticket);
+		
+		//ASSERT
 		//assertEquals(0.5002778 * Fare.CAR_RATE_PER_HOUR,ticket.getPrice());
 		
 		//Use of AssertJ for the approximation

@@ -24,7 +24,7 @@ import com.parkit.parkingsystem.service.FareCalculatorService;
 @PrepareForTest(ParkingType.class)
 //@ExtendWith(PowerMockExtension.class)
 @ExtendWith(MockitoExtension.class)
-public class FareCalculatorServiceTestMockito {
+public class FareCalculatorServiceMockitoTest {
 
 	private static FareCalculatorService fareCalculatorService;
 
