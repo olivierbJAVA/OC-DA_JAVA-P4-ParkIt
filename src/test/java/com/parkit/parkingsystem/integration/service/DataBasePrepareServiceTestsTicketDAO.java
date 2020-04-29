@@ -15,7 +15,7 @@ import com.parkit.parkingsystem.integration.config.DataBaseTestConfig;
 import com.parkit.parkingsystem.model.ParkingSpot;
 import com.parkit.parkingsystem.model.Ticket;
 
-public class DataBasePrepareServiceTicketDAOUnitTests {
+public class DataBasePrepareServiceTestsTicketDAO {
 
 	public static final String SAVE_TICKET_TEST = "insert into ticket(PARKING_NUMBER, VEHICLE_REG_NUMBER, PRICE, IN_TIME, OUT_TIME) values(?,?,?,?,?)";
 	public static final String UPDATE_TICKET = "update ticket set PRICE=?, OUT_TIME=? where ID=?";
@@ -44,8 +44,7 @@ public class DataBasePrepareServiceTicketDAOUnitTests {
 			connection = dataBaseTestConfig.getConnection();
 
 			PreparedStatement ps = connection.prepareStatement(SAVE_TICKET_TEST);
-			// PARKING_NUMBER, VEHICLE_REG_NUMBER, PRICE, IN_TIME, OUT_TIME)
-			// values(?,?,?,?,?)";
+			// PARKING_NUMBER, VEHICLE_REG_NUMBER, PRICE, IN_TIME, OUT_TIME
 			ps.setInt(1, ticketTest.getParkingSpot().getId());
 			ps.setString(2, ticketTest.getVehicleRegNumber());
 			ps.setDouble(3, ticketTest.getPrice());
@@ -55,8 +54,6 @@ public class DataBasePrepareServiceTicketDAOUnitTests {
 
 			ps.execute();
 
-			// clear ticket entries;
-			// connection.prepareStatement("truncate table ticket").execute();
 			dataBaseTestConfig.closePreparedStatement(ps);
 
 		} catch (Exception e) {
@@ -96,8 +93,6 @@ public class DataBasePrepareServiceTicketDAOUnitTests {
 
 			PreparedStatement ps = connection.prepareStatement(GET_TICKET_TEST);
 			// PARKING_NUMBER, VEHICLE_REG_NUMBER, PRICE, IN_TIME, OUT_TIME)
-			// values(?,?,?,?,?)";
-
 			ps.setString(1, vehicleRegNumber);
 			ResultSet rs = ps.executeQuery();
 			if (rs.next()) {

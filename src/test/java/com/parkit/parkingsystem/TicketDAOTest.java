@@ -2,7 +2,10 @@ package com.parkit.parkingsystem;
 
 import java.time.LocalDateTime;
 
+import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import com.parkit.parkingsystem.constants.ParkingType;
@@ -10,22 +13,36 @@ import com.parkit.parkingsystem.dao.ParkingSpotDAO;
 import com.parkit.parkingsystem.dao.TicketDAO;
 import com.parkit.parkingsystem.integration.config.DataBaseTestConfig;
 import com.parkit.parkingsystem.integration.config.DataBaseTestConfigReturnNullConnection;
-import com.parkit.parkingsystem.integration.service.DataBasePrepareServiceDAOUnitTests;
-import com.parkit.parkingsystem.integration.service.DataBasePrepareServiceTicketDAOUnitTests;
+import com.parkit.parkingsystem.integration.service.DataBasePrepareServiceTestsParkingDAO;
+import com.parkit.parkingsystem.integration.service.DataBasePrepareServiceTestsTicketDAO;
 import com.parkit.parkingsystem.model.ParkingSpot;
 import com.parkit.parkingsystem.model.Ticket;
 
 public class TicketDAOTest {
 
-	private static DataBasePrepareServiceTicketDAOUnitTests dataBasePrepareServiceTicketDAOUnitTest;
+	private static DataBasePrepareServiceTestsTicketDAO dataBasePrepareServiceTicketDAOUnitTest;
 
+    @BeforeAll
+    private static void setUp() throws Exception{
+    	dataBasePrepareServiceTicketDAOUnitTest = new DataBasePrepareServiceTestsTicketDAO();
+    }
+
+    @BeforeEach
+    private void setUpPerTest() throws Exception {
+    	dataBasePrepareServiceTicketDAOUnitTest.clearDataBaseEntries();
+    }
+
+    @AfterAll
+    private static void tearDown(){
+
+    }
+	
 	@Test
 	public void getTicket_WhenTicketExist_WhenConnectionToDBOK() throws Exception {
 
 		// ARRANGE
 		TicketDAO ticketDAOUnderTest = new TicketDAO();
 		ticketDAOUnderTest.dataBaseConfig = new DataBaseTestConfig();
-		dataBasePrepareServiceTicketDAOUnitTest = new DataBasePrepareServiceTicketDAOUnitTests();
 		Ticket ticketToGetFromDB = dataBasePrepareServiceTicketDAOUnitTest.ticketDAOTest_SaveATicketInDB();
 
 		// Ticket get from DB :
@@ -51,7 +68,6 @@ public class TicketDAOTest {
 		// ARRANGE
 		TicketDAO ticketDAOUnderTest = new TicketDAO();
 		ticketDAOUnderTest.dataBaseConfig = new DataBaseTestConfig();
-		dataBasePrepareServiceTicketDAOUnitTest = new DataBasePrepareServiceTicketDAOUnitTests();
 		dataBasePrepareServiceTicketDAOUnitTest.ticketDAOTest_ClearTicketDB();
 
 		// ACT
@@ -68,7 +84,6 @@ public class TicketDAOTest {
 		// ARRANGE
 		TicketDAO ticketDAOUnderTest = new TicketDAO();
 		ticketDAOUnderTest.dataBaseConfig = new DataBaseTestConfigReturnNullConnection();
-		dataBasePrepareServiceTicketDAOUnitTest = new DataBasePrepareServiceTicketDAOUnitTests();
 		Ticket ticketToGetFromDB = dataBasePrepareServiceTicketDAOUnitTest.ticketDAOTest_SaveATicketInDB();
 		
 		// ACT
@@ -84,8 +99,6 @@ public class TicketDAOTest {
 		// ARRANGE
 		TicketDAO ticketDAOUnderTest = new TicketDAO();
 		ticketDAOUnderTest.dataBaseConfig = new DataBaseTestConfig();
-
-		dataBasePrepareServiceTicketDAOUnitTest = new DataBasePrepareServiceTicketDAOUnitTests();
 
 		Ticket ticketToSaveInDB = new Ticket();
 		ParkingSpot parkingSpotToSaveInDB = new ParkingSpot(1, ParkingType.CAR, true);
@@ -121,8 +134,6 @@ public class TicketDAOTest {
 		// ARRANGE
 		TicketDAO ticketDAOUnderTest = new TicketDAO();
 		ticketDAOUnderTest.dataBaseConfig = new DataBaseTestConfigReturnNullConnection();
-
-		dataBasePrepareServiceTicketDAOUnitTest = new DataBasePrepareServiceTicketDAOUnitTests();
 
 		Ticket ticketToSaveInDB = new Ticket();
 		ParkingSpot parkingSpotToSaveInDB = new ParkingSpot(1, ParkingType.CAR, true);
