@@ -30,6 +30,7 @@ import static org.mockito.Mockito.when;
 
 import java.time.Duration;
 import java.time.LocalDateTime;
+import java.time.temporal.ChronoUnit;
 
 @ExtendWith(MockitoExtension.class)
 public class ParkingDataBaseIT {
@@ -87,8 +88,8 @@ public class ParkingDataBaseIT {
 		assertThat(getTicketSaved.getVehicleRegNumber()).isEqualTo("ABCDEF");
 		assertThat(getTicketSaved.getPrice()).isEqualTo(0);
 		assertThat(getTicketSaved.getOutTime()).isNull();
-		assertThat(getTicketSaved.getInTime()).isBetween(now.minusSeconds(1), now.plusSeconds(10));
-		//assertThat(getTicketSaved.getInTime().getSecond()).isBetween(inTime.getSecond(), inTime.getSecond());
+		//assertThat(getTicketSaved.getInTime()).isBetween(now.minusSeconds(1), now.plusSeconds(10));
+		assertThat(getTicketSaved.getInTime()).isBetween(now.truncatedTo(ChronoUnit.SECONDS), now.truncatedTo(ChronoUnit.SECONDS).plusSeconds(10));
 		
 		//Parking
 		boolean availabilityParking = dataBasePrepareServiceTestsParkingDAO.getParkingSpotDAOTest_GetAvailabilityParkingOne();
@@ -97,7 +98,7 @@ public class ParkingDataBaseIT {
 	}
 
 	@Test
-	public void testParkingLotExit_WhenStayLessThanThirtyMinutes_WithWaitEffectiveTime() {
+	public void testParkingLotExit_WhenStayLessThanThirtyMinutes_WithEffectiveStayTime() {
 		// TODO: check that the fare generated and out time are populated correctly in the database
 
 		//ARRANGE
@@ -122,7 +123,8 @@ public class ParkingDataBaseIT {
 				
 		assertThat(ticketUpdatedInDB.getVehicleRegNumber()).isEqualTo("ABCDEF");
 		
-		assertThat(ticketUpdatedInDB.getOutTime()).isBetween(now.minusSeconds(1), now.plusSeconds(10));
+		//assertThat(ticketUpdatedInDB.getOutTime()).isBetween(now, now.plusSeconds(10));
+		assertThat(ticketUpdatedInDB.getOutTime()).isBetween(now.truncatedTo(ChronoUnit.SECONDS), now.truncatedTo(ChronoUnit.SECONDS).plusSeconds(10));
 		
 		Duration duration = Duration.between(ticketUpdatedInDB.getInTime(),ticketUpdatedInDB.getOutTime());
         long durationLong = duration.getSeconds();
@@ -140,9 +142,9 @@ public class ParkingDataBaseIT {
 		assertThat(availabilityParking).isTrue();
 	}
 	
-	//@Disabled
+	@Disabled("WARNING : long test which last 31 minutes as the program wait an effective time of 31 minutes to simulate an effective stay of more than 30 minutes")
 	@Test
-	public void testParkingLotExit_WhenStayMoreThanThirtyMinutes_WithWaitEffectiveTime() {
+	public void testParkingLotExit_WhenStayMoreThanThirtyMinutes_WithEffectiveStayTime() {
 		// TODO: check that the fare generated and out time are populated correctly in the database
 
 		//ARRANGE
@@ -155,7 +157,7 @@ public class ParkingDataBaseIT {
 		LocalDateTime now = LocalDateTime.now();
 		
 		//Wait some time for tests purposes
-		WaitTime waitTimeBeforeProcessExistingVehicle = new WaitTime (1000);
+		WaitTime waitTimeBeforeProcessExistingVehicle = new WaitTime (31*60*1000);
 		waitTimeBeforeProcessExistingVehicle.run();
 				
 		//ACT
@@ -167,7 +169,8 @@ public class ParkingDataBaseIT {
 				
 		assertThat(ticketUpdatedInDB.getVehicleRegNumber()).isEqualTo("ABCDEF");
 		
-		assertThat(ticketUpdatedInDB.getOutTime()).isBetween(now.minusSeconds(1), now.plusSeconds(10));
+		//assertThat(ticketUpdatedInDB.getOutTime()).isBetween(now, now.plusSeconds(10));
+		assertThat(ticketUpdatedInDB.getOutTime()).isBetween(now.truncatedTo(ChronoUnit.SECONDS), now.truncatedTo(ChronoUnit.SECONDS).plusSeconds(10));
 		
 		Duration duration = Duration.between(ticketUpdatedInDB.getInTime(),ticketUpdatedInDB.getOutTime());
         long durationLong = duration.getSeconds();
@@ -187,7 +190,7 @@ public class ParkingDataBaseIT {
 
 
 	@Test
-	public void testParkingLotExit_WhenStayLessThanThirtyMinutes() {
+	public void testParkingLotExit_WhenStayLessThanThirtyMinutes_WithSimulatedStayTime() {
 		// TODO: check that the fare generated and out time are populated correctly in the database
 
 		//ARRANGE
@@ -202,11 +205,14 @@ public class ParkingDataBaseIT {
 		ticketTest.setInTime(LocalDateTime.now().minusMinutes(15));
 		ticketTest.setOutTime(null);
 		
+		LocalDateTime now = LocalDateTime.now();
+		//LocalDateTime LocalDateTime2 = LocalDateTime(now.getSecond().to);
+		
 		dataBasePrepareServiceTestsTicketDAO.ticketDAOTest_SaveATicketInDB(ticketTest);
 		
 		ParkingService parkingService = new ParkingService(inputReaderUtil, parkingSpotDAO, ticketDAO);
 		
-		LocalDateTime now = LocalDateTime.now();
+		//LocalDateTime now = LocalDateTime.now();
 		
 		//ACT
 		parkingService.processExitingVehicle();
@@ -217,7 +223,9 @@ public class ParkingDataBaseIT {
 				
 		assertThat(ticketUpdatedInDB.getVehicleRegNumber()).isEqualTo("ABCDEF");
 		
-		assertThat(ticketUpdatedInDB.getOutTime()).isBetween(now.minusSeconds(1), now.plusSeconds(10));
+		//assertThat(ticketUpdatedInDB.getOutTime()).isBetween(now, now.plusSeconds(10));
+		//assertThat(ticketUpdatedInDB.getOutTime()).isBetween(now.minusSeconds(1), now.plusSeconds(10));
+		assertThat(ticketUpdatedInDB.getOutTime()).isBetween(now.truncatedTo(ChronoUnit.SECONDS), now.truncatedTo(ChronoUnit.SECONDS).plusSeconds(10));
 		
 		Duration duration = Duration.between(ticketUpdatedInDB.getInTime(),ticketUpdatedInDB.getOutTime());
         long durationLong = duration.getSeconds();
@@ -235,7 +243,7 @@ public class ParkingDataBaseIT {
 	}
 	
 	@Test
-	public void testParkingLotExit_WhenStayMoreThanThirtyMinutes() {
+	public void testParkingLotExit_WhenStayMoreThanThirtyMinutes_WithSimulatedStayTime() {
 		// TODO: check that the fare generated and out time are populated correctly in the database
 
 		//ARRANGE
@@ -265,8 +273,9 @@ public class ParkingDataBaseIT {
 				
 		assertThat(ticketUpdatedInDB.getVehicleRegNumber()).isEqualTo("ABCDEF");
 		
-		assertThat(ticketUpdatedInDB.getOutTime()).isBetween(now.minusSeconds(1), now.plusSeconds(10));
-			
+		//assertThat(ticketUpdatedInDB.getOutTime()).isBetween(now.minusSeconds(1), now.plusSeconds(10));
+		assertThat(ticketUpdatedInDB.getOutTime()).isBetween(now.truncatedTo(ChronoUnit.SECONDS), now.truncatedTo(ChronoUnit.SECONDS).plusSeconds(10));	
+		
 		Duration duration = Duration.between(ticketUpdatedInDB.getInTime(),ticketUpdatedInDB.getOutTime());
         long durationLong = duration.getSeconds();
         double durationDouble = durationLong / 3600.0;

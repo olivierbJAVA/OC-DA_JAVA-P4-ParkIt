@@ -50,6 +50,7 @@ public class ParkingService {
                 System.out.println("Generated Ticket and saved in DB");
                 System.out.println("Please park your vehicle in spot number:"+parkingSpot.getId());
                 System.out.println("Recorded in-time for vehicle number:"+vehicleRegNumber+" is:"+inTime);
+                System.out.println("Stay less than 30 minutes is free !");
             }
         }catch(Exception e){
             logger.error("Unable to process incoming vehicle",e);
@@ -116,6 +117,10 @@ public class ParkingService {
                 df.setRoundingMode(RoundingMode.HALF_UP);
                 System.out.println("Please pay the parking fare:" + df.format(ticket.getPrice()));
                 
+                if (ticket.getPrice()==0.0) {
+                	System.out.println("Nothing to pay as a stay less than 30 minutes is free !");
+                }
+                               
                 System.out.println("Full parking fare for info:" + ticket.getPrice());
                 System.out.println("Recorded out-time for vehicle number:" + ticket.getVehicleRegNumber() + " is:" + outTime);
             }else{
