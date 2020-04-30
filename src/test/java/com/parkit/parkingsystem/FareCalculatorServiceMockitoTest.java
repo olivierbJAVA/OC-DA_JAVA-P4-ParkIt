@@ -80,7 +80,7 @@ public class FareCalculatorServiceMockitoTest {
 
 		// fareCalculatorService.calculateFare(ticket);
 
-		assertThrows(Exception.class, () -> fareCalculatorService.calculateFare(ticket));
+		assertThrows(Exception.class, () -> fareCalculatorService.calculateFare(ticket,false));
 
 		// bar.foo(C);
 	}
@@ -125,9 +125,9 @@ public class FareCalculatorServiceMockitoTest {
 		 */
 		// ticket.setParkingSpot(parkingSpot);
 
-		// fareCalculatorService.calculateFare(ticket);
+		// fareCalculatorService.calculateFare(ticket,false);
 
-		assertThrows(Exception.class, () -> fareCalculatorService.calculateFare(ticket));
+		assertThrows(Exception.class, () -> fareCalculatorService.calculateFare(ticket, false));
 
 		// bar.foo(C);
 	}

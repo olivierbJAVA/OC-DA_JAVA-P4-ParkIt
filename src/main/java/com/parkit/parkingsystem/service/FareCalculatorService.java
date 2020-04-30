@@ -1,13 +1,14 @@
 package com.parkit.parkingsystem.service;
 
 import com.parkit.parkingsystem.constants.Fare;
+import com.parkit.parkingsystem.dao.TicketDAO;
 import com.parkit.parkingsystem.model.Ticket;
 
 import java.time.*;
 
 public class FareCalculatorService {
 
-    public void calculateFare(Ticket ticket){
+	public void calculateFare(Ticket ticket, boolean recurringUser){
         if( (ticket.getOutTime() == null) || (ticket.getOutTime().isBefore(ticket.getInTime())) ){
             throw new IllegalArgumentException("Out time provided is incorrect:"+ticket.getOutTime().toString());
         }
@@ -21,25 +22,33 @@ public class FareCalculatorService {
         double durationDouble = durationLong / 3600.0;
         
         /*
-        //TDD - Initial version :
+        //TDD_US1 - Initial version :
         if(durationDouble < 0.5) {
-        	durationDoubleToPay = 0.0;
+        	durationToPayThirtyMinutesFree = 0.0;
         }
         else {
-        	durationDoubleToPay = durationDouble;
+        	durationToPayThirtyMinutesFree = durationDouble;
         }
         */
         
-        //TDD - Refactoring version :
-        double durationDoubleToPay = (durationDouble < 0.5) ? 0.0 : durationDouble;
+        /*
+        //TDD_US2 - Initial version : 
+        TicketDAO ticketDAO = new TicketDAO();
+        boolean recurringUser = ticketDAO.recurringUser(ticket.getVehicleRegNumber());
+       	*/
+        
+        //TDD_US1 - Refactoring version :
+        double durationToPayThirtyMinutesFree = (durationDouble < 0.5) ? 0.0 : durationDouble;
 
+        double durationToPayThirtyMinutesFreeReduction = ( (recurringUser) ? (durationToPayThirtyMinutesFree * 0.95) : durationToPayThirtyMinutesFree);
+        
         switch (ticket.getParkingSpot().getParkingType()){
         	case CAR: {
-        		ticket.setPrice(durationDoubleToPay * Fare.CAR_RATE_PER_HOUR);
+        		ticket.setPrice(durationToPayThirtyMinutesFreeReduction * Fare.CAR_RATE_PER_HOUR);
             	break;
         	}
         	case BIKE: {
-            	ticket.setPrice(durationDoubleToPay * Fare.BIKE_RATE_PER_HOUR);
+            	ticket.setPrice(durationToPayThirtyMinutesFreeReduction * Fare.BIKE_RATE_PER_HOUR);
             	break;
         	}
         	default: throw new IllegalArgumentException("Unkown Parking Type");

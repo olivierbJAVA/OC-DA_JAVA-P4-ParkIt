@@ -47,16 +47,26 @@ public class ParkingService {
                 ticket.setInTime(inTime);
                 ticket.setOutTime(null);
                 ticketDAO.saveTicket(ticket);
+   
+                if(recurringUser(vehicleRegNumber)) {
+                	System.out.println("\n" + "Welcome back! As a recurring user of our parking lot, you'll benefit from a 5% discount.");
+                }
                 System.out.println("Generated Ticket and saved in DB");
                 System.out.println("Please park your vehicle in spot number:"+parkingSpot.getId());
-                System.out.println("Recorded in-time for vehicle number:"+vehicleRegNumber+" is:"+inTime);
-                System.out.println("Stay less than 30 minutes is free !");
+                System.out.println("Recorded in-time for vehicle number: "+vehicleRegNumber+" is: "+inTime);
+                System.out.println("For your information : a stay less than 30 minutes is free !" + "\n");
+            
             }
         }catch(Exception e){
             logger.error("Unable to process incoming vehicle",e);
         }
     }
 
+    private boolean recurringUser(String vehicleRegNumber) {
+        boolean recurringUser = ticketDAO.recurringUser(vehicleRegNumber);
+        return recurringUser;
+    }
+    
     private String getVehichleRegNumber() throws Exception {
         System.out.println("Please type the vehicle registration number and press enter key");
         return inputReaderUtil.readVehicleRegistrationNumber();
@@ -106,7 +116,7 @@ public class ParkingService {
             Ticket ticket = ticketDAO.getTicket(vehicleRegNumber);
             LocalDateTime outTime = LocalDateTime.now();
             ticket.setOutTime(outTime);
-            fareCalculatorService.calculateFare(ticket);
+            fareCalculatorService.calculateFare(ticket, recurringUser(ticket.getVehicleRegNumber()));
             if(ticketDAO.updateTicket(ticket)) {
                 ParkingSpot parkingSpot = ticket.getParkingSpot();
                 parkingSpot.setAvailable(true);
@@ -115,14 +125,18 @@ public class ParkingService {
                 // Rounding ticket price
                 DecimalFormat df = new DecimalFormat("0.00");
                 df.setRoundingMode(RoundingMode.HALF_UP);
-                System.out.println("Please pay the parking fare:" + df.format(ticket.getPrice()));
                 
                 if (ticket.getPrice()==0.0) {
                 	System.out.println("Nothing to pay as a stay less than 30 minutes is free !");
+                } else if(recurringUser(vehicleRegNumber)) {
+                 	System.out.println("As a recurring user of our parking lot, you benefit from a 5% discount.");
+                 	System.out.println("Please pay the parking fare:" + df.format(ticket.getPrice()));
+                } else {            	
+                	System.out.println("Please pay the parking fare:" + df.format(ticket.getPrice()));
                 }
                                
-                System.out.println("Full parking fare for info:" + ticket.getPrice());
-                System.out.println("Recorded out-time for vehicle number:" + ticket.getVehicleRegNumber() + " is:" + outTime);
+                //System.out.println("Full parking fare for info:" + ticket.getPrice());
+                System.out.println("Recorded out-time for vehicle number: " + ticket.getVehicleRegNumber() + " is: " + outTime + "\n");
             }else{
                 System.out.println("Unable to update ticket information. Error occurred");
             }

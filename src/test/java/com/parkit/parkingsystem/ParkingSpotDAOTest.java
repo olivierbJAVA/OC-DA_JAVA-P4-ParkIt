@@ -100,7 +100,6 @@ public class ParkingSpotDAOTest {
 		
 		Assertions.assertFalse(resultFromDB);
 
-		// OB : à laisser ?
 		Assertions.assertTrue(resultFromMethodUnderTest);
 
 	}

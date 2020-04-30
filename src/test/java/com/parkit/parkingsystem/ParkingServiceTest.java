@@ -119,10 +119,6 @@ public class ParkingServiceTest {
 		// ARRANGE
 		when(inputReaderUtil.readSelection()).thenReturn(1);
 		when(parkingSpotDAO.getNextAvailableSlot(any(ParkingType.class))).thenReturn(-1);
-		
-		// OB : Pas besoin de mocker les méthodes ci-dessous qui ne sont pas appelées
-		// when(parkingSpotDAO.updateParking(any(ParkingSpot.class))).thenReturn(true);
-		// when(ticketDAO.saveTicket(any(Ticket.class))).thenReturn(true);
 
 		// ACT
 		try {
@@ -142,10 +138,6 @@ public class ParkingServiceTest {
 			// ARRANGE
 			when(inputReaderUtil.readSelection()).thenReturn(1);
 			when(parkingSpotDAO.getNextAvailableSlot(any(ParkingType.class))).thenReturn(1);
-
-			// OB : Pas besoin de mocker les méthodes appelées après que l'exception a été lancée 
-			// when(parkingSpotDAO.updateParking(any(ParkingSpot.class))).thenReturn(true);
-			// when(ticketDAO.saveTicket(any(Ticket.class))).thenReturn(true);
 
 			when(inputReaderUtil.readVehicleRegistrationNumber()).thenThrow(new Exception("Test illegal"));
 

@@ -19,7 +19,7 @@ import com.parkit.parkingsystem.model.Ticket;
 public class TicketDAOTest {
 
 	private static DataBasePrepareServiceTestsTicketDAO dataBasePrepareServiceTestsTicketDAO;
-	
+
 	@BeforeAll
 	private static void setUp() throws Exception {
 		dataBasePrepareServiceTestsTicketDAO = new DataBasePrepareServiceTestsTicketDAO();
@@ -36,7 +36,7 @@ public class TicketDAOTest {
 	}
 
 	@Test
-	public void getTicket_WhenTicketExist_AndConnectionToDBOK() throws Exception {
+	public void getTicket_WhenTicketExist_WhenConnectionToDBOK() throws Exception {
 
 		// ARRANGE
 		TicketDAO ticketDAOUnderTest = new TicketDAO();
@@ -61,7 +61,7 @@ public class TicketDAOTest {
 	}
 
 	@Test
-	public void getTicket_WhenTicketDoesNotExist() throws Exception {
+	public void getTicket_WhenTicketDoesNotExist_WhenConnectionToDBOK() throws Exception {
 
 		// ARRANGE
 		TicketDAO ticketDAOUnderTest = new TicketDAO();
@@ -73,11 +73,10 @@ public class TicketDAOTest {
 
 		// ASSERT
 		Assertions.assertNull(ticketGetFromDB);
-
 	}
 
 	@Test
-	public void getTicket_WhenNoConnectionToDB() throws Exception {
+	public void getTicket_WhenTicketExist_WhenNoConnectionToDB() throws Exception {
 
 		// ARRANGE
 		TicketDAO ticketDAOUnderTest = new TicketDAO();
@@ -91,6 +90,21 @@ public class TicketDAOTest {
 		Assertions.assertNull(ticketGetFromDB);
 	}
 
+	@Test
+	public void getTicket_WhenTicketDoesNotExist_WhenNoConnectionToDB() throws Exception {
+
+		// ARRANGE
+		TicketDAO ticketDAOUnderTest = new TicketDAO();
+		ticketDAOUnderTest.dataBaseConfig = new DataBaseTestConfigReturnNullConnection();
+		dataBasePrepareServiceTestsTicketDAO.ticketDAOTest_ClearTicketDB();
+
+		// ACT
+		Ticket ticketGetFromDB = ticketDAOUnderTest.getTicket("NOTINDB");
+
+		// ASSERT
+		Assertions.assertNull(ticketGetFromDB);
+	}
+	
 	@Test
 	public void saveTicket_WhenConnectionToDBOK() throws Exception {
 
@@ -154,7 +168,7 @@ public class TicketDAOTest {
 	}
 
 	@Test
-	public void updateTicket_WhenTicketExist() throws Exception {
+	public void updateTicket_WhenTicketExist_WhenConnectionToDBOK() throws Exception {
 
 		// ARRANGE
 		TicketDAO ticketDAOUnderTest = new TicketDAO();
@@ -178,7 +192,7 @@ public class TicketDAOTest {
 	}
 
 	@Test
-	public void updateTicket_WhenNoTicketExist() throws Exception {
+	public void updateTicket_WhenNoTicketExist_WhenConnectionToDBOK() throws Exception {
 
 		// ARRANGE
 		TicketDAO ticketDAOUnderTest = new TicketDAO();
@@ -206,7 +220,7 @@ public class TicketDAOTest {
 	}
 
 	@Test
-	public void updateTicket_WhenNoConnection() throws Exception {
+	public void updateTicket_WhenTicketExist_WhenNoConnection() throws Exception {
 
 		// ARRANGE
 		TicketDAO ticketDAOUnderTest = new TicketDAO();
@@ -227,6 +241,67 @@ public class TicketDAOTest {
 		Assertions.assertNull(ticketTestUpdated.getOutTime());
 
 		Assertions.assertFalse(result);
+	}
+
+	@Test
+	public void updateTicket_WhenNoTicketExist_WhenNoConnection() throws Exception {
+
+		// ARRANGE
+		TicketDAO ticketDAOUnderTest = new TicketDAO();
+		ticketDAOUnderTest.dataBaseConfig = new DataBaseTestConfigReturnNullConnection();
+		dataBasePrepareServiceTestsTicketDAO = new DataBasePrepareServiceTestsTicketDAO();
+
+		Ticket ticketTestNotInDB = new Ticket();
+		ParkingSpot parkingSpot = new ParkingSpot(1, ParkingType.CAR, true);
+		double price = 333.0;
+		LocalDateTime inTime = LocalDateTime.of(2019, 4, 26, 3, 6, 9);
+		LocalDateTime outTime = LocalDateTime.of(2019, 4, 26, 7, 6, 9);
+		ticketTestNotInDB.setParkingSpot(parkingSpot);
+		ticketTestNotInDB.setId(1);
+		ticketTestNotInDB.setVehicleRegNumber("NOTINDB");
+		ticketTestNotInDB.setPrice(price);
+		ticketTestNotInDB.setInTime(inTime);
+		ticketTestNotInDB.setOutTime(outTime);
+
+		// ACT
+		ticketDAOUnderTest.updateTicket(ticketTestNotInDB);
+
+		// ASSERT
+		Ticket ticketTestUpdated = dataBasePrepareServiceTestsTicketDAO.ticketDAOTest_GetATicketFromDB("NOTINDB");
+		Assertions.assertNull(ticketTestUpdated);
+	}
+	
+	@Test
+	public void recurringUser_WhenFirstStay() throws Exception {
+		
+		//ARRANGE
+		TicketDAO ticketDAOUnderTest = new TicketDAO();
+		ticketDAOUnderTest.dataBaseConfig = new DataBaseTestConfig();
+		dataBasePrepareServiceTestsTicketDAO = new DataBasePrepareServiceTestsTicketDAO();
+		dataBasePrepareServiceTestsTicketDAO.ticketDAOTest_SaveATestTicketInDB();
+		
+		//ACT
+		boolean recurringUser = ticketDAOUnderTest.recurringUser("TEST");
+
+		//ASSERT
+		Assertions.assertFalse(recurringUser);
+
+	}
+
+	@Test
+	public void recurringUser_WhenAlreadyStayed() throws Exception {
+		//ARRANGE
+		TicketDAO ticketDAOUnderTest = new TicketDAO();
+		ticketDAOUnderTest.dataBaseConfig = new DataBaseTestConfig();
+		dataBasePrepareServiceTestsTicketDAO = new DataBasePrepareServiceTestsTicketDAO();
+		dataBasePrepareServiceTestsTicketDAO.ticketDAOTest_SaveATestTicketInDB();
+		dataBasePrepareServiceTestsTicketDAO.ticketDAOTest_SaveATestTicketInDB();
+		
+		//ACT
+		boolean recurringUser = ticketDAOUnderTest.recurringUser("TEST");
+
+		//ASSERT
+		Assertions.assertTrue(recurringUser);
 	}
 
 }
