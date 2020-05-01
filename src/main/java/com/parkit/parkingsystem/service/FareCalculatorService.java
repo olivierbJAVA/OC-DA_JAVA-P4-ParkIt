@@ -1,10 +1,10 @@
 package com.parkit.parkingsystem.service;
 
-import com.parkit.parkingsystem.constants.Fare;
-import com.parkit.parkingsystem.dao.TicketDAO;
-import com.parkit.parkingsystem.model.Ticket;
+import java.time.Duration;
+import java.time.LocalDateTime;
 
-import java.time.*;
+import com.parkit.parkingsystem.constants.Fare;
+import com.parkit.parkingsystem.model.Ticket;
 
 public class FareCalculatorService {
 

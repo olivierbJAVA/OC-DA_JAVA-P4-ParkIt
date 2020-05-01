@@ -35,7 +35,7 @@ public class TicketDAO {
 			ps.execute();
 			return true;
 		} catch (Exception ex) {
-			logger.error("Error fetching next available slot", ex);
+			logger.error("Error saving ticker", ex);
 			return false;
 		} finally {
 			dataBaseConfig.closePreparedStatement(ps);
@@ -63,16 +63,14 @@ public class TicketDAO {
 				ticket.setVehicleRegNumber(vehicleRegNumber);
 				ticket.setPrice(rs.getDouble(3));
 				ticket.setInTime(rs.getTimestamp(4).toLocalDateTime());
-				// ticket.setOutTime(rs.getTimestamp(5).toLocalDateTime());
 				ticket.setOutTime(rs.getTimestamp(5) == null ? null : rs.getTimestamp(5).toLocalDateTime());
 			}
 		} catch (Exception ex) {
-			logger.error("Error fetching next available slot", ex);
+			logger.error("Error getting ticket", ex);
 		} finally {
 			dataBaseConfig.closeResultSet(rs);
 			dataBaseConfig.closePreparedStatement(ps);
 			dataBaseConfig.closeConnection(con);
-			// return ticket;
 		}
 		return ticket;
 	}
@@ -89,7 +87,7 @@ public class TicketDAO {
 			ps.execute();
 			return true;
 		} catch (Exception ex) {
-			logger.error("Error saving ticket info", ex);
+			logger.error("Error updating ticket info", ex);
 		} finally {
 			dataBaseConfig.closePreparedStatement(ps);
 			dataBaseConfig.closeConnection(con);
@@ -112,7 +110,7 @@ public class TicketDAO {
 				result = true;
 			}
 		} catch (Exception ex) {
-			logger.error("Error fetching next available slot", ex);
+			logger.error("Error fetching recurring user", ex);
 		} finally {
 			dataBaseConfig.closeResultSet(rs);
 			dataBaseConfig.closePreparedStatement(ps);
@@ -137,7 +135,7 @@ public class TicketDAO {
 				}
 			}
 		} catch (Exception ex) {
-			logger.error("Error fetching next available slot", ex);
+			logger.error("Error getting user in the parking", ex);
 		} finally {
 			dataBaseConfig.closeResultSet(rs);
 			dataBaseConfig.closePreparedStatement(ps);

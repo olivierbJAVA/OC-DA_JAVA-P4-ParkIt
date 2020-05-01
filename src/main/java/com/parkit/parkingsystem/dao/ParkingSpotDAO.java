@@ -29,12 +29,8 @@ public class ParkingSpotDAO {
             if(rs.next()){
                 result = rs.getInt(1);
             }
-            //dataBaseConfig.closeResultSet(rs);
-            //dataBaseConfig.closePreparedStatement(ps);
         }catch (Exception ex){
         	logger.error("Error fetching next available slot",ex);
-        	//dataBaseConfig.closeResultSet(rs);
-            //dataBaseConfig.closePreparedStatement(ps);
         }finally {
         	dataBaseConfig.closeResultSet(rs);
             dataBaseConfig.closePreparedStatement(ps);
@@ -53,16 +49,13 @@ public class ParkingSpotDAO {
             ps.setBoolean(1, parkingSpot.isAvailable());
             ps.setInt(2, parkingSpot.getId());
             int updateRowCount = ps.executeUpdate();
-            //dataBaseConfig.closePreparedStatement(ps);
             return (updateRowCount == 1);
         }catch (Exception ex){
             logger.error("Error updating parking info",ex);
-            //dataBaseConfig.closePreparedStatement(ps);
             return false;
         }finally {
         	dataBaseConfig.closePreparedStatement(ps);
         	dataBaseConfig.closeConnection(con);
         }
     }
-
 }

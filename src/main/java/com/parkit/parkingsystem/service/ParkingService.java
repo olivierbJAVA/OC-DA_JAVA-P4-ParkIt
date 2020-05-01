@@ -21,7 +21,7 @@ public class ParkingService {
 
     private InputReaderUtil inputReaderUtil;
     private ParkingSpotDAO parkingSpotDAO;
-    private  TicketDAO ticketDAO;
+    private TicketDAO ticketDAO;
 
     public ParkingService(InputReaderUtil inputReaderUtil, ParkingSpotDAO parkingSpotDAO, TicketDAO ticketDAO){
         this.inputReaderUtil = inputReaderUtil;
@@ -36,7 +36,6 @@ public class ParkingService {
                 String vehicleRegNumber = getVehichleRegNumber();
                 
                 boolean userAlreadyParked = ticketDAO.userInTheParking(vehicleRegNumber);
-                
                 if(userAlreadyParked) {
                 	System.out.println("\n" + "There is an issue as your vehicle number is already in the parking. \n Please try again");
                 	throw new Exception("Issue with entry : the vehicle number is already in the parking.");
@@ -71,8 +70,7 @@ public class ParkingService {
     }
 
     private boolean recurringUser(String vehicleRegNumber) {
-        boolean recurringUser = ticketDAO.recurringUser(vehicleRegNumber);
-        return recurringUser;
+    	return ticketDAO.recurringUser(vehicleRegNumber);
     }
     
     private String getVehichleRegNumber() throws Exception {
