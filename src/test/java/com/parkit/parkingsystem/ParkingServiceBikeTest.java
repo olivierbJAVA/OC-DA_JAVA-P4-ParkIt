@@ -24,6 +24,8 @@ import java.time.LocalDateTime;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
@@ -53,11 +55,6 @@ public class ParkingServiceBikeTest {
 			ticket.setParkingSpot(parkingSpot);
 			ticket.setVehicleRegNumber("ABCDEF");
 
-			// OB : crée des problèmes (dépendances entre les tests) si on les déclare ici 
-			// when(ticketDAO.getTicket(anyString())).thenReturn(ticket);
-			// when(ticketDAO.updateTicket(any(Ticket.class))).thenReturn(true);
-			// when(parkingSpotDAO.updateParking(any(ParkingSpot.class))).thenReturn(true);
-
 			parkingService = new ParkingService(inputReaderUtil, parkingSpotDAO, ticketDAO);
 
 		} catch (Exception e) {
@@ -67,13 +64,14 @@ public class ParkingServiceBikeTest {
 	}
 
 	@Test
-	public void processIncomingVehicleTest_WhenAllIsOK() {
+	public void processIncomingVehicleTest_WhenRegNumberNotAlreadyInParking() {
 		// ARRANGE
 		when(inputReaderUtil.readSelection()).thenReturn(2);
 		when(parkingSpotDAO.getNextAvailableSlot(any(ParkingType.class))).thenReturn(1);
 		when(parkingSpotDAO.updateParking(any(ParkingSpot.class))).thenReturn(true);
 		when(ticketDAO.saveTicket(any(Ticket.class))).thenReturn(true);
-
+		when(ticketDAO.userInTheParking((anyString()))).thenReturn(false);
+		
 		// ACT
 		parkingService.processIncomingVehicle();
 
@@ -82,63 +80,26 @@ public class ParkingServiceBikeTest {
 		verify(ticketDAO, times(1)).saveTicket(any(Ticket.class));
 	}
 
-	@Disabled("Ne fonctionne pas ?")
 	@Test
-	public void processIncomingVehicleTest_WhenNoParkingSpotIsAvailable_AndThrowAnException() {
+	public void processIncomingVehicleTest_WhenRegNumberAlreadyInParking() {
 		// ARRANGE
-		when(inputReaderUtil.readSelection()).thenReturn(2);
-		when(parkingSpotDAO.getNextAvailableSlot(any(ParkingType.class))).thenReturn(-1);
-		
-		// OB : Pas besoin de mocker les méthodes ci-dessous qui ne sont pas appelées
-		// when(parkingSpotDAO.updateParking(any(ParkingSpot.class))).thenReturn(true);
-		// when(ticketDAO.saveTicket(any(Ticket.class))).thenReturn(true);
-
+		when(inputReaderUtil.readSelection()).thenReturn(1);
+		when(parkingSpotDAO.getNextAvailableSlot(any(ParkingType.class))).thenReturn(1);
+		when(ticketDAO.userInTheParking((anyString()))).thenReturn(true);
 		// ACT
-		try {
-			parkingService.processIncomingVehicle();
-		} catch (Exception e) {
-			System.out.println("Exception test incoming vehicle" + e);
-		}
-
-		// ASSERT
-		// OB : pourquoi ça ne marche pas ? Même si on met la méthode parkingService.getNextParkingNumberIfAvailable() public
-		/*
-		try { 
-			assertThrows(Exception.class,() -> parkingService.getNextParkingNumberIfAvailable()); 
-		} catch (Exception e) { 
-		 	System.out.println("Exception test incoming vehicle" + e);
-		}
-		*/ 
-		verify(parkingSpotDAO, never()).updateParking(any(ParkingSpot.class));
-		verify(ticketDAO, never()).saveTicket(any(Ticket.class));
-	}
-
-	@Disabled("Ne fonctionne pas ?")
-	@Test
-	public void processIncomingVehicleTest_WhenNoParkingSpotIsAvailable() {
-		// ARRANGE
-		when(inputReaderUtil.readSelection()).thenReturn(2);
-		when(parkingSpotDAO.getNextAvailableSlot(any(ParkingType.class))).thenReturn(-1);
-
-		// ACT
-		try {
-			parkingService.processIncomingVehicle();
-		} catch (Exception e) {
-			System.out.println("Exception test incoming vehicle" + e);
-		}
+		parkingService.processIncomingVehicle();
 
 		// ASSERT
 		verify(parkingSpotDAO, never()).updateParking(any(ParkingSpot.class));
 		verify(ticketDAO, never()).saveTicket(any(Ticket.class));
 	}
-
+	
 	@Test
 	public void processIncomingVehicleTest_WhenReadVehicleRegistrationNumberThrowAnException() {
 		try {
 			// ARRANGE
 			when(inputReaderUtil.readSelection()).thenReturn(2);
 			when(parkingSpotDAO.getNextAvailableSlot(any(ParkingType.class))).thenReturn(1);
-
 			when(inputReaderUtil.readVehicleRegistrationNumber()).thenThrow(new Exception("Test illegal"));
 
 			// ACT
@@ -153,7 +114,7 @@ public class ParkingServiceBikeTest {
 	}
 
 	@Test
-	public void processExitingVehicleTest_WhenUpdateTicketIsTrue() {
+	public void processExitingVehicleTest_WhenUpdateTicketIsTrue_WhenRegNumberInParking() {
 
 		// ARRANGE
 		ArgumentCaptor<ParkingSpot> argumentCaptorParkingSpot = ArgumentCaptor.forClass(ParkingSpot.class);
@@ -162,7 +123,8 @@ public class ParkingServiceBikeTest {
 		when(ticketDAO.getTicket(anyString())).thenReturn(ticket);
 		when(ticketDAO.updateTicket(any(Ticket.class))).thenReturn(true);
 		when(parkingSpotDAO.updateParking(any(ParkingSpot.class))).thenReturn(true);
-
+		when(ticketDAO.userInTheParking((anyString()))).thenReturn(true);
+		
 		// ACT
 		parkingService.processExitingVehicle();
 
@@ -186,12 +148,28 @@ public class ParkingServiceBikeTest {
 	}
 
 	@Test
+	public void processExitingVehicleTest_WhenUpdateTicketIsTrue_WhenRegNumberNotInParking() {
+
+		// ARRANGE
+		when(ticketDAO.userInTheParking((anyString()))).thenReturn(false);
+		
+		// ACT
+		parkingService.processExitingVehicle();
+
+		// ASSERT correct method calls
+		verify(parkingSpotDAO, Mockito.never()).updateParking(any(ParkingSpot.class));
+		verify(ticketDAO, Mockito.never()).getTicket(anyString());
+		verify(ticketDAO, Mockito.never()).updateTicket(any(Ticket.class));
+	}
+	
+	@Test
 	public void processExitingVehicleTest_WhenUpdateTicketIsFalse() {
 
 		// ARRANGE
 		when(ticketDAO.getTicket(anyString())).thenReturn(ticket);
 		when(ticketDAO.updateTicket(any(Ticket.class))).thenReturn(false);
-
+		when(ticketDAO.userInTheParking((anyString()))).thenReturn(true);
+		
 		// ACT
 		parkingService.processExitingVehicle();
 
@@ -200,7 +178,24 @@ public class ParkingServiceBikeTest {
 		verify(ticketDAO, Mockito.times(1)).getTicket(anyString());
 		verify(ticketDAO, Mockito.times(1)).updateTicket(any(Ticket.class));
 	}
+	
+	@Test
+	public void processExitingVehicleTest_WhenReadVehicleRegistrationNumberThrowAnException() {
+		try {
+			// ARRANGE
+			when(inputReaderUtil.readVehicleRegistrationNumber()).thenThrow(new Exception("Test illegal"));
 
+			// ACT
+			parkingService.processExitingVehicle();
+
+			// ASSERT
+			Mockito.verify(ticketDAO, never()).getTicket(anyString());
+			Mockito.verify(ticketDAO, never()).updateTicket(any(Ticket.class));
+			Mockito.verify(parkingSpotDAO, never()).updateParking(any(ParkingSpot.class));
+		} catch (Exception e) {
+		}
+	}
+	
 	@Test
 	public void processExitingVehicleTest_WhenUpdateTicketThrowAnException() {
 
@@ -209,6 +204,8 @@ public class ParkingServiceBikeTest {
 		// assertThrows(Exception.class, () -> parkingService.processExitingVehicle());
 
 		// ARRANGE
+		when(ticketDAO.userInTheParking((anyString()))).thenReturn(true);
+		
 		Answer<Void> answerException = new Answer<Void>() {
 			@Override
 			public Void answer(InvocationOnMock invocationOnMock) throws Throwable {
@@ -234,22 +231,5 @@ public class ParkingServiceBikeTest {
 
 		// ASSERT
 		verify(ticketDAO, Mockito.never()).updateTicket(any(Ticket.class));
-	}
-
-	@Test
-	public void processExitingVehicleTest_WhenReadVehicleRegistrationNumberThrowAnException() {
-		try {
-			// ARRANGE
-			when(inputReaderUtil.readVehicleRegistrationNumber()).thenThrow(new Exception("Test illegal"));
-
-			// ACT
-			parkingService.processExitingVehicle();
-
-			// ASSERT
-			Mockito.verify(ticketDAO, never()).getTicket(anyString());
-			Mockito.verify(ticketDAO, never()).updateTicket(any(Ticket.class));
-			Mockito.verify(parkingSpotDAO, never()).updateParking(any(ParkingSpot.class));
-		} catch (Exception e) {
-		}
 	}
 }

@@ -34,6 +34,14 @@ public class ParkingService {
             ParkingSpot parkingSpot = getNextParkingNumberIfAvailable();
             if(parkingSpot !=null && parkingSpot.getId() > 0){
                 String vehicleRegNumber = getVehichleRegNumber();
+                
+                boolean userAlreadyParked = ticketDAO.userInTheParking(vehicleRegNumber);
+                
+                if(userAlreadyParked) {
+                	System.out.println("\n" + "There is an issue as your vehicle number is already in the parking. \n Please try again");
+                	throw new Exception("Issue with entry : the vehicle number is already in the parking.");
+                }
+                
                 parkingSpot.setAvailable(false);
                 parkingSpotDAO.updateParking(parkingSpot);//allot this parking space and mark it's availability as false
 
@@ -113,6 +121,13 @@ public class ParkingService {
     public void processExitingVehicle() {
         try{
             String vehicleRegNumber = getVehichleRegNumber();
+            
+            boolean userAlreadyParked = ticketDAO.userInTheParking(vehicleRegNumber);
+            if(!userAlreadyParked) {
+            	System.out.println("\n" + "There is an issue as your vehicle number is not in the parking. \n Please try again");
+            	throw new Exception("Issue with exit : vehicle number is not in the parking.");
+            }
+            
             Ticket ticket = ticketDAO.getTicket(vehicleRegNumber);
             LocalDateTime outTime = LocalDateTime.now();
             ticket.setOutTime(outTime);

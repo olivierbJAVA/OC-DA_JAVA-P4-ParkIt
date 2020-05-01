@@ -66,8 +66,6 @@ public class TicketDAO {
 				// ticket.setOutTime(rs.getTimestamp(5).toLocalDateTime());
 				ticket.setOutTime(rs.getTimestamp(5) == null ? null : rs.getTimestamp(5).toLocalDateTime());
 			}
-			//dataBaseConfig.closeResultSet(rs);
-			//dataBaseConfig.closePreparedStatement(ps);
 		} catch (Exception ex) {
 			logger.error("Error fetching next available slot", ex);
 		} finally {
@@ -112,6 +110,31 @@ public class TicketDAO {
 			rs.next();
 			if (rs.next()) {
 				result = true;
+			}
+		} catch (Exception ex) {
+			logger.error("Error fetching next available slot", ex);
+		} finally {
+			dataBaseConfig.closeResultSet(rs);
+			dataBaseConfig.closePreparedStatement(ps);
+			dataBaseConfig.closeConnection(con);
+		}
+		return result;
+	}
+
+	public boolean userInTheParking(String vehicleRegNumberUser) {
+		boolean result = false;
+		Connection con = null;
+		PreparedStatement ps = null;
+		ResultSet rs = null;
+		try {
+			con = dataBaseConfig.getConnection();
+			ps = con.prepareStatement(DBConstants.GET_USER_IN_PARKING);
+			ps.setString(1, vehicleRegNumberUser);
+			rs = ps.executeQuery();
+			if (rs.next()) {
+				if (rs.getTimestamp(2) == null) {
+					result = true;
+				}
 			}
 		} catch (Exception ex) {
 			logger.error("Error fetching next available slot", ex);

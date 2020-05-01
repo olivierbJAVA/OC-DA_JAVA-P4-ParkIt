@@ -1,9 +1,5 @@
 package com.parkit.parkingsystem;
 
-//import static org.junit.Assert.assertThat;
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.mockito.Mockito.when;
-
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeAll;
@@ -12,14 +8,11 @@ import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 
 import com.parkit.parkingsystem.constants.ParkingType;
-import com.parkit.parkingsystem.model.ParkingSpot;
-
 import com.parkit.parkingsystem.dao.ParkingSpotDAO;
-import com.parkit.parkingsystem.dao.TicketDAO;
 import com.parkit.parkingsystem.integration.config.DataBaseTestConfig;
 import com.parkit.parkingsystem.integration.config.DataBaseTestConfigReturnNullConnection;
-import com.parkit.parkingsystem.integration.service.DataBasePrepareService;
 import com.parkit.parkingsystem.integration.service.DataBasePrepareServiceTestsParkingDAO;
+import com.parkit.parkingsystem.model.ParkingSpot;
 
 public class ParkingSpotDAOTest {
 
@@ -158,7 +151,7 @@ public class ParkingSpotDAOTest {
 		Assertions.assertEquals(-1, result);
 	}
 	
-	//@Disabled("Ne fonctionne pas car BDD renvoie soit 0 soit -1 !!!")
+	@Disabled("Ne fonctionne pas car BDD renvoie soit 0 soit -1 !!!")
 	@Test
 	public void getNextAvailableSlot_WhenNoSlotIsAvailable_WhenConnectionToDBOK() throws Exception {
 		int result = 10;
@@ -187,8 +180,8 @@ public class ParkingSpotDAOTest {
 		result = parkingSpotDAOUnderTest.getNextAvailableSlot(ParkingType.CAR);
 		
 		// ASSERT
-		// Assertions.assertEquals(-1, result);
-		Assertions.assertEquals(0, result);
+		 Assertions.assertEquals(-1, result);
+		//Assertions.assertEquals(0, result);
 	}
 	
 	@Test

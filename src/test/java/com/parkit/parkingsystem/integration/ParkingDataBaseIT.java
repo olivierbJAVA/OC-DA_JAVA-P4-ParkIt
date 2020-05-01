@@ -26,6 +26,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.byLessThan;
 import static org.assertj.core.api.Assertions.within;
 import static org.assertj.core.api.Assertions.withinPercentage;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.when;
 
 import java.time.Duration;
@@ -103,10 +104,9 @@ public class ParkingDataBaseIT {
 
 		//ARRANGE
 		when(inputReaderUtil.readSelection()).thenReturn(1);
-		
-		testParkingACar();
-		
+
 		ParkingService parkingService = new ParkingService(inputReaderUtil, parkingSpotDAO, ticketDAO);
+		parkingService.processIncomingVehicle();
 		
 		LocalDateTime now = LocalDateTime.now();
 		
@@ -142,9 +142,8 @@ public class ParkingDataBaseIT {
 		//ARRANGE
 		when(inputReaderUtil.readSelection()).thenReturn(1);
 		
-		testParkingACar();
-		
 		ParkingService parkingService = new ParkingService(inputReaderUtil, parkingSpotDAO, ticketDAO);
+		parkingService.processIncomingVehicle();
 		
 		LocalDateTime now = LocalDateTime.now();
 		
@@ -268,7 +267,7 @@ public class ParkingDataBaseIT {
 
 		//We simulate two stays : during the first one the user is not a recurring user whereas in the second one he is a recurring user
 		for(int i=0;i<2;i++) {
-			testParkingACar();
+			parkingService.processIncomingVehicle();
 	
 			LocalDateTime now = LocalDateTime.now();
 		
@@ -319,7 +318,9 @@ public class ParkingDataBaseIT {
 			ticketTest.setOutTime(null);
 			
 			dataBasePrepareServiceTestsTicketDAO.ticketDAOTest_SaveATicketInDB(ticketTest);
-					
+			
+			parkingService.processIncomingVehicle();
+			
 			LocalDateTime now = LocalDateTime.now();
 		
 			//ACT
@@ -347,5 +348,35 @@ public class ParkingDataBaseIT {
 
 			assertThat(availabilityParking).isTrue();
 		}
+	}
+	
+	@Test
+	public void testParkingACar_UserInParking() {
+		
+		//ARRANGE
+		when(inputReaderUtil.readSelection()).thenReturn(1);
+		ParkingService parkingService = new ParkingService(inputReaderUtil, parkingSpotDAO, ticketDAO);
+		
+		//ASSERT : user is not already in the parking before entry
+		boolean userInTheParkingBeforeEntry = ticketDAO.userInTheParking("ABCDEF");
+		assertThat(userInTheParkingBeforeEntry).isFalse();
+		
+		//ACT - User entry 
+		parkingService.processIncomingVehicle();
+
+		//ASSERT : user is in the parking following its entry
+		boolean userInTheParkingAfterEntry = ticketDAO.userInTheParking("ABCDEF");
+		assertThat(userInTheParkingAfterEntry).isTrue();
+		
+		//Wait some time for test purposes
+		WaitTime waitTimeBeforeProcessExistingVehicle = new WaitTime (1000);
+		waitTimeBeforeProcessExistingVehicle.run();
+		
+		//ACT - User exit 
+		parkingService.processExitingVehicle();
+		
+		//ASSERT - user is not in the parking anymore following its exit
+		boolean userInTheParkingAfterExit = ticketDAO.userInTheParking("ABCDEF");
+		assertThat(userInTheParkingAfterExit).isFalse();
 	}
 }
