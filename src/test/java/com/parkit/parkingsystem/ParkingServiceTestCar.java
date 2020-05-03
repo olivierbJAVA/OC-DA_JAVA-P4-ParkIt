@@ -1,5 +1,26 @@
 package com.parkit.parkingsystem;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyString;
+import static org.mockito.Mockito.never;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
+
+import java.time.LocalDateTime;
+
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.ArgumentCaptor;
+import org.mockito.Mock;
+import org.mockito.Mockito;
+import org.mockito.invocation.InvocationOnMock;
+import org.mockito.junit.jupiter.MockitoExtension;
+import org.mockito.stubbing.Answer;
+
 import com.parkit.parkingsystem.constants.ParkingType;
 import com.parkit.parkingsystem.dao.ParkingSpotDAO;
 import com.parkit.parkingsystem.dao.TicketDAO;
@@ -7,27 +28,9 @@ import com.parkit.parkingsystem.model.ParkingSpot;
 import com.parkit.parkingsystem.model.Ticket;
 import com.parkit.parkingsystem.service.ParkingService;
 import com.parkit.parkingsystem.util.InputReaderUtil;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Disabled;
-import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.ArgumentCaptor;
-import org.mockito.Captor;
-import org.mockito.Mock;
-import org.mockito.Mockito;
-import org.mockito.invocation.InvocationOnMock;
-import org.mockito.junit.jupiter.MockitoExtension;
-import org.mockito.stubbing.Answer;
-
-import java.time.LocalDateTime;
-
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertThrows;
-import static org.junit.jupiter.api.Assertions.assertTrue;
-import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
-public class ParkingServiceTest {
+public class ParkingServiceTestCar {
 
 	private static ParkingService parkingService;
 	private static LocalDateTime inTimeTest = LocalDateTime.now().minusHours(1);
@@ -72,7 +75,7 @@ public class ParkingServiceTest {
 		when(inputReaderUtil.readSelection()).thenReturn(1);
 		when(parkingSpotDAO.getNextAvailableSlot(any(ParkingType.class))).thenReturn(1);
 		when(parkingSpotDAO.updateParking(any(ParkingSpot.class))).thenReturn(true);
-		when(ticketDAO.userInTheParking((anyString()))).thenReturn(false);
+		when(ticketDAO.vehicleInTheParking((anyString()))).thenReturn(false);
 		when(ticketDAO.saveTicket(any(Ticket.class))).thenReturn(true);
 		// ACT
 		parkingService.processIncomingVehicle();
@@ -87,7 +90,7 @@ public class ParkingServiceTest {
 		// ARRANGE
 		when(inputReaderUtil.readSelection()).thenReturn(1);
 		when(parkingSpotDAO.getNextAvailableSlot(any(ParkingType.class))).thenReturn(1);
-		when(ticketDAO.userInTheParking((anyString()))).thenReturn(true);
+		when(ticketDAO.vehicleInTheParking((anyString()))).thenReturn(true);
 		// ACT
 		parkingService.processIncomingVehicle();
 
@@ -125,7 +128,7 @@ public class ParkingServiceTest {
 		when(ticketDAO.getTicket(anyString())).thenReturn(ticket);
 		when(ticketDAO.updateTicket(any(Ticket.class))).thenReturn(true);
 		when(parkingSpotDAO.updateParking(any(ParkingSpot.class))).thenReturn(true);
-		when(ticketDAO.userInTheParking((anyString()))).thenReturn(true);
+		when(ticketDAO.vehicleInTheParking((anyString()))).thenReturn(true);
 		
 		// ACT
 		parkingService.processExitingVehicle();
@@ -153,7 +156,7 @@ public class ParkingServiceTest {
 	public void processExitingVehicleTest_WhenUpdateTicketIsTrue_WhenRegNumberNotInParking() {
 
 		// ARRANGE
-		when(ticketDAO.userInTheParking((anyString()))).thenReturn(false);
+		when(ticketDAO.vehicleInTheParking((anyString()))).thenReturn(false);
 		
 		// ACT
 		parkingService.processExitingVehicle();
@@ -170,7 +173,7 @@ public class ParkingServiceTest {
 		// ARRANGE
 		when(ticketDAO.getTicket(anyString())).thenReturn(ticket);
 		when(ticketDAO.updateTicket(any(Ticket.class))).thenReturn(false);
-		when(ticketDAO.userInTheParking((anyString()))).thenReturn(true);
+		when(ticketDAO.vehicleInTheParking((anyString()))).thenReturn(true);
 		
 		// ACT
 		parkingService.processExitingVehicle();
@@ -206,7 +209,7 @@ public class ParkingServiceTest {
 		// assertThrows(Exception.class, () -> parkingService.processExitingVehicle());
 
 		// ARRANGE
-		when(ticketDAO.userInTheParking((anyString()))).thenReturn(true);
+		when(ticketDAO.vehicleInTheParking((anyString()))).thenReturn(true);
 		
 		Answer<Void> answerException = new Answer<Void>() {
 			@Override

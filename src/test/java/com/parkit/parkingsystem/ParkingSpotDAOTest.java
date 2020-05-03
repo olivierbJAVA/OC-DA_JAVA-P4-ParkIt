@@ -34,7 +34,7 @@ public class ParkingSpotDAOTest {
     }
 		
   	@Test
-	public void updateParkingAvailableInDatabase_ToTrue_WhenConnectionToDBOK() throws Exception {
+	public void updateParkingAvailableInDatabase_ToTrue_WhenConnectionToDBOK() {
 
 		// ARRANGE
 		ParkingSpotDAO parkingSpotDAOUnderTest = new ParkingSpotDAO();
@@ -55,7 +55,7 @@ public class ParkingSpotDAOTest {
 	}
 
 	@Test
-	public void updateParkingAvailableInDatabase_ToTrue_WhenNoConnectionToDB() throws Exception {
+	public void updateParkingAvailableInDatabase_ToTrue_WhenNoConnectionToDB() {
 
 		// ARRANGE
 		ParkingSpotDAO parkingSpotDAOUnderTest = new ParkingSpotDAO();
@@ -76,7 +76,7 @@ public class ParkingSpotDAOTest {
 	}
 
 	@Test
-	public void updateParkingAvailableInDatabase_ToFalse_WhenConnectionToDBOK() throws Exception {
+	public void updateParkingAvailableInDatabase_ToFalse_WhenConnectionToDBOK() {
 
 		// ARRANGE
 		ParkingSpotDAO parkingSpotDAOUnderTest = new ParkingSpotDAO();
@@ -98,7 +98,7 @@ public class ParkingSpotDAOTest {
 	}
 
 	@Test
-	public void updateParkingAvailableInDatabase_ToFalse_WhenNoConnectionToDB() throws Exception {
+	public void updateParkingAvailableInDatabase_ToFalse_WhenNoConnectionToDB() {
 
 		// ARRANGE
 		ParkingSpotDAO parkingSpotDAOUnderTest = new ParkingSpotDAO();
@@ -120,7 +120,7 @@ public class ParkingSpotDAOTest {
 	}
 	
 	@Test
-	public void getNextAvailableSlot_WhenAllSlotAreAvailable_WhenConnectionToDBOK() throws Exception {
+	public void getNextAvailableSlot_WhenAllSlotAreAvailable_WhenConnectionToDBOK() {
 
 		// ARRANGE
 		ParkingSpotDAO parkingSpotDAOUnderTest = new ParkingSpotDAO();
@@ -136,7 +136,7 @@ public class ParkingSpotDAOTest {
 	}
 
 	@Test
-	public void getNextAvailableSlot_WhenAllSlotAreAvailable_WhenNoConnectionToDB() throws Exception {
+	public void getNextAvailableSlot_WhenAllSlotAreAvailable_WhenNoConnectionToDB() {
 
 		// ARRANGE
 		ParkingSpotDAO parkingSpotDAOUnderTest = new ParkingSpotDAO();
@@ -153,7 +153,7 @@ public class ParkingSpotDAOTest {
 	
 	@Disabled("Ne fonctionne pas car BDD renvoie soit 0 soit -1 !!!")
 	@Test
-	public void getNextAvailableSlot_WhenNoSlotIsAvailable_WhenConnectionToDBOK() throws Exception {
+	public void getNextAvailableSlot_WhenNoSlotIsAvailable_WhenConnectionToDBOK() {
 		int result = 10;
 		/*
 		try {
@@ -185,7 +185,7 @@ public class ParkingSpotDAOTest {
 	}
 	
 	@Test
-	public void getNextAvailableSlot_WhenNoSlotIsAvailable_WhenNoConnectionToDB() throws Exception {
+	public void getNextAvailableSlot_WhenNoSlotIsAvailable_WhenNoConnectionToDB() {
 		int result = 10;
 	
 		// ARRANGE

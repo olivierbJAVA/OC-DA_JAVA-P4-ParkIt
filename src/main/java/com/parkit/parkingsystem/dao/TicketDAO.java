@@ -11,6 +11,7 @@ import org.apache.logging.log4j.Logger;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.sql.Timestamp;
 
 public class TicketDAO {
@@ -34,13 +35,12 @@ public class TicketDAO {
 			ps.setTimestamp(5, (ticket.getOutTime() == null) ? null : (Timestamp.valueOf(ticket.getOutTime())));
 			ps.execute();
 			return true;
-		} catch (Exception ex) {
+		} catch (SQLException | ClassNotFoundException | NullPointerException ex) {
 			logger.error("Error saving ticker", ex);
 			return false;
 		} finally {
 			dataBaseConfig.closePreparedStatement(ps);
 			dataBaseConfig.closeConnection(con);
-			// return false;
 		}
 	}
 
@@ -65,7 +65,7 @@ public class TicketDAO {
 				ticket.setInTime(rs.getTimestamp(4).toLocalDateTime());
 				ticket.setOutTime(rs.getTimestamp(5) == null ? null : rs.getTimestamp(5).toLocalDateTime());
 			}
-		} catch (Exception ex) {
+		} catch (SQLException | ClassNotFoundException | NullPointerException ex) {
 			logger.error("Error getting ticket", ex);
 		} finally {
 			dataBaseConfig.closeResultSet(rs);
@@ -86,20 +86,20 @@ public class TicketDAO {
 			ps.setInt(3, ticket.getId());
 			ps.execute();
 			return true;
-		} catch (Exception ex) {
+		} catch (SQLException | ClassNotFoundException | NullPointerException ex) {
 			logger.error("Error updating ticket info", ex);
+			return false;
 		} finally {
 			dataBaseConfig.closePreparedStatement(ps);
 			dataBaseConfig.closeConnection(con);
 		}
-		return false;
 	}
 
 	public boolean recurringUser(String vehicleRegNumberUser) {
-		boolean result = false;
 		Connection con = null;
 		PreparedStatement ps = null;
 		ResultSet rs = null;
+		boolean result = false;
 		try {
 			con = dataBaseConfig.getConnection();
 			ps = con.prepareStatement(DBConstants.GET_RECURRING_USER);
@@ -109,7 +109,7 @@ public class TicketDAO {
 			if (rs.next()) {
 				result = true;
 			}
-		} catch (Exception ex) {
+		} catch (SQLException | ClassNotFoundException | NullPointerException ex) {
 			logger.error("Error fetching recurring user", ex);
 		} finally {
 			dataBaseConfig.closeResultSet(rs);
@@ -119,14 +119,14 @@ public class TicketDAO {
 		return result;
 	}
 
-	public boolean userInTheParking(String vehicleRegNumberUser) {
-		boolean result = false;
+	public boolean vehicleInTheParking(String vehicleRegNumberUser) {
 		Connection con = null;
 		PreparedStatement ps = null;
 		ResultSet rs = null;
+		boolean result = false;
 		try {
 			con = dataBaseConfig.getConnection();
-			ps = con.prepareStatement(DBConstants.GET_USER_IN_PARKING);
+			ps = con.prepareStatement(DBConstants.GET_VEHICLE_IN_PARKING);
 			ps.setString(1, vehicleRegNumberUser);
 			rs = ps.executeQuery();
 			if (rs.next()) {
@@ -134,7 +134,7 @@ public class TicketDAO {
 					result = true;
 				}
 			}
-		} catch (Exception ex) {
+		} catch (SQLException | ClassNotFoundException | NullPointerException ex) {
 			logger.error("Error getting user in the parking", ex);
 		} finally {
 			dataBaseConfig.closeResultSet(rs);

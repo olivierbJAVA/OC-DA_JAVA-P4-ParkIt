@@ -70,7 +70,7 @@ public class ParkingServiceBikeTest {
 		when(parkingSpotDAO.getNextAvailableSlot(any(ParkingType.class))).thenReturn(1);
 		when(parkingSpotDAO.updateParking(any(ParkingSpot.class))).thenReturn(true);
 		when(ticketDAO.saveTicket(any(Ticket.class))).thenReturn(true);
-		when(ticketDAO.userInTheParking((anyString()))).thenReturn(false);
+		when(ticketDAO.vehicleInTheParking((anyString()))).thenReturn(false);
 		
 		// ACT
 		parkingService.processIncomingVehicle();
@@ -85,7 +85,7 @@ public class ParkingServiceBikeTest {
 		// ARRANGE
 		when(inputReaderUtil.readSelection()).thenReturn(1);
 		when(parkingSpotDAO.getNextAvailableSlot(any(ParkingType.class))).thenReturn(1);
-		when(ticketDAO.userInTheParking((anyString()))).thenReturn(true);
+		when(ticketDAO.vehicleInTheParking((anyString()))).thenReturn(true);
 		// ACT
 		parkingService.processIncomingVehicle();
 
@@ -123,7 +123,7 @@ public class ParkingServiceBikeTest {
 		when(ticketDAO.getTicket(anyString())).thenReturn(ticket);
 		when(ticketDAO.updateTicket(any(Ticket.class))).thenReturn(true);
 		when(parkingSpotDAO.updateParking(any(ParkingSpot.class))).thenReturn(true);
-		when(ticketDAO.userInTheParking((anyString()))).thenReturn(true);
+		when(ticketDAO.vehicleInTheParking((anyString()))).thenReturn(true);
 		
 		// ACT
 		parkingService.processExitingVehicle();
@@ -151,7 +151,7 @@ public class ParkingServiceBikeTest {
 	public void processExitingVehicleTest_WhenUpdateTicketIsTrue_WhenRegNumberNotInParking() {
 
 		// ARRANGE
-		when(ticketDAO.userInTheParking((anyString()))).thenReturn(false);
+		when(ticketDAO.vehicleInTheParking((anyString()))).thenReturn(false);
 		
 		// ACT
 		parkingService.processExitingVehicle();
@@ -168,7 +168,7 @@ public class ParkingServiceBikeTest {
 		// ARRANGE
 		when(ticketDAO.getTicket(anyString())).thenReturn(ticket);
 		when(ticketDAO.updateTicket(any(Ticket.class))).thenReturn(false);
-		when(ticketDAO.userInTheParking((anyString()))).thenReturn(true);
+		when(ticketDAO.vehicleInTheParking((anyString()))).thenReturn(true);
 		
 		// ACT
 		parkingService.processExitingVehicle();
@@ -204,7 +204,7 @@ public class ParkingServiceBikeTest {
 		// assertThrows(Exception.class, () -> parkingService.processExitingVehicle());
 
 		// ARRANGE
-		when(ticketDAO.userInTheParking((anyString()))).thenReturn(true);
+		when(ticketDAO.vehicleInTheParking((anyString()))).thenReturn(true);
 		
 		Answer<Void> answerException = new Answer<Void>() {
 			@Override

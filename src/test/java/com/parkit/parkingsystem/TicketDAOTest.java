@@ -36,7 +36,7 @@ public class TicketDAOTest {
 	}
 
 	@Test
-	public void getTicket_WhenTicketExist_WhenConnectionToDBOK() throws Exception {
+	public void getTicket_WhenTicketExist_WhenConnectionToDBOK() {
 
 		// ARRANGE
 		TicketDAO ticketDAOUnderTest = new TicketDAO();
@@ -61,7 +61,7 @@ public class TicketDAOTest {
 	}
 
 	@Test
-	public void getTicket_WhenTicketDoesNotExist_WhenConnectionToDBOK() throws Exception {
+	public void getTicket_WhenTicketDoesNotExist_WhenConnectionToDBOK() {
 
 		// ARRANGE
 		TicketDAO ticketDAOUnderTest = new TicketDAO();
@@ -76,7 +76,7 @@ public class TicketDAOTest {
 	}
 
 	@Test
-	public void getTicket_WhenTicketExist_WhenNoConnectionToDB() throws Exception {
+	public void getTicket_WhenTicketExist_WhenNoConnectionToDB() {
 
 		// ARRANGE
 		TicketDAO ticketDAOUnderTest = new TicketDAO();
@@ -91,7 +91,7 @@ public class TicketDAOTest {
 	}
 
 	@Test
-	public void getTicket_WhenTicketDoesNotExist_WhenNoConnectionToDB() throws Exception {
+	public void getTicket_WhenTicketDoesNotExist_WhenNoConnectionToDB() {
 
 		// ARRANGE
 		TicketDAO ticketDAOUnderTest = new TicketDAO();
@@ -106,7 +106,7 @@ public class TicketDAOTest {
 	}
 	
 	@Test
-	public void saveTicket_WhenConnectionToDBOK() throws Exception {
+	public void saveTicket_WhenConnectionToDBOK() {
 
 		// ARRANGE
 		TicketDAO ticketDAOUnderTest = new TicketDAO();
@@ -141,7 +141,7 @@ public class TicketDAOTest {
 	}
 
 	@Test
-	public void saveTicket_WhenNoConnectionToDB() throws Exception {
+	public void saveTicket_WhenNoConnectionToDB() {
 
 		// ARRANGE
 		TicketDAO ticketDAOUnderTest = new TicketDAO();
@@ -168,7 +168,7 @@ public class TicketDAOTest {
 	}
 
 	@Test
-	public void updateTicket_WhenTicketExist_WhenConnectionToDBOK() throws Exception {
+	public void updateTicket_WhenTicketExist_WhenConnectionToDBOK() {
 
 		// ARRANGE
 		TicketDAO ticketDAOUnderTest = new TicketDAO();
@@ -192,7 +192,7 @@ public class TicketDAOTest {
 	}
 
 	@Test
-	public void updateTicket_WhenNoTicketExist_WhenConnectionToDBOK() throws Exception {
+	public void updateTicket_WhenNoTicketExist_WhenConnectionToDBOK() {
 
 		// ARRANGE
 		TicketDAO ticketDAOUnderTest = new TicketDAO();
@@ -220,7 +220,7 @@ public class TicketDAOTest {
 	}
 
 	@Test
-	public void updateTicket_WhenTicketExist_WhenNoConnection() throws Exception {
+	public void updateTicket_WhenTicketExist_WhenNoConnection() {
 
 		// ARRANGE
 		TicketDAO ticketDAOUnderTest = new TicketDAO();
@@ -244,7 +244,7 @@ public class TicketDAOTest {
 	}
 
 	@Test
-	public void updateTicket_WhenNoTicketExist_WhenNoConnection() throws Exception {
+	public void updateTicket_WhenNoTicketExist_WhenNoConnection() {
 
 		// ARRANGE
 		TicketDAO ticketDAOUnderTest = new TicketDAO();
@@ -272,7 +272,7 @@ public class TicketDAOTest {
 	}
 	
 	@Test
-	public void recurringUser_WhenFirstStay() throws Exception {
+	public void recurringUser_WhenFirstStay() {
 		
 		//ARRANGE
 		TicketDAO ticketDAOUnderTest = new TicketDAO();
@@ -289,7 +289,7 @@ public class TicketDAOTest {
 	}
 
 	@Test
-	public void recurringUser_WhenAlreadyStayed() throws Exception {
+	public void recurringUser_WhenAlreadyStayed() {
 		//ARRANGE
 		TicketDAO ticketDAOUnderTest = new TicketDAO();
 		ticketDAOUnderTest.dataBaseConfig = new DataBaseTestConfig();

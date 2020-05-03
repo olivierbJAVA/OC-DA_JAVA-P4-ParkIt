@@ -14,24 +14,13 @@
 		<maven.compiler.target>1.8</maven.compiler.target>
 	</properties>
 
-
 	<dependencies>
-
 		<dependency>
 			<groupId>org.assertj</groupId>
 			<artifactId>assertj-core</artifactId>
 			<version>3.13.2</version>
 			<scope>test</scope>
 		</dependency>
-
-		<dependency>
-			<groupId>org.powermock</groupId>
-			<artifactId>powermock-api-mockito2</artifactId>
-			<version>2.0.7</version>
-			<scope>test</scope>
-		</dependency>
-
-
 		<dependency>
 			<groupId>org.apache.logging.log4j</groupId>
 			<artifactId>log4j-api</artifactId>
@@ -116,6 +105,7 @@
 					</dependency>
 				</dependencies>
 				<configuration>
+					<aggregate>true</aggregate>
 					<excludes>
 						<exclude>**/*IT.java</exclude>
 					</excludes>
@@ -125,6 +115,7 @@
 						<id>integration-test</id>
 						<goals>
 							<goal>test</goal>
+							<goal>report</goal>
 						</goals>
 						<phase>integration-test</phase>
 						<configuration>
@@ -179,9 +170,22 @@
 	<reporting>
 		<plugins>
 			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-javadoc-plugin</artifactId>
+				<version>3.2.0</version>
+				<configuration>
+					<quiet>true</quiet>
+					<locale>fr</locale>
+				</configuration>
+			</plugin>
+			<plugin>
 				<groupId>org.codehaus.mojo</groupId>
 				<artifactId>findbugs-maven-plugin</artifactId>
 				<version>3.0.4</version>
+				<configuration>
+					<effort>Max</effort>
+					<threshold>Low</threshold>
+				</configuration>
 				<reportSets>
 					<reportSet>
 						<reports>
@@ -189,9 +193,78 @@
 						</reports>
 					</reportSet>
 				</reportSets>
+			</plugin>
+			<plugin>
+				<groupId>org.jacoco</groupId>
+				<artifactId>jacoco-maven-plugin</artifactId>
+				<version>0.8.5</version>
+			</plugin>
+
+
+
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-surefire-report-plugin</artifactId>
+				<version>2.22.2</version>
+				<configuration>
+					<aggregate>true</aggregate>
+					<!--also set this to link to generated source reports -->
+					<linkXRef>false</linkXRef>
+				</configuration>
+				<reportSets>
+					<reportSet>
+						<reports>
+							<report>report-only</report>
+						</reports>
+					</reportSet>
+				</reportSets>
+			</plugin>
+
+
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-surefire-report-plugin</artifactId>
+				<version>2.19.1</version>
+				<reportSets>
+					<reportSet>
+						<!-- defines aggregate unit test report -->
+						<id>unit-tests-aggregate</id>
+						<inherited>false</inherited>
+
+						<reports>
+							<report>report</report>
+						</reports>
+						<configuration>
+							<aggregate>true</aggregate>
+							<excludes>
+								<exclude>none</exclude>
+							</excludes>
+							<includes>
+								<include>all</include>
+								<!--include>**/*Test.java</include -->
+							</includes>
+						</configuration>
+
+					</reportSet>
+
+					<reportSet>
+						<!-- defines aggregate integration test report -->
+						<id>integration-tests-aggregate</id>
+						<inherited>false</inherited>
+						<reports>
+							<report>failsafe-report-only</report>
+						</reports>
+						<configuration>
+							<aggregate>true</aggregate>
+						</configuration>
+					</reportSet>
+				</reportSets>
 
 			</plugin>
 		</plugins>
+
+
+
 	</reporting>
 
 	<distributionManagement>
@@ -200,6 +273,5 @@
 			<url>scp://localhost/tmp/</url>
 		</site>
 	</distributionManagement>
-
 
 </project>

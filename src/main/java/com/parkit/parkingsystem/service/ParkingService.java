@@ -35,10 +35,10 @@ public class ParkingService {
             if(parkingSpot !=null && parkingSpot.getId() > 0){
                 String vehicleRegNumber = getVehichleRegNumber();
                 
-                boolean userAlreadyParked = ticketDAO.userInTheParking(vehicleRegNumber);
-                if(userAlreadyParked) {
-                	System.out.println("\n" + "There is an issue as your vehicle number is already in the parking. \n Please try again");
-                	throw new Exception("Issue with entry : the vehicle number is already in the parking.");
+                boolean vehicleAlreadyParked = ticketDAO.vehicleInTheParking(vehicleRegNumber);
+                if(vehicleAlreadyParked) {
+                	System.out.println("\n" + "There is an issue as your vehicle number is already in the parking. Please try again");
+                 	throw new IllegalArgumentException("Issue with entry : the vehicle number is already in the parking.");
                 }
                 
                 parkingSpot.setAvailable(false);
@@ -55,22 +55,20 @@ public class ParkingService {
                 ticket.setOutTime(null);
                 ticketDAO.saveTicket(ticket);
    
-                if(recurringUser(vehicleRegNumber)) {
+                boolean recurringUser = ticketDAO.recurringUser(vehicleRegNumber);
+                if(recurringUser) {
                 	System.out.println("\n" + "Welcome back! As a recurring user of our parking lot, you'll benefit from a 5% discount.");
                 }
                 System.out.println("Generated Ticket and saved in DB");
-                System.out.println("Please park your vehicle in spot number:"+parkingSpot.getId());
+                System.out.println("Please park your vehicle in spot number: "+parkingSpot.getId());
                 System.out.println("Recorded in-time for vehicle number: "+vehicleRegNumber+" is: "+inTime);
                 System.out.println("For your information : a stay less than 30 minutes is free !" + "\n");
             
             }
-        }catch(Exception e){
+        }
+        catch(Exception e){
             logger.error("Unable to process incoming vehicle",e);
         }
-    }
-
-    private boolean recurringUser(String vehicleRegNumber) {
-    	return ticketDAO.recurringUser(vehicleRegNumber);
     }
     
     private String getVehichleRegNumber() throws Exception {
@@ -120,16 +118,18 @@ public class ParkingService {
         try{
             String vehicleRegNumber = getVehichleRegNumber();
             
-            boolean userAlreadyParked = ticketDAO.userInTheParking(vehicleRegNumber);
+            boolean userAlreadyParked = ticketDAO.vehicleInTheParking(vehicleRegNumber);
             if(!userAlreadyParked) {
-            	System.out.println("\n" + "There is an issue as your vehicle number is not in the parking. \n Please try again");
-            	throw new Exception("Issue with exit : vehicle number is not in the parking.");
+            	System.out.println("\n" + "There is an issue as your vehicle number is not in the parking. Please try again");
+              	throw new IllegalArgumentException("Issue with exit : vehicle number is not in the parking.");
             }
             
             Ticket ticket = ticketDAO.getTicket(vehicleRegNumber);
             LocalDateTime outTime = LocalDateTime.now();
             ticket.setOutTime(outTime);
-            fareCalculatorService.calculateFare(ticket, recurringUser(ticket.getVehicleRegNumber()));
+            
+            boolean recurringUser = ticketDAO.recurringUser(ticket.getVehicleRegNumber());
+            fareCalculatorService.calculateFare(ticket, recurringUser);
             if(ticketDAO.updateTicket(ticket)) {
                 ParkingSpot parkingSpot = ticket.getParkingSpot();
                 parkingSpot.setAvailable(true);
@@ -141,7 +141,7 @@ public class ParkingService {
                 
                 if (ticket.getPrice()==0.0) {
                 	System.out.println("Nothing to pay as a stay less than 30 minutes is free !");
-                } else if(recurringUser(vehicleRegNumber)) {
+                } else if(recurringUser) {
                  	System.out.println("As a recurring user of our parking lot, you benefit from a 5% discount.");
                  	System.out.println("Please pay the parking fare:" + df.format(ticket.getPrice()));
                 } else {            	

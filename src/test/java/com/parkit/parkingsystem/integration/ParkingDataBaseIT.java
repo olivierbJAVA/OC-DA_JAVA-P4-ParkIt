@@ -358,14 +358,14 @@ public class ParkingDataBaseIT {
 		ParkingService parkingService = new ParkingService(inputReaderUtil, parkingSpotDAO, ticketDAO);
 		
 		//ASSERT : user is not already in the parking before entry
-		boolean userInTheParkingBeforeEntry = ticketDAO.userInTheParking("ABCDEF");
+		boolean userInTheParkingBeforeEntry = ticketDAO.vehicleInTheParking("ABCDEF");
 		assertThat(userInTheParkingBeforeEntry).isFalse();
 		
 		//ACT - User entry 
 		parkingService.processIncomingVehicle();
 
 		//ASSERT : user is in the parking following its entry
-		boolean userInTheParkingAfterEntry = ticketDAO.userInTheParking("ABCDEF");
+		boolean userInTheParkingAfterEntry = ticketDAO.vehicleInTheParking("ABCDEF");
 		assertThat(userInTheParkingAfterEntry).isTrue();
 		
 		//Wait some time for test purposes
@@ -376,7 +376,7 @@ public class ParkingDataBaseIT {
 		parkingService.processExitingVehicle();
 		
 		//ASSERT - user is not in the parking anymore following its exit
-		boolean userInTheParkingAfterExit = ticketDAO.userInTheParking("ABCDEF");
+		boolean userInTheParkingAfterExit = ticketDAO.vehicleInTheParking("ABCDEF");
 		assertThat(userInTheParkingAfterExit).isFalse();
 	}
 }

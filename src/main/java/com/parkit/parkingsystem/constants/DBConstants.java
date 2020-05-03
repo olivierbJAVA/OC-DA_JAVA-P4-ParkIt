@@ -16,5 +16,5 @@ public class DBConstants {
 
     public static final String GET_RECURRING_USER = "select VEHICLE_REG_NUMBER from ticket where VEHICLE_REG_NUMBER = ?";
 
-    public static final String GET_USER_IN_PARKING = "select ID, OUT_TIME from ticket where VEHICLE_REG_NUMBER = ? order by ID DESC limit 1";
+    public static final String GET_VEHICLE_IN_PARKING = "select ID, OUT_TIME from ticket where VEHICLE_REG_NUMBER = ? order by ID DESC limit 1";
 }

@@ -17,17 +17,17 @@ public class FareCalculatorService {
 
         Duration duration = Duration.between(inTime,outTime);
 
-        long durationLong = duration.getSeconds();
+        long durationInSeconds = duration.getSeconds();
     
-        double durationDouble = durationLong / 3600.0;
+        double durationInHours = durationInSeconds / 3600.0;
         
         /*
         //TDD_US1 - Initial version :
-        if(durationDouble < 0.5) {
-        	durationToPayThirtyMinutesFree = 0.0;
+        if(durationInHours < 0.5) {
+        	double durationToPayIncFreeTime = 0.0;
         }
         else {
-        	durationToPayThirtyMinutesFree = durationDouble;
+        	double durationToPayIncFreeTime = durationInHours;
         }
         */
         
@@ -38,17 +38,17 @@ public class FareCalculatorService {
        	*/
         
         //TDD_US1 - Refactoring version :
-        double durationToPayThirtyMinutesFree = (durationDouble < 0.5) ? 0.0 : durationDouble;
+        double durationToPayIncFreeTime = (durationInHours < 0.5) ? 0.0 : durationInHours;
 
-        double durationToPayThirtyMinutesFreeReduction = ( (recurringUser) ? (durationToPayThirtyMinutesFree * 0.95) : durationToPayThirtyMinutesFree);
+        double durationToPayIncFreeTimeAndReduction = ( (recurringUser) ? (durationToPayIncFreeTime * 0.95) : durationToPayIncFreeTime);
         
         switch (ticket.getParkingSpot().getParkingType()){
         	case CAR: {
-        		ticket.setPrice(durationToPayThirtyMinutesFreeReduction * Fare.CAR_RATE_PER_HOUR);
+        		ticket.setPrice(durationToPayIncFreeTimeAndReduction * Fare.CAR_RATE_PER_HOUR);
             	break;
         	}
         	case BIKE: {
-            	ticket.setPrice(durationToPayThirtyMinutesFreeReduction * Fare.BIKE_RATE_PER_HOUR);
+            	ticket.setPrice(durationToPayIncFreeTimeAndReduction * Fare.BIKE_RATE_PER_HOUR);
             	break;
         	}
         	default: throw new IllegalArgumentException("Unkown Parking Type");
