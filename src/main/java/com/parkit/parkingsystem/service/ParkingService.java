@@ -37,7 +37,7 @@ public class ParkingService {
                 
                 boolean vehicleAlreadyParked = ticketDAO.vehicleInTheParking(vehicleRegNumber);
                 if(vehicleAlreadyParked) {
-                	System.out.println("\n" + "There is an issue as your vehicle number is already in the parking. Please try again");
+                	System.out.println("\n" + "There is an issue as your vehicle number is already in the parking. Please try again.");
                  	throw new IllegalArgumentException("Issue with entry : the vehicle number is already in the parking.");
                 }
                 
@@ -85,7 +85,8 @@ public class ParkingService {
             if(parkingNumber > 0){
                 parkingSpot = new ParkingSpot(parkingNumber,parkingType, true);
             }else{
-                throw new Exception("Error fetching parking number from DB. Parking slots might be full");
+            	System.out.println("Unfortunately the parking is full. We are sorry for the disagrement.\nDo not hesitate to come back later");
+            	throw new Exception("Error fetching parking number from DB. Parking slots might be full");
             }
         }catch(IllegalArgumentException ie){
             logger.error("Error parsing user input for type of vehicle", ie);

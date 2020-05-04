@@ -17,6 +17,10 @@ public class DataBaseTestConfig extends DataBaseConfig {
                 "jdbc:mysql://localhost:3306/test","root","rootroot");
     }
 
+    public Connection getNullConnection() throws ClassNotFoundException, SQLException {
+        return null;
+    }
+
     public void closeConnection(Connection con){
         if(con!=null){
             try {

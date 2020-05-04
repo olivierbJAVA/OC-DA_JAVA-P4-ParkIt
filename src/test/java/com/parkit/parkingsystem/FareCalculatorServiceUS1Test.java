@@ -1,17 +1,13 @@
 package com.parkit.parkingsystem;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertThrows;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.within;
-import static org.assertj.core.api.Assertions.withinPercentage;
 
 import java.time.LocalDateTime;
 
-import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 
 import com.parkit.parkingsystem.constants.Fare;
@@ -20,18 +16,14 @@ import com.parkit.parkingsystem.model.ParkingSpot;
 import com.parkit.parkingsystem.model.Ticket;
 import com.parkit.parkingsystem.service.FareCalculatorService;
 
-public class FareCalculatorServiceUS1TDDTest {
+public class FareCalculatorServiceUS1Test {
 
-	private static FareCalculatorService fareCalculatorService;
+	private FareCalculatorService fareCalculatorServiceUnderTest;
 	private Ticket ticket;
-
-	@BeforeAll
-	private static void setUp() {
-		fareCalculatorService = new FareCalculatorService();
-	}
 
 	@BeforeEach
 	private void setUpPerTest() {
+		fareCalculatorServiceUnderTest = new FareCalculatorService();
 		ticket = new Ticket();
 	}
 
@@ -49,7 +41,7 @@ public class FareCalculatorServiceUS1TDDTest {
 		ticket.setParkingSpot(parkingSpot);
 
 		// ACT
-		fareCalculatorService.calculateFare(ticket, false);
+		fareCalculatorServiceUnderTest.calculateFare(ticket, false);
 
 		// ASSERT
 		assertEquals(0, ticket.getPrice());
@@ -67,7 +59,7 @@ public class FareCalculatorServiceUS1TDDTest {
 		ticket.setParkingSpot(parkingSpot);
 
 		// ACT
-		fareCalculatorService.calculateFare(ticket, false);
+		fareCalculatorServiceUnderTest.calculateFare(ticket, false);
 
 		// ASSERT
 		assertEquals(0.75 * Fare.CAR_RATE_PER_HOUR, ticket.getPrice());
@@ -86,7 +78,7 @@ public class FareCalculatorServiceUS1TDDTest {
 		ticket.setParkingSpot(parkingSpot);
 
 		// ACT
-		fareCalculatorService.calculateFare(ticket, false);
+		fareCalculatorServiceUnderTest.calculateFare(ticket, false);
 
 		// ASSERT
 		assertEquals(0, ticket.getPrice());
@@ -104,7 +96,7 @@ public class FareCalculatorServiceUS1TDDTest {
 		ticket.setParkingSpot(parkingSpot);
 
 		// ACT
-		fareCalculatorService.calculateFare(ticket, false);
+		fareCalculatorServiceUnderTest.calculateFare(ticket, false);
 
 		// ASSERT
 		assertEquals(0.5 * Fare.CAR_RATE_PER_HOUR, ticket.getPrice());
@@ -122,12 +114,12 @@ public class FareCalculatorServiceUS1TDDTest {
 		ticket.setParkingSpot(parkingSpot);
 
 		// ACT
-		fareCalculatorService.calculateFare(ticket, false);
+		fareCalculatorServiceUnderTest.calculateFare(ticket, false);
 
 		// ASSERT
 		// assertEquals(0.5002778 * Fare.CAR_RATE_PER_HOUR,ticket.getPrice());
 
-		// Use of AssertJ for the approximation
+		// Use of AssertJ for the approximation / 0.5002778 = 30mins+1s in hour
 		assertThat(ticket.getPrice()).isCloseTo(0.5002778 * Fare.CAR_RATE_PER_HOUR, within(0.01));
 
 	}
@@ -146,7 +138,7 @@ public class FareCalculatorServiceUS1TDDTest {
 		ticket.setParkingSpot(parkingSpot);
 
 		// ACT
-		fareCalculatorService.calculateFare(ticket, true);
+		fareCalculatorServiceUnderTest.calculateFare(ticket, true);
 
 		// ASSERT
 		assertEquals(0, ticket.getPrice());
@@ -164,7 +156,7 @@ public class FareCalculatorServiceUS1TDDTest {
 		ticket.setParkingSpot(parkingSpot);
 
 		// ACT
-		fareCalculatorService.calculateFare(ticket, true);
+		fareCalculatorServiceUnderTest.calculateFare(ticket, true);
 
 		// ASSERT
 		assertEquals(0.95 * 0.75 * Fare.CAR_RATE_PER_HOUR, ticket.getPrice());
@@ -183,7 +175,7 @@ public class FareCalculatorServiceUS1TDDTest {
 		ticket.setParkingSpot(parkingSpot);
 
 		// ACT
-		fareCalculatorService.calculateFare(ticket, true);
+		fareCalculatorServiceUnderTest.calculateFare(ticket, true);
 
 		// ASSERT
 		assertEquals(0, ticket.getPrice());
@@ -201,7 +193,7 @@ public class FareCalculatorServiceUS1TDDTest {
 		ticket.setParkingSpot(parkingSpot);
 
 		// ACT
-		fareCalculatorService.calculateFare(ticket, true);
+		fareCalculatorServiceUnderTest.calculateFare(ticket, true);
 
 		// ASSERT
 		assertEquals(0.95 * 0.5 * Fare.CAR_RATE_PER_HOUR, ticket.getPrice());
@@ -219,12 +211,10 @@ public class FareCalculatorServiceUS1TDDTest {
 		ticket.setParkingSpot(parkingSpot);
 
 		// ACT
-		fareCalculatorService.calculateFare(ticket, true);
+		fareCalculatorServiceUnderTest.calculateFare(ticket, true);
 
 		// ASSERT
-		// assertEquals(0.5002778 * Fare.CAR_RATE_PER_HOUR,ticket.getPrice());
-
-		// Use of AssertJ for the approximation
+		// Use of AssertJ for the approximation / 0.5002778 = 30mins+1s in hour
 		assertThat(ticket.getPrice()).isCloseTo(0.95 * 0.5002778 * Fare.CAR_RATE_PER_HOUR, within(0.01));
 	}
 

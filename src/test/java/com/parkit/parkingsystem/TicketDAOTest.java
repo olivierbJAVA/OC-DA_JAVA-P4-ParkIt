@@ -20,6 +20,8 @@ public class TicketDAOTest {
 
 	private static DataBasePrepareServiceTestsTicketDAO dataBasePrepareServiceTestsTicketDAO;
 
+	private TicketDAO ticketDAOUnderTest;
+	
 	@BeforeAll
 	private static void setUp() throws Exception {
 		dataBasePrepareServiceTestsTicketDAO = new DataBasePrepareServiceTestsTicketDAO();
@@ -28,6 +30,7 @@ public class TicketDAOTest {
 	@BeforeEach
 	private void setUpPerTest() throws Exception {
 		dataBasePrepareServiceTestsTicketDAO.clearDataBaseEntries();
+		ticketDAOUnderTest = new TicketDAO();
 	}
 
 	@AfterAll
@@ -39,7 +42,6 @@ public class TicketDAOTest {
 	public void getTicket_WhenTicketExist_WhenConnectionToDBOK() {
 
 		// ARRANGE
-		TicketDAO ticketDAOUnderTest = new TicketDAO();
 		ticketDAOUnderTest.dataBaseConfig = new DataBaseTestConfig();
 		Ticket ticketToGetFromDB = dataBasePrepareServiceTestsTicketDAO.ticketDAOTest_SaveATestTicketInDB();
 
@@ -64,9 +66,7 @@ public class TicketDAOTest {
 	public void getTicket_WhenTicketDoesNotExist_WhenConnectionToDBOK() {
 
 		// ARRANGE
-		TicketDAO ticketDAOUnderTest = new TicketDAO();
 		ticketDAOUnderTest.dataBaseConfig = new DataBaseTestConfig();
-		dataBasePrepareServiceTestsTicketDAO.ticketDAOTest_ClearTicketDB();
 
 		// ACT
 		Ticket ticketGetFromDB = ticketDAOUnderTest.getTicket("NOTINDB");
@@ -79,7 +79,6 @@ public class TicketDAOTest {
 	public void getTicket_WhenTicketExist_WhenNoConnectionToDB() {
 
 		// ARRANGE
-		TicketDAO ticketDAOUnderTest = new TicketDAO();
 		ticketDAOUnderTest.dataBaseConfig = new DataBaseTestConfigReturnNullConnection();
 		dataBasePrepareServiceTestsTicketDAO.ticketDAOTest_SaveATestTicketInDB();
 
@@ -94,9 +93,7 @@ public class TicketDAOTest {
 	public void getTicket_WhenTicketDoesNotExist_WhenNoConnectionToDB() {
 
 		// ARRANGE
-		TicketDAO ticketDAOUnderTest = new TicketDAO();
 		ticketDAOUnderTest.dataBaseConfig = new DataBaseTestConfigReturnNullConnection();
-		dataBasePrepareServiceTestsTicketDAO.ticketDAOTest_ClearTicketDB();
 
 		// ACT
 		Ticket ticketGetFromDB = ticketDAOUnderTest.getTicket("NOTINDB");
@@ -109,24 +106,21 @@ public class TicketDAOTest {
 	public void saveTicket_WhenConnectionToDBOK() {
 
 		// ARRANGE
-		TicketDAO ticketDAOUnderTest = new TicketDAO();
 		ticketDAOUnderTest.dataBaseConfig = new DataBaseTestConfig();
 
-		Ticket ticketToSaveInDB = new Ticket();
+		Ticket ticketTestToSaveInDB = new Ticket();
 		ParkingSpot parkingSpotToSaveInDB = new ParkingSpot(1, ParkingType.CAR, true);
-		double priceToSaveInDB = 123.0;
+		double priceToSaveInDB = 0.0;
 		LocalDateTime inTimeToSaveInDB = LocalDateTime.of(2019, 4, 26, 3, 6, 9);
 		LocalDateTime outTimeToSaveInDB = null;
-		// LocalDateTime outTimeToSaveInDB = LocalDateTime.of(2019, 4, 26, 7, 6, 9);
-		ticketToSaveInDB.setParkingSpot(parkingSpotToSaveInDB);
-		// ticket.setId(1);
-		ticketToSaveInDB.setVehicleRegNumber("TEST");
-		ticketToSaveInDB.setPrice(priceToSaveInDB);
-		ticketToSaveInDB.setInTime(inTimeToSaveInDB);
-		ticketToSaveInDB.setOutTime(outTimeToSaveInDB);
+		ticketTestToSaveInDB.setParkingSpot(parkingSpotToSaveInDB);
+		ticketTestToSaveInDB.setVehicleRegNumber("TEST");
+		ticketTestToSaveInDB.setPrice(priceToSaveInDB);
+		ticketTestToSaveInDB.setInTime(inTimeToSaveInDB);
+		ticketTestToSaveInDB.setOutTime(outTimeToSaveInDB);
 
 		// ACT
-		boolean resultFromMethodUnderTest = ticketDAOUnderTest.saveTicket(ticketToSaveInDB);
+		boolean resultFromMethodUnderTest = ticketDAOUnderTest.saveTicket(ticketTestToSaveInDB);
 
 		// ASSERT
 		Ticket ticketGetFromDB = dataBasePrepareServiceTestsTicketDAO.ticketDAOTest_GetATicketFromDB("TEST");
@@ -144,17 +138,14 @@ public class TicketDAOTest {
 	public void saveTicket_WhenNoConnectionToDB() {
 
 		// ARRANGE
-		TicketDAO ticketDAOUnderTest = new TicketDAO();
 		ticketDAOUnderTest.dataBaseConfig = new DataBaseTestConfigReturnNullConnection();
 
 		Ticket ticketToSaveInDB = new Ticket();
 		ParkingSpot parkingSpotToSaveInDB = new ParkingSpot(1, ParkingType.CAR, true);
-		double priceToSaveInDB = 123.0;
+		double priceToSaveInDB = 0.0;
 		LocalDateTime inTimeToSaveInDB = LocalDateTime.of(2019, 4, 26, 3, 6, 9);
 		LocalDateTime outTimeToSaveInDB = null;
-		// LocalDateTime outTimeToSaveInDB = LocalDateTime.of(2019, 4, 26, 7, 6, 9);
 		ticketToSaveInDB.setParkingSpot(parkingSpotToSaveInDB);
-		// ticket.setId(1);
 		ticketToSaveInDB.setVehicleRegNumber("TEST");
 		ticketToSaveInDB.setPrice(priceToSaveInDB);
 		ticketToSaveInDB.setInTime(inTimeToSaveInDB);
@@ -171,13 +162,11 @@ public class TicketDAOTest {
 	public void updateTicket_WhenTicketExist_WhenConnectionToDBOK() {
 
 		// ARRANGE
-		TicketDAO ticketDAOUnderTest = new TicketDAO();
 		ticketDAOUnderTest.dataBaseConfig = new DataBaseTestConfig();
-		dataBasePrepareServiceTestsTicketDAO = new DataBasePrepareServiceTestsTicketDAO();
 		Ticket ticketTestToUpdate = dataBasePrepareServiceTestsTicketDAO.ticketDAOTest_SaveATestTicketInDB();
 
 		ticketTestToUpdate.setOutTime(LocalDateTime.of(2019, 4, 26, 7, 6, 9));
-		ticketTestToUpdate.setPrice(321.0);
+		ticketTestToUpdate.setPrice(123.0);
 
 		// ACT
 		Boolean result = ticketDAOUnderTest.updateTicket(ticketTestToUpdate);
@@ -195,41 +184,38 @@ public class TicketDAOTest {
 	public void updateTicket_WhenNoTicketExist_WhenConnectionToDBOK() {
 
 		// ARRANGE
-		TicketDAO ticketDAOUnderTest = new TicketDAO();
 		ticketDAOUnderTest.dataBaseConfig = new DataBaseTestConfig();
-		dataBasePrepareServiceTestsTicketDAO = new DataBasePrepareServiceTestsTicketDAO();
 
 		Ticket ticketTestNotInDB = new Ticket();
 		ParkingSpot parkingSpot = new ParkingSpot(1, ParkingType.CAR, true);
-		double price = 333.0;
+		double price = 0.0;
 		LocalDateTime inTime = LocalDateTime.of(2019, 4, 26, 3, 6, 9);
-		LocalDateTime outTime = LocalDateTime.of(2019, 4, 26, 7, 6, 9);
+		LocalDateTime outTime = null;
 		ticketTestNotInDB.setParkingSpot(parkingSpot);
-		ticketTestNotInDB.setId(1);
 		ticketTestNotInDB.setVehicleRegNumber("NOTINDB");
 		ticketTestNotInDB.setPrice(price);
 		ticketTestNotInDB.setInTime(inTime);
 		ticketTestNotInDB.setOutTime(outTime);
 
 		// ACT
-		ticketDAOUnderTest.updateTicket(ticketTestNotInDB);
+		Boolean result = ticketDAOUnderTest.updateTicket(ticketTestNotInDB);
 
 		// ASSERT
 		Ticket ticketTestUpdated = dataBasePrepareServiceTestsTicketDAO.ticketDAOTest_GetATicketFromDB("NOTINDB");
 		Assertions.assertNull(ticketTestUpdated);
+		
+		Assertions.assertFalse(result);
 	}
 
 	@Test
 	public void updateTicket_WhenTicketExist_WhenNoConnection() {
 
 		// ARRANGE
-		TicketDAO ticketDAOUnderTest = new TicketDAO();
 		ticketDAOUnderTest.dataBaseConfig = new DataBaseTestConfigReturnNullConnection();
-		dataBasePrepareServiceTestsTicketDAO = new DataBasePrepareServiceTestsTicketDAO();
 		Ticket ticketTestToUpdate = dataBasePrepareServiceTestsTicketDAO.ticketDAOTest_SaveATestTicketInDB();
 
 		ticketTestToUpdate.setOutTime(LocalDateTime.of(2019, 4, 26, 7, 6, 9));
-		ticketTestToUpdate.setPrice(321.0);
+		ticketTestToUpdate.setPrice(123.0);
 
 		// ACT
 		Boolean result = ticketDAOUnderTest.updateTicket(ticketTestToUpdate);
@@ -247,7 +233,6 @@ public class TicketDAOTest {
 	public void updateTicket_WhenNoTicketExist_WhenNoConnection() {
 
 		// ARRANGE
-		TicketDAO ticketDAOUnderTest = new TicketDAO();
 		ticketDAOUnderTest.dataBaseConfig = new DataBaseTestConfigReturnNullConnection();
 		dataBasePrepareServiceTestsTicketDAO = new DataBasePrepareServiceTestsTicketDAO();
 
@@ -264,20 +249,20 @@ public class TicketDAOTest {
 		ticketTestNotInDB.setOutTime(outTime);
 
 		// ACT
-		ticketDAOUnderTest.updateTicket(ticketTestNotInDB);
+		Boolean result = ticketDAOUnderTest.updateTicket(ticketTestNotInDB);
 
 		// ASSERT
 		Ticket ticketTestUpdated = dataBasePrepareServiceTestsTicketDAO.ticketDAOTest_GetATicketFromDB("NOTINDB");
 		Assertions.assertNull(ticketTestUpdated);
+		
+		Assertions.assertFalse(result);
 	}
 	
 	@Test
 	public void recurringUser_WhenFirstStay() {
 		
 		//ARRANGE
-		TicketDAO ticketDAOUnderTest = new TicketDAO();
 		ticketDAOUnderTest.dataBaseConfig = new DataBaseTestConfig();
-		dataBasePrepareServiceTestsTicketDAO = new DataBasePrepareServiceTestsTicketDAO();
 		dataBasePrepareServiceTestsTicketDAO.ticketDAOTest_SaveATestTicketInDB();
 		
 		//ACT
@@ -291,9 +276,7 @@ public class TicketDAOTest {
 	@Test
 	public void recurringUser_WhenAlreadyStayed() {
 		//ARRANGE
-		TicketDAO ticketDAOUnderTest = new TicketDAO();
 		ticketDAOUnderTest.dataBaseConfig = new DataBaseTestConfig();
-		dataBasePrepareServiceTestsTicketDAO = new DataBasePrepareServiceTestsTicketDAO();
 		dataBasePrepareServiceTestsTicketDAO.ticketDAOTest_SaveATestTicketInDB();
 		dataBasePrepareServiceTestsTicketDAO.ticketDAOTest_SaveATestTicketInDB();
 		

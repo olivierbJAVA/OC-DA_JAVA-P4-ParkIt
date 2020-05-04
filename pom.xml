@@ -24,12 +24,12 @@
 		<dependency>
 			<groupId>org.apache.logging.log4j</groupId>
 			<artifactId>log4j-api</artifactId>
-			<version>2.12.1</version>
+			<version>2.13.1</version>
 		</dependency>
 		<dependency>
 			<groupId>org.apache.logging.log4j</groupId>
 			<artifactId>log4j-core</artifactId>
-			<version>2.12.1</version>
+			<version>2.13.1</version>
 		</dependency>
 		<dependency>
 			<groupId>mysql</groupId>
@@ -115,7 +115,6 @@
 						<id>integration-test</id>
 						<goals>
 							<goal>test</goal>
-							<goal>report</goal>
 						</goals>
 						<phase>integration-test</phase>
 						<configuration>
@@ -163,7 +162,6 @@
 					<locales>fr</locales>
 				</configuration>
 			</plugin>
-
 		</plugins>
 	</build>
 
@@ -200,66 +198,23 @@
 				<version>0.8.5</version>
 			</plugin>
 
-
-
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-surefire-report-plugin</artifactId>
-				<version>2.22.2</version>
+				<version>3.0.0-M4</version>
 				<configuration>
 					<aggregate>true</aggregate>
-					<!--also set this to link to generated source reports -->
-					<linkXRef>false</linkXRef>
 				</configuration>
-				<reportSets>
-					<reportSet>
-						<reports>
-							<report>report-only</report>
-						</reports>
-					</reportSet>
-				</reportSets>
 			</plugin>
 
-
 			<plugin>
-				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-surefire-report-plugin</artifactId>
-				<version>2.19.1</version>
-				<reportSets>
-					<reportSet>
-						<!-- defines aggregate unit test report -->
-						<id>unit-tests-aggregate</id>
-						<inherited>false</inherited>
-
-						<reports>
-							<report>report</report>
-						</reports>
-						<configuration>
-							<aggregate>true</aggregate>
-							<excludes>
-								<exclude>none</exclude>
-							</excludes>
-							<includes>
-								<include>all</include>
-								<!--include>**/*Test.java</include -->
-							</includes>
-						</configuration>
-
-					</reportSet>
-
-					<reportSet>
-						<!-- defines aggregate integration test report -->
-						<id>integration-tests-aggregate</id>
-						<inherited>false</inherited>
-						<reports>
-							<report>failsafe-report-only</report>
-						</reports>
-						<configuration>
-							<aggregate>true</aggregate>
-						</configuration>
-					</reportSet>
-				</reportSets>
-
+				<groupId>com.github.spotbugs</groupId>
+				<artifactId>spotbugs-maven-plugin</artifactId>
+				<version>4.0.0</version>
+				<configuration>
+					<effort>Max</effort>
+					<threshold>Low</threshold>
+				</configuration>
 			</plugin>
 		</plugins>
 
