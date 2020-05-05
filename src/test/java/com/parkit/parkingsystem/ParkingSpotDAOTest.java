@@ -37,7 +37,7 @@ public class ParkingSpotDAOTest {
     }
 		
   	@Test
-	public void updateParkingAvailableInDatabase_ToTrue_WhenConnectionToDBOK() {
+	public void updateParking_AvailabilityToTrue_WhenConnectionToDBOK() {
 
 		// ARRANGE
 		parkingSpotDAOUnderTest.dataBaseConfig = new DataBaseTestConfig();
@@ -57,7 +57,7 @@ public class ParkingSpotDAOTest {
 	}
 
 	@Test
-	public void updateParkingAvailableInDatabase_ToTrue_WhenNoConnectionToDB() {
+	public void updateParking_AvailabilityToTrue_WhenNoConnectionToDB() {
 
 		// ARRANGE
 		parkingSpotDAOUnderTest.dataBaseConfig = new DataBaseTestConfigReturnNullConnection();
@@ -77,7 +77,7 @@ public class ParkingSpotDAOTest {
 	}
 
 	@Test
-	public void updateParkingAvailableInDatabase_ToFalse_WhenConnectionToDBOK() {
+	public void updateParking_AvailabilityToFalse_WhenConnectionToDBOK() {
 
 		// ARRANGE
 		parkingSpotDAOUnderTest.dataBaseConfig = new DataBaseTestConfig();
@@ -97,7 +97,7 @@ public class ParkingSpotDAOTest {
 	}
 
 	@Test
-	public void updateParkingAvailableInDatabase_ToFalse_WhenNoConnectionToDB() {
+	public void updateParking_AvailabilityToFalse_WhenNoConnectionToDB() {
 
 		// ARRANGE
 		parkingSpotDAOUnderTest.dataBaseConfig = new DataBaseTestConfigReturnNullConnection();

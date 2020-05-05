@@ -59,7 +59,7 @@ public class ParkingServiceBikeTest {
 	}
 
 	@Test
-	public void processIncomingVehicleTest_WhenRegNumberNotAlreadyInParking() {
+	public void processIncomingVehicle_WhenRegNumberNotAlreadyInParking() {
 		// ARRANGE
 		when(inputReaderUtil.readSelection()).thenReturn(2);
 		when(parkingSpotDAO.getNextAvailableSlot(any(ParkingType.class))).thenReturn(1);
@@ -77,7 +77,7 @@ public class ParkingServiceBikeTest {
 	}
 
 	@Test
-	public void processIncomingVehicleTest_WhenRegNumberAlreadyInParking() {
+	public void processIncomingVehicle_WhenRegNumberAlreadyInParking() {
 		// ARRANGE
 		when(inputReaderUtil.readSelection()).thenReturn(1);
 		when(parkingSpotDAO.getNextAvailableSlot(any(ParkingType.class))).thenReturn(1);
@@ -92,7 +92,7 @@ public class ParkingServiceBikeTest {
 	}
 	
 	@Test
-	public void processIncomingVehicleTest_WhenReadVehicleRegistrationNumberThrowAnException() {
+	public void processIncomingVehicle_WhenReadVehicleRegistrationNumberThrowAnException() {
 		try {
 			// ARRANGE
 			when(inputReaderUtil.readSelection()).thenReturn(2);
@@ -112,7 +112,7 @@ public class ParkingServiceBikeTest {
 	}
 
 	@Test
-	public void processExitingVehicleTest_WhenUpdateTicketIsTrue_WhenRegNumberInParking() {
+	public void processExitingVehicle_WhenUpdateTicketIsTrue_WhenRegNumberInParking() {
 
 		// ARRANGE
 		ArgumentCaptor<ParkingSpot> argumentCaptorParkingSpot = ArgumentCaptor.forClass(ParkingSpot.class);
@@ -148,7 +148,7 @@ public class ParkingServiceBikeTest {
 	}
 
 	@Test
-	public void processExitingVehicleTest_WhenUpdateTicketIsTrue_WhenRegNumberNotInParking() {
+	public void processExitingVehicle_WhenUpdateTicketIsTrue_WhenRegNumberNotInParking() {
 
 		// ARRANGE
 		when(ticketDAO.vehicleInTheParking((anyString()))).thenReturn(false);
@@ -164,7 +164,7 @@ public class ParkingServiceBikeTest {
 	}
 	
 	@Test
-	public void processExitingVehicleTest_WhenUpdateTicketIsFalse() {
+	public void processExitingVehicle_WhenUpdateTicketIsFalse() {
 
 		// ARRANGE
 		when(ticketDAO.getTicket(anyString())).thenReturn(ticket);
@@ -182,7 +182,7 @@ public class ParkingServiceBikeTest {
 	}
 	
 	@Test
-	public void processExitingVehicleTest_WhenReadVehicleRegistrationNumberThrowAnException() {
+	public void processExitingVehicle_WhenReadVehicleRegistrationNumberThrowAnException() {
 		try {
 			// ARRANGE
 			when(inputReaderUtil.readVehicleRegistrationNumber()).thenThrow(new Exception("Invalid input provided"));

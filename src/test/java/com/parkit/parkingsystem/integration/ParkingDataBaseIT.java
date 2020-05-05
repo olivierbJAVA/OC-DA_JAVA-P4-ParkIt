@@ -3,16 +3,10 @@ package com.parkit.parkingsystem.integration;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.within;
 import static org.mockito.Mockito.when;
-import static org.awaitility.Awaitility.*;
 
-import java.time.Duration;
-import java.time.Duration.*;
 import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
-import java.util.concurrent.TimeUnit;
-import java.util.concurrent.TimeUnit.*;
 
-import org.awaitility.Awaitility;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
@@ -245,7 +239,7 @@ public class ParkingDataBaseIT {
 		for(int i=0;i<2;i++) {
 			parkingService.processIncomingVehicle();
 			
-			//Wait some time for test purposes
+			//Wait time for test purposes
 			WaitTime waitTimeBeforeProcessExistingVehicle = new WaitTime (1000);
 			waitTimeBeforeProcessExistingVehicle.run();
 	
@@ -330,27 +324,10 @@ public class ParkingDataBaseIT {
 		boolean userInTheParkingAfterEntry = ticketDAO.vehicleInTheParking("ABCDEF");
 		assertThat(userInTheParkingAfterEntry).isTrue();
 		
-		//Wait some time for test purposes
+		//Wait time for test purposes
 		WaitTime waitTimeBeforeProcessExistingVehicle = new WaitTime (1000);
 		waitTimeBeforeProcessExistingVehicle.run();
-		/*
-		Awaitility.await().atLeast(Duration.ofSeconds(23));
-		//Awaitility.await().pollInterval(10,TimeUnit.SECONDS);
-		
-				
-		//AsyncService asyncService = new AsyncService();
-		//await().atLeast  (1, ChronoUnit.SECONDS);
-		//Duration.FIVE_SECONDS
-		//await().atLeast(Duration.ofSeconds(1));
-		
-		try {
-			Awaitility.await().wait(3000);
-		} catch (InterruptedException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		Awaitility.await().unt;
-		*/
+
 		//ACT - User exit 
 		parkingService.processExitingVehicle();
 		

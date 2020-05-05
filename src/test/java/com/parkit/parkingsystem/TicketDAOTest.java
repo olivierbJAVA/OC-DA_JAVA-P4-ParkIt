@@ -45,8 +45,6 @@ public class TicketDAOTest {
 		ticketDAOUnderTest.dataBaseConfig = new DataBaseTestConfig();
 		//We save a test ticket in the database
 		Ticket ticketToGetFromDB = dataBasePrepareServiceTestsTicketDAO.ticketDAOTest_SaveATestTicketInDB();
-
-		// Ticket get from DB :
 		ParkingSpot parkingSpotToGetFromDB = ticketToGetFromDB.getParkingSpot();
 		double priceToGetFromDB = ticketToGetFromDB.getPrice();
 		LocalDateTime inTimeToGetFromDB = ticketToGetFromDB.getInTime();
