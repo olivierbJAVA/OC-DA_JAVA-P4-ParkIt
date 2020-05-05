@@ -20,6 +20,7 @@ public class DataBasePrepareServiceTestsTicketDAO {
 	
 	private DataBaseTestConfig dataBaseTestConfig = new DataBaseTestConfig();
 	
+	//save a test ticket in the database
 	public Ticket ticketDAOTest_SaveATestTicketInDB() {
 
 		Ticket ticketTest = new Ticket();
@@ -58,6 +59,7 @@ public class DataBasePrepareServiceTestsTicketDAO {
 		return ticketTest;
 	}
 
+	//get a ticket from the database
 	public Ticket ticketDAOTest_GetATicketFromDB(String vehicleRegNumber) {
 
 		Ticket ticket = null;
@@ -94,6 +96,7 @@ public class DataBasePrepareServiceTestsTicketDAO {
 		return ticket;
 	}
 
+	//save a ticket in the database
 	public boolean ticketDAOTest_SaveATicketInDB(Ticket ticket) {
 
 		Connection connection = null;

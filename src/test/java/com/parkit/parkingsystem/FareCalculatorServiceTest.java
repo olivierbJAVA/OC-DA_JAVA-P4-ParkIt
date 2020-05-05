@@ -25,7 +25,7 @@ public class FareCalculatorServiceTest {
 		ticket = new Ticket();
 	}
 
-	// RECCURING USER : NO
+	// TESTS for A NON RECURRING USER
 	@Test
 	public void calculateFareCar_WithOneHourParkingTime_RecurringUserNo() {
 		
@@ -220,7 +220,7 @@ public class FareCalculatorServiceTest {
 		assertThrows(NullPointerException.class, () -> fareCalculatorServiceUnderTest.calculateFare(ticket, false));
 	}
 	
-	// RECURRING USER : YES
+	// TESTS for A RECURRING USER
 	@Test
 	public void calculateFareCar_WithOneHourParkingTime_RecurringUserYes() {
 		
@@ -237,7 +237,7 @@ public class FareCalculatorServiceTest {
 		fareCalculatorServiceUnderTest.calculateFare(ticket, true);
 		
 		//ASSERT
-		assertEquals(0.95 * Fare.CAR_RATE_PER_HOUR, ticket.getPrice());
+		assertEquals(0.95 * Fare.CAR_RATE_PER_HOUR, ticket.getPrice());//the user shall have a 5% discount as recurring user
 	}
 
 	@Test
@@ -256,7 +256,7 @@ public class FareCalculatorServiceTest {
 		fareCalculatorServiceUnderTest.calculateFare(ticket, true);
 		
 		//ASSERT
-		assertEquals(0.95 * Fare.BIKE_RATE_PER_HOUR, ticket.getPrice());
+		assertEquals(0.95 * Fare.BIKE_RATE_PER_HOUR, ticket.getPrice());//the user shall have a 5% discount as recurring user
 	}
 
 	@Test
@@ -324,7 +324,7 @@ public class FareCalculatorServiceTest {
 		fareCalculatorServiceUnderTest.calculateFare(ticket, true);
 
 		//ASSERT
-		assertEquals((0.95 * 0.75 * Fare.CAR_RATE_PER_HOUR), ticket.getPrice());
+		assertEquals((0.95 * 0.75 * Fare.CAR_RATE_PER_HOUR), ticket.getPrice());//the user shall have a 5% discount as recurring user
 	}
 
 	@Test
@@ -343,7 +343,7 @@ public class FareCalculatorServiceTest {
 		fareCalculatorServiceUnderTest.calculateFare(ticket, true);
 		
 		//ASSERT
-		assertEquals((0.95 * 0.75 * Fare.BIKE_RATE_PER_HOUR), ticket.getPrice());
+		assertEquals((0.95 * 0.75 * Fare.BIKE_RATE_PER_HOUR), ticket.getPrice());//the user shall have a 5% discount as recurring user
 	}
 
 	@Test
@@ -363,7 +363,7 @@ public class FareCalculatorServiceTest {
 		fareCalculatorServiceUnderTest.calculateFare(ticket, true);
 		
 		//ASSERT
-		assertEquals((0.95 * 24 * Fare.CAR_RATE_PER_HOUR), ticket.getPrice());
+		assertEquals((0.95 * 24 * Fare.CAR_RATE_PER_HOUR), ticket.getPrice());//the user shall have a 5% discount as recurring user
 	}
 
 	@Test
@@ -382,7 +382,7 @@ public class FareCalculatorServiceTest {
 		fareCalculatorServiceUnderTest.calculateFare(ticket, true);
 		
 		//ASSERT
-		assertEquals((0.95 * 24 * Fare.BIKE_RATE_PER_HOUR), ticket.getPrice());
+		assertEquals((0.95 * 24 * Fare.BIKE_RATE_PER_HOUR), ticket.getPrice());//the user shall have a 5% discount as recurring user
 	}
 
 	@Test

@@ -71,6 +71,7 @@ public class ParkingServiceBikeTest {
 		parkingServiceUnderTest.processIncomingVehicle();
 
 		// ASSERT
+		//We check that methods updateParking and saveTicket have been called one time to process the income of the vehicle
 		verify(parkingSpotDAO, times(1)).updateParking(any(ParkingSpot.class));
 		verify(ticketDAO, times(1)).saveTicket(any(Ticket.class));
 	}
@@ -85,6 +86,7 @@ public class ParkingServiceBikeTest {
 		parkingServiceUnderTest.processIncomingVehicle();
 
 		// ASSERT
+		//As the vehicle is already in the parking, we check that methods updateParking and saveTicket are not called (no need to process the income of the vehicle)
 		verify(parkingSpotDAO, never()).updateParking(any(ParkingSpot.class));
 		verify(ticketDAO, never()).saveTicket(any(Ticket.class));
 	}
@@ -101,6 +103,7 @@ public class ParkingServiceBikeTest {
 			parkingServiceUnderTest.processIncomingVehicle();
 
 			// ASSERT
+			//We check that methods updateParking and saveTicket are not called as the readVehicleRegistrationNumber method has thrown an Exception
 			verify(parkingSpotDAO, never()).updateParking(any(ParkingSpot.class));
 			verify(ticketDAO, never()).saveTicket(any(Ticket.class));
 
@@ -124,11 +127,13 @@ public class ParkingServiceBikeTest {
 		parkingServiceUnderTest.processExitingVehicle();
 
 		// ASSERT correct method calls
+		//We check that methods getTicket, updateTicket and updateParking are called one time to process the exit of the vehicle
 		verify(ticketDAO, Mockito.times(1)).getTicket(anyString());
 		verify(ticketDAO, Mockito.times(1)).updateTicket(any(Ticket.class));
 		verify(parkingSpotDAO, Mockito.times(1)).updateParking(any(ParkingSpot.class));
 		
 		// ASSERT correct arguments
+		//We check that methods have been called with correct arguments
 		verify(ticketDAO, Mockito.times(1)).updateTicket(argumentCaptorticket.capture());
 		Ticket ticketTest = argumentCaptorticket.getValue();
 		assertEquals(inTimeTest, ticketTest.getInTime());
@@ -151,7 +156,8 @@ public class ParkingServiceBikeTest {
 		// ACT
 		parkingServiceUnderTest.processExitingVehicle();
 
-		// ASSERT correct method calls
+		// ASSERT
+		//As the vehicle is not in the parking, we check that methods getTicket updateTicket and updateParking are not called (no need to process the exit of the vehicle)
 		verify(ticketDAO, Mockito.never()).getTicket(anyString());
 		verify(ticketDAO, Mockito.never()).updateTicket(any(Ticket.class));
 		verify(parkingSpotDAO, Mockito.never()).updateParking(any(ParkingSpot.class));
@@ -169,6 +175,7 @@ public class ParkingServiceBikeTest {
 		parkingServiceUnderTest.processExitingVehicle();
 
 		// ASSERT
+		//If the program is not able to update the ticket, we check that the method updateParking is not called  
 		verify(ticketDAO, Mockito.times(1)).getTicket(anyString());
 		verify(ticketDAO, Mockito.times(1)).updateTicket(any(Ticket.class));
 		verify(parkingSpotDAO, Mockito.never()).updateParking(any(ParkingSpot.class));
@@ -184,6 +191,7 @@ public class ParkingServiceBikeTest {
 			parkingServiceUnderTest.processExitingVehicle();
 
 			// ASSERT
+			//We check that methods getTicket, updateParking and saveTicket are not called as the readVehicleRegistrationNumber method has thrown an Exception
 			Mockito.verify(ticketDAO, never()).getTicket(anyString());
 			Mockito.verify(ticketDAO, never()).updateTicket(any(Ticket.class));
 			Mockito.verify(parkingSpotDAO, never()).updateParking(any(ParkingSpot.class));

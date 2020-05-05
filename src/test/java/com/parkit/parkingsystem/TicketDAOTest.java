@@ -43,6 +43,7 @@ public class TicketDAOTest {
 
 		// ARRANGE
 		ticketDAOUnderTest.dataBaseConfig = new DataBaseTestConfig();
+		//We save a test ticket in the database
 		Ticket ticketToGetFromDB = dataBasePrepareServiceTestsTicketDAO.ticketDAOTest_SaveATestTicketInDB();
 
 		// Ticket get from DB :
@@ -52,9 +53,11 @@ public class TicketDAOTest {
 		LocalDateTime outTimeToGetFromDB = ticketToGetFromDB.getOutTime();
 
 		// ACT
+		//We get the test ticket
 		Ticket ticketGetFromDB = ticketDAOUnderTest.getTicket("TEST");
 
 		// ASSERT
+		//We check that the ticket got from database is the one saved
 		Assertions.assertEquals(priceToGetFromDB, ticketGetFromDB.getPrice());
 		Assertions.assertEquals(inTimeToGetFromDB, ticketGetFromDB.getInTime());
 		Assertions.assertEquals(outTimeToGetFromDB, ticketGetFromDB.getOutTime());
@@ -69,9 +72,11 @@ public class TicketDAOTest {
 		ticketDAOUnderTest.dataBaseConfig = new DataBaseTestConfig();
 
 		// ACT
+		//We try to get a ticket that is not in the database
 		Ticket ticketGetFromDB = ticketDAOUnderTest.getTicket("NOTINDB");
 
 		// ASSERT
+		//We check that the method return null as the ticket is not in the database
 		Assertions.assertNull(ticketGetFromDB);
 	}
 
@@ -80,12 +85,15 @@ public class TicketDAOTest {
 
 		// ARRANGE
 		ticketDAOUnderTest.dataBaseConfig = new DataBaseTestConfigReturnNullConnection();
+		//We save a test ticket in the database
 		dataBasePrepareServiceTestsTicketDAO.ticketDAOTest_SaveATestTicketInDB();
 
 		// ACT
+		//We try to get the ticket save from the database
 		Ticket ticketGetFromDB = ticketDAOUnderTest.getTicket("TEST");
 
 		// ASSERT
+		//We check that the method return null as there is no connection to the database
 		Assertions.assertNull(ticketGetFromDB);
 	}
 
@@ -96,9 +104,11 @@ public class TicketDAOTest {
 		ticketDAOUnderTest.dataBaseConfig = new DataBaseTestConfigReturnNullConnection();
 
 		// ACT
+		//We try to get a ticket that is not in the database
 		Ticket ticketGetFromDB = ticketDAOUnderTest.getTicket("NOTINDB");
 
 		// ASSERT
+		//We check that the method return null as the ticket is not in the database and there is no connection to the database
 		Assertions.assertNull(ticketGetFromDB);
 	}
 	
@@ -120,17 +130,19 @@ public class TicketDAOTest {
 		ticketTestToSaveInDB.setOutTime(outTimeToSaveInDB);
 
 		// ACT
+		//We save a test ticket in the database
 		boolean resultFromMethodUnderTest = ticketDAOUnderTest.saveTicket(ticketTestToSaveInDB);
 
 		// ASSERT
+		//We get the test ticket saved in the database
 		Ticket ticketGetFromDB = dataBasePrepareServiceTestsTicketDAO.ticketDAOTest_GetATicketFromDB("TEST");
-
+		//We check that the ticket saved in the database is the correct one
 		Assertions.assertEquals(priceToSaveInDB, ticketGetFromDB.getPrice());
 		Assertions.assertEquals(inTimeToSaveInDB, ticketGetFromDB.getInTime());
 		Assertions.assertEquals(outTimeToSaveInDB, ticketGetFromDB.getOutTime());
 		Assertions.assertEquals(parkingSpotToSaveInDB.getId(), ticketGetFromDB.getParkingSpot().getId());
 		Assertions.assertEquals(parkingSpotToSaveInDB.getParkingType(),	ticketGetFromDB.getParkingSpot().getParkingType());
-
+		//We check that the method return true as the execution went well
 		Assertions.assertTrue(resultFromMethodUnderTest);
 	}
 
@@ -152,9 +164,11 @@ public class TicketDAOTest {
 		ticketToSaveInDB.setOutTime(outTimeToSaveInDB);
 
 		// ACT
+		//We try to save the test ticket in the database
 		boolean resultFromMethodUnderTest = ticketDAOUnderTest.saveTicket(ticketToSaveInDB);
 
 		// ASSERT
+		//We check that the method return false as there was an issue in the execution (no connection to the database)
 		Assertions.assertFalse(resultFromMethodUnderTest);
 	}
 
@@ -163,20 +177,23 @@ public class TicketDAOTest {
 
 		// ARRANGE
 		ticketDAOUnderTest.dataBaseConfig = new DataBaseTestConfig();
+		//We save a test ticket to update in the database
 		Ticket ticketTestToUpdate = dataBasePrepareServiceTestsTicketDAO.ticketDAOTest_SaveATestTicketInDB();
 
 		ticketTestToUpdate.setOutTime(LocalDateTime.of(2019, 4, 26, 7, 6, 9));
 		ticketTestToUpdate.setPrice(123.0);
 
 		// ACT
+		//We update the test ticket in the database
 		Boolean result = ticketDAOUnderTest.updateTicket(ticketTestToUpdate);
 
-		Ticket ticketTestUpdated = dataBasePrepareServiceTestsTicketDAO.ticketDAOTest_GetATicketFromDB("TEST");
-
 		// ASSERT
+		//We get the updated test ticket from the database
+		Ticket ticketTestUpdated = dataBasePrepareServiceTestsTicketDAO.ticketDAOTest_GetATicketFromDB("TEST");
+		//We check that the test ticket has rightly been updated
 		Assertions.assertEquals(ticketTestToUpdate.getPrice(), ticketTestUpdated.getPrice());
 		Assertions.assertEquals(ticketTestToUpdate.getOutTime(), ticketTestUpdated.getOutTime());
-
+		//We check that the method return true as the execution went well
 		Assertions.assertTrue(result);
 	}
 
@@ -198,12 +215,14 @@ public class TicketDAOTest {
 		ticketTestNotInDB.setOutTime(outTime);
 
 		// ACT
+		//We try to update a test ticket that is not in the database
 		Boolean result = ticketDAOUnderTest.updateTicket(ticketTestNotInDB);
 
 		// ASSERT
 		Ticket ticketTestUpdated = dataBasePrepareServiceTestsTicketDAO.ticketDAOTest_GetATicketFromDB("NOTINDB");
+		//As the ticket to update was not in the database, we check that the ticket is still null
 		Assertions.assertNull(ticketTestUpdated);
-		
+		//We check that the method return false as there was an issue in the execution 
 		Assertions.assertFalse(result);
 	}
 
@@ -212,20 +231,23 @@ public class TicketDAOTest {
 
 		// ARRANGE
 		ticketDAOUnderTest.dataBaseConfig = new DataBaseTestConfigReturnNullConnection();
+		//We save a test ticket to update in the database
 		Ticket ticketTestToUpdate = dataBasePrepareServiceTestsTicketDAO.ticketDAOTest_SaveATestTicketInDB();
 
 		ticketTestToUpdate.setOutTime(LocalDateTime.of(2019, 4, 26, 7, 6, 9));
 		ticketTestToUpdate.setPrice(123.0);
 
 		// ACT
+		//We try to update the test ticket
 		Boolean result = ticketDAOUnderTest.updateTicket(ticketTestToUpdate);
 
-		Ticket ticketTestUpdated = dataBasePrepareServiceTestsTicketDAO.ticketDAOTest_GetATicketFromDB("TEST");
-
 		// ASSERT
+		//We get from the database the test ticket that should have been updated 
+		Ticket ticketTestUpdated = dataBasePrepareServiceTestsTicketDAO.ticketDAOTest_GetATicketFromDB("TEST");
+		//We check that the test ticket has not been updated as there was an issue in the execution (no connection to database)
 		Assertions.assertEquals(0.0, ticketTestUpdated.getPrice());
 		Assertions.assertNull(ticketTestUpdated.getOutTime());
-
+		//We check that the method return false as there was an issue in the execution 
 		Assertions.assertFalse(result);
 	}
 
@@ -249,12 +271,14 @@ public class TicketDAOTest {
 		ticketTestNotInDB.setOutTime(outTime);
 
 		// ACT
+		//We try to update a test ticket that is not in the database
 		Boolean result = ticketDAOUnderTest.updateTicket(ticketTestNotInDB);
 
 		// ASSERT
 		Ticket ticketTestUpdated = dataBasePrepareServiceTestsTicketDAO.ticketDAOTest_GetATicketFromDB("NOTINDB");
+		//As the ticket to update was not in the database and as there was no connection, we check that the ticket is still null
 		Assertions.assertNull(ticketTestUpdated);
-		
+		//We check that the method return false as there was an issue in the execution 
 		Assertions.assertFalse(result);
 	}
 	
@@ -263,12 +287,14 @@ public class TicketDAOTest {
 		
 		//ARRANGE
 		ticketDAOUnderTest.dataBaseConfig = new DataBaseTestConfig();
+		//We save a test ticket in the database ONE time
 		dataBasePrepareServiceTestsTicketDAO.ticketDAOTest_SaveATestTicketInDB();
 		
 		//ACT
 		boolean recurringUser = ticketDAOUnderTest.recurringUser("TEST");
 
 		//ASSERT
+		//We check that the user not already came in the parking (i.e. is not a recurring user)
 		Assertions.assertFalse(recurringUser);
 
 	}
@@ -277,6 +303,7 @@ public class TicketDAOTest {
 	public void recurringUser_WhenAlreadyStayed() {
 		//ARRANGE
 		ticketDAOUnderTest.dataBaseConfig = new DataBaseTestConfig();
+		//We save the same test ticket (i.e. with the same vehicle registration number) in the database TWO times
 		dataBasePrepareServiceTestsTicketDAO.ticketDAOTest_SaveATestTicketInDB();
 		dataBasePrepareServiceTestsTicketDAO.ticketDAOTest_SaveATestTicketInDB();
 		
@@ -284,6 +311,7 @@ public class TicketDAOTest {
 		boolean recurringUser = ticketDAOUnderTest.recurringUser("TEST");
 
 		//ASSERT
+		//We check that the user already came in the parking (i.e. is a recurring user)
 		Assertions.assertTrue(recurringUser);
 	}
 

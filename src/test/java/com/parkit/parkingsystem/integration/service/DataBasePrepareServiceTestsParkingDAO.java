@@ -55,6 +55,7 @@ public class DataBasePrepareServiceTestsParkingDAO {
         try{
             connection = dataBaseTestConfig.getConnection();
 
+            //get availability of parking 1
             ps = connection.prepareStatement("select AVAILABLE from parking where PARKING_NUMBER = 1");
             rs = ps.executeQuery();
             

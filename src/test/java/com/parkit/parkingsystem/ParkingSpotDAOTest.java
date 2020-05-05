@@ -41,7 +41,7 @@ public class ParkingSpotDAOTest {
 
 		// ARRANGE
 		parkingSpotDAOUnderTest.dataBaseConfig = new DataBaseTestConfig();
-
+		//We put the availability of parking one at false
 		dataBasePrepareServiceTestsParkingDAO.updateParkingSpotDAOTest_SetParkingOneAvailabilityToFalse();
 
 		// ACT
@@ -51,8 +51,8 @@ public class ParkingSpotDAOTest {
 		// ASSERT
 		boolean resultFromDB = dataBasePrepareServiceTestsParkingDAO.getParkingSpotDAOTest_GetAvailabilityParkingOne();
 		
+		//We check that the availability of parking one has been updated at true and the method return true (as execution went well)
 		Assertions.assertTrue(resultFromDB);
-
 		Assertions.assertTrue(resultFromMethodUnderTest);
 	}
 
@@ -61,7 +61,7 @@ public class ParkingSpotDAOTest {
 
 		// ARRANGE
 		parkingSpotDAOUnderTest.dataBaseConfig = new DataBaseTestConfigReturnNullConnection();
-
+		//We put the availability of parking one at false
 		dataBasePrepareServiceTestsParkingDAO.updateParkingSpotDAOTest_SetParkingOneAvailabilityToFalse();
 
 		// ACT
@@ -71,8 +71,8 @@ public class ParkingSpotDAOTest {
 		// ASSERT
 		boolean resultFromDB = dataBasePrepareServiceTestsParkingDAO.getParkingSpotDAOTest_GetAvailabilityParkingOne();
 		
+		//As there is not connection to the database, we check that the availability of parking one has not been updated and the method return false (as there was an issue in the execution)
 		Assertions.assertFalse(resultFromDB);
-
 		Assertions.assertFalse(resultFromMethodUnderTest);
 	}
 
@@ -81,7 +81,7 @@ public class ParkingSpotDAOTest {
 
 		// ARRANGE
 		parkingSpotDAOUnderTest.dataBaseConfig = new DataBaseTestConfig();
-
+		//We put the availability of parking one at true
 		dataBasePrepareServiceTestsParkingDAO.updateParkingSpotDAOTest_SetParkingOneAvailabilityToTrue();
 
 		// ACT
@@ -90,9 +90,8 @@ public class ParkingSpotDAOTest {
 
 		// ASSERT
 		boolean resultFromDB = dataBasePrepareServiceTestsParkingDAO.getParkingSpotDAOTest_GetAvailabilityParkingOne();
-		
+		//We check that the availability of parking one has been updated at false and the method return true (as execution went well) 		
 		Assertions.assertFalse(resultFromDB);
-
 		Assertions.assertTrue(resultFromMethodUnderTest);
 
 	}
@@ -102,7 +101,7 @@ public class ParkingSpotDAOTest {
 
 		// ARRANGE
 		parkingSpotDAOUnderTest.dataBaseConfig = new DataBaseTestConfigReturnNullConnection();
-	
+		//We put the availability of parking one at true
 		dataBasePrepareServiceTestsParkingDAO.updateParkingSpotDAOTest_SetParkingOneAvailabilityToTrue();
 
 		// ACT
@@ -111,9 +110,8 @@ public class ParkingSpotDAOTest {
 
 		// ASSERT
 		boolean resultFromDB = dataBasePrepareServiceTestsParkingDAO.getParkingSpotDAOTest_GetAvailabilityParkingOne();
-		
+		//As there is not connection to the database, we check that the availability of parking one has not been updated and the method return false (as there was an issue in the execution)
 		Assertions.assertTrue(resultFromDB);
-
 		Assertions.assertFalse(resultFromMethodUnderTest);
 
 	}
@@ -123,13 +121,14 @@ public class ParkingSpotDAOTest {
 
 		// ARRANGE
 		parkingSpotDAOUnderTest.dataBaseConfig = new DataBaseTestConfig();
-
+		//We put all parking availability at true
 		dataBasePrepareServiceTestsParkingDAO.updateParkingSpotDAOTest_SetAllToTrue();
 
 		// ACT
 		int result = parkingSpotDAOUnderTest.getNextAvailableSlot(ParkingType.CAR);
 
 		// ASSERT
+		//We check that the next parking available returned is the first one
 		Assertions.assertEquals(1, result);
 	}
 
@@ -138,13 +137,14 @@ public class ParkingSpotDAOTest {
 
 		// ARRANGE
 		parkingSpotDAOUnderTest.dataBaseConfig = new DataBaseTestConfigReturnNullConnection();
-
+		//We put all parking availability at true
 		dataBasePrepareServiceTestsParkingDAO.updateParkingSpotDAOTest_SetAllToTrue();
 
 		// ACT
 		int result = parkingSpotDAOUnderTest.getNextAvailableSlot(ParkingType.CAR);
 
 		// ASSERT
+		//We check that the method return -1 as there was an issue in the execution (because no connection to database)
 		Assertions.assertEquals(-1, result);
 	}
 	
@@ -172,13 +172,14 @@ public class ParkingSpotDAOTest {
 	
 		// ARRANGE
 		parkingSpotDAOUnderTest.dataBaseConfig = new DataBaseTestConfigReturnNullConnection();
-
+		//We put all parking availability at false
 		dataBasePrepareServiceTestsParkingDAO.updateParkingSpotDAOTest_SetAllToFalse();
 
 		// ACT
 		result = parkingSpotDAOUnderTest.getNextAvailableSlot(ParkingType.CAR);
 		
 		// ASSERT
+		//We check that the method return -1 as there was an issue in the execution (because no connection to database)
 		Assertions.assertEquals(-1, result);
 	}
 	
