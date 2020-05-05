@@ -172,6 +172,7 @@
 				<artifactId>maven-javadoc-plugin</artifactId>
 				<version>3.2.0</version>
 				<configuration>
+					<doclint>none</doclint>
 					<quiet>true</quiet>
 					<locale>fr</locale>
 				</configuration>
@@ -217,8 +218,6 @@
 				</configuration>
 			</plugin>
 		</plugins>
-
-
 
 	</reporting>
 

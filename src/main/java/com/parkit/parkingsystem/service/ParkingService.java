@@ -13,6 +13,9 @@ import java.math.RoundingMode;
 import java.text.DecimalFormat;
 import java.time.LocalDateTime;
 
+/**
+ * Class processing the income and the exit of a vehicle in the parking
+ */
 public class ParkingService {
 
     private static final Logger logger = LogManager.getLogger("ParkingService");
@@ -22,39 +25,62 @@ public class ParkingService {
     private InputReaderUtil inputReaderUtil;
     private ParkingSpotDAO parkingSpotDAO;
     private TicketDAO ticketDAO;
-
+    
+    /**
+     * Constructor of a parking service
+     * 
+     * @param inputReaderUtil
+     * Used to manage the interaction with the user
+     * 
+     * @param parkingSpotDAO
+     * Used to manage the interaction with the database for the parking spot
+     * 
+     * @param ticketDAO
+     * Used to manage the interaction with the database for the ticket
+     */
     public ParkingService(InputReaderUtil inputReaderUtil, ParkingSpotDAO parkingSpotDAO, TicketDAO ticketDAO){
         this.inputReaderUtil = inputReaderUtil;
         this.parkingSpotDAO = parkingSpotDAO;
         this.ticketDAO = ticketDAO;
     }
  
+    /**
+     * Method processing the income of a vehicle in the parking, with the following steps :
+     * - get the next parking number if available
+     * - get the entry vehicle registration number
+     * - check that the vehicle is not already in the parking
+     * - update the parking spot as not available anymore
+     * - create a new ticket and save it in the database
+     * - check if the user already came in the parking 
+     */
     public void processIncomingVehicle() {
         try{
             ParkingSpot parkingSpot = getNextParkingNumberIfAvailable();
             if(parkingSpot !=null && parkingSpot.getId() > 0){
                 String vehicleRegNumber = getVehichleRegNumber();
                 
+                //We check that the vehicle which wants to enter into the parking is not already parked 
                 boolean vehicleAlreadyParked = ticketDAO.vehicleInTheParking(vehicleRegNumber);
                 if(vehicleAlreadyParked) {
                 	System.out.println("\n" + "There is an issue as your vehicle number is already in the parking. Please try again.");
                  	throw new IllegalArgumentException("Issue with entry : the vehicle number is already in the parking.");
                 }
                 
+                //We allot this parking space and mark it's availability as false
                 parkingSpot.setAvailable(false);
-                parkingSpotDAO.updateParking(parkingSpot);//allot this parking space and mark it's availability as false
+                parkingSpotDAO.updateParking(parkingSpot);
 
                 LocalDateTime inTime = LocalDateTime.now();
                 Ticket ticket = new Ticket();
                 //ID, PARKING_NUMBER, VEHICLE_REG_NUMBER, PRICE, IN_TIME, OUT_TIME)
-                //ticket.setId(ticketID);
                 ticket.setParkingSpot(parkingSpot);
                 ticket.setVehicleRegNumber(vehicleRegNumber);
                 ticket.setPrice(0);
                 ticket.setInTime(inTime);
                 ticket.setOutTime(null);
                 ticketDAO.saveTicket(ticket);
-   
+                
+                //If the user already came in the parking, we welcome him back
                 boolean recurringUser = ticketDAO.recurringUser(vehicleRegNumber);
                 if(recurringUser) {
                 	System.out.println("\n" + "Welcome back! As a recurring user of our parking lot, you'll benefit from a 5% discount.");
@@ -115,12 +141,23 @@ public class ParkingService {
         }
     }
 
+    /**
+     * Method processing the exit of a vehicle in the parking, with the following steps :
+     * - get the entry vehicle registration number
+     * - check that the vehicle is currently in the parking
+     * - get the ticket corresponding to the vehicle registration number
+     * - check if the user already came in the parking 
+     * - calculate the fare price
+     * - update the ticket with price and out time and update it in the database
+     * - update the parking spot as available
+     */
     public void processExitingVehicle() {
         try{
             String vehicleRegNumber = getVehichleRegNumber();
             
-            boolean userAlreadyParked = ticketDAO.vehicleInTheParking(vehicleRegNumber);
-            if(!userAlreadyParked) {
+            //We check that the vehicle which wants to exit from the parking is currently parked 
+            boolean vehicleInTheParking = ticketDAO.vehicleInTheParking(vehicleRegNumber);
+            if(!vehicleInTheParking) {
             	System.out.println("\n" + "There is an issue as your vehicle number is not in the parking. Please try again");
               	throw new IllegalArgumentException("Issue with exit : vehicle number is not in the parking.");
             }
@@ -136,16 +173,19 @@ public class ParkingService {
                 parkingSpot.setAvailable(true);
                 parkingSpotDAO.updateParking(parkingSpot);
                 
-                // Rounding ticket price
+                //Rounding ticket price
                 DecimalFormat df = new DecimalFormat("0.00");
                 df.setRoundingMode(RoundingMode.HALF_UP);
                 
                 if (ticket.getPrice()==0.0) {
+                	//If the stay duration is less than 30 minutes then the user has nothing to pay
                 	System.out.println("Nothing to pay as a stay less than 30 minutes is free !");
                 } else if(recurringUser) {
-                 	System.out.println("As a recurring user of our parking lot, you benefit from a 5% discount.");
+                 	//Else, if the user already came in the parking, he got a 5% discount
+                	System.out.println("As a recurring user of our parking lot, you benefit from a 5% discount.");
                  	System.out.println("Please pay the parking fare:" + df.format(ticket.getPrice()));
                 } else {            	
+                	//Else, the user has to pay the normal price
                 	System.out.println("Please pay the parking fare:" + df.format(ticket.getPrice()));
                 }
                                

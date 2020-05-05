@@ -14,12 +14,23 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Timestamp;
 
+/**
+ * Class managing interactions with the database linked to the ticket
+ */
 public class TicketDAO {
 
 	private static final Logger logger = LogManager.getLogger("TicketDAO");
 
 	public DataBaseConfig dataBaseConfig = new DataBaseConfig();
 
+	 /**
+     * Save a ticket when a vehicle enters in the parking
+     * 
+     * @param ticket
+     * The ticket to save when a vehicle enters in the parking
+     * 
+     * @return True if the ticket was saved with success, false if it failed
+     */
 	public boolean saveTicket(Ticket ticket) {
 		Connection con = null;
 		PreparedStatement ps = null;
@@ -27,7 +38,6 @@ public class TicketDAO {
 			con = dataBaseConfig.getConnection();
 			ps = con.prepareStatement(DBConstants.SAVE_TICKET);
 			// ID, PARKING_NUMBER, VEHICLE_REG_NUMBER, PRICE, IN_TIME, OUT_TIME)
-			// ps.setInt(1,ticket.getId());
 			ps.setInt(1, ticket.getParkingSpot().getId());
 			ps.setString(2, ticket.getVehicleRegNumber());
 			ps.setDouble(3, ticket.getPrice());
@@ -44,6 +54,14 @@ public class TicketDAO {
 		}
 	}
 
+	 /**
+     * Get the ticket when a vehicle wants to exit from the parking
+     * 
+     * @param vehicleRegNumber
+     * The vehicle registration number which wants to exit from the parking
+     * 
+     * @return The ticket corresponding to the vehicle registration number which wants to exit from the parking
+     */
 	public Ticket getTicket(String vehicleRegNumber) {
 		Connection con = null;
 		ResultSet rs = null;
@@ -75,6 +93,14 @@ public class TicketDAO {
 		return ticket;
 	}
 
+	 /**
+     * Update the ticket when a vehicle wants to exit from the parking
+     * 
+     * @param ticket
+     * The ticket to update when a vehicle wants to exit from the parking
+     * 
+     * @return True if the ticket was updated with success, false if it failed
+     */
 	public boolean updateTicket(Ticket ticket) {
 		Connection con = null;
 		PreparedStatement ps = null;
@@ -95,6 +121,14 @@ public class TicketDAO {
 		}
 	}
 
+	 /**
+     * Indicates if the vehicle registration number already came in the parking
+     * 
+     * @param vehicleRegNumber
+     * The vehicle registration number for which we want to know if he already came in the parking
+     * 
+     * @return True if the vehicle already came in the parking, false if it never came before
+     */
 	public boolean recurringUser(String vehicleRegNumberUser) {
 		Connection con = null;
 		PreparedStatement ps = null;
@@ -119,6 +153,14 @@ public class TicketDAO {
 		return result;
 	}
 
+	 /**
+     * Indicates if the vehicle registration number is currently inside the parking
+     * 
+     * @param vehicleRegNumber
+     * The vehicle registration number for which we want to know if he is currently inside the parking
+     * 
+     * @return True if the vehicle is currently inside the parking, false if it is currently not inside the parking
+     */
 	public boolean vehicleInTheParking(String vehicleRegNumberUser) {
 		Connection con = null;
 		PreparedStatement ps = null;

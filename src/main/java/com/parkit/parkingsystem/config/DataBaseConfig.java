@@ -5,10 +5,21 @@ import org.apache.logging.log4j.Logger;
 
 import java.sql.*;
 
+/**
+ * Class managing the connection and the closures with the database 
+ */
 public class DataBaseConfig {
 
     private static final Logger logger = LogManager.getLogger("DataBaseConfig");
 
+    /**
+     * Get a connection to the DataBase
+     * 
+     * @param inputListSymptoms
+     * An ArrayList of Strings containing the list of symptoms not sorted and possibly with duplications
+     * 
+     * @return A Connection to the DataBase
+     */
     public Connection getConnection() throws ClassNotFoundException, SQLException {
         logger.info("Create DB connection");
         Class.forName("com.mysql.cj.jdbc.Driver");
@@ -16,10 +27,16 @@ public class DataBaseConfig {
                 "jdbc:mysql://localhost:3306/prod","root","rootroot");
     }
 
-    public void closeConnection(Connection con){
-        if(con!=null){
+    /**
+     * Close the connection to the DataBase
+     * 
+     * @param connection
+     * A connection to the DataBase
+     */
+    public void closeConnection(Connection connection){
+        if(connection!=null){
             try {
-                con.close();
+                connection.close();
                 logger.info("Closing DB connection");
             } catch (SQLException e) {
                 logger.error("Error while closing connection",e);
@@ -27,10 +44,16 @@ public class DataBaseConfig {
         }
     }
 
-    public void closePreparedStatement(PreparedStatement ps) {
-        if(ps!=null){
+    /**
+     * Close the preparedStatement
+     * 
+     * @param preparedStatement
+     * A preparedStatement for the DataBase
+     */
+    public void closePreparedStatement(PreparedStatement preparedStatement) {
+        if(preparedStatement!=null){
             try {
-                ps.close();
+                preparedStatement.close();
                 logger.info("Closing Prepared Statement");
             } catch (SQLException e) {
                 logger.error("Error while closing prepared statement",e);
@@ -38,10 +61,16 @@ public class DataBaseConfig {
         }
     }
 
-    public void closeResultSet(ResultSet rs) {
-        if(rs!=null){
+    /**
+     * Close the resultSet
+     * 
+     * @param resultSet
+     * A resultSet for the DataBase
+     */
+    public void closeResultSet(ResultSet resultSet) {
+        if(resultSet!=null){
             try {
-                rs.close();
+                resultSet.close();
                 logger.info("Closing Result Set");
             } catch (SQLException e) {
                 logger.error("Error while closing result set",e);

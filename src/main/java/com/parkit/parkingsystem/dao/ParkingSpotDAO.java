@@ -12,11 +12,22 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
+/**
+ * Class managing interactions with the database linked to the parking
+ */
 public class ParkingSpotDAO {
     private static final Logger logger = LogManager.getLogger("ParkingSpotDAO");
 
     public DataBaseConfig dataBaseConfig = new DataBaseConfig();
 
+    /**
+     * Get the next available parking slot for the given parking type if any
+     * 
+     * @param parkingType
+     * The parkingType for which we are looking for the next available slot
+     * 
+     * @return The next available parking number if any, otherwise -1 if no parking slot is available
+     */
     public int getNextAvailableSlot(ParkingType parkingType){
         Connection con = null;
         PreparedStatement ps = null;
@@ -40,6 +51,14 @@ public class ParkingSpotDAO {
         return result;
     }
 
+    /**
+     * Update a parking spot as available if a vehicle exited from the parking or not available if a vehicle entered in the parking 
+     * 
+     * @param parkingType
+     * The parkingType we want to update availability
+     * 
+     * @return True if the parking spot update succeed, false if it failed
+     */
     public boolean updateParking(ParkingSpot parkingSpot){
         Connection con = null;
         PreparedStatement ps = null;
