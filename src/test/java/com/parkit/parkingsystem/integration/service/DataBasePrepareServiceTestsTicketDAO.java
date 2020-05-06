@@ -17,10 +17,10 @@ public class DataBasePrepareServiceTestsTicketDAO {
 	public static final String SAVE_TICKET_TEST = "insert into ticket(PARKING_NUMBER, VEHICLE_REG_NUMBER, PRICE, IN_TIME, OUT_TIME) values(?,?,?,?,?)";
 	public static final String UPDATE_TICKET_TEST = "update ticket set PRICE=?, OUT_TIME=? where ID=?";
 	public static final String GET_TICKET_TEST = "select t.PARKING_NUMBER, t.ID, t.PRICE, t.IN_TIME, t.OUT_TIME, p.TYPE from ticket t,parking p where p.parking_number = t.parking_number and t.VEHICLE_REG_NUMBER=? order by t.IN_TIME DESC limit 1";
-	
+
 	private DataBaseTestConfig dataBaseTestConfig = new DataBaseTestConfig();
-	
-	//save a test ticket in the database
+
+	// save a test ticket in the database
 	public Ticket ticketDAOTest_SaveATestTicketInDB() {
 
 		Ticket ticketTest = new Ticket();
@@ -59,7 +59,7 @@ public class DataBasePrepareServiceTestsTicketDAO {
 		return ticketTest;
 	}
 
-	//get a ticket from the database
+	// get a ticket from the database
 	public Ticket ticketDAOTest_GetATicketFromDB(String vehicleRegNumber) {
 
 		Ticket ticket = null;
@@ -84,8 +84,6 @@ public class DataBasePrepareServiceTestsTicketDAO {
 				ticket.setOutTime(rs.getTimestamp(5) == null ? null : rs.getTimestamp(5).toLocalDateTime());
 			}
 
-			
-
 		} catch (SQLException | ClassNotFoundException | NullPointerException e) {
 			e.printStackTrace();
 		} finally {
@@ -96,7 +94,7 @@ public class DataBasePrepareServiceTestsTicketDAO {
 		return ticket;
 	}
 
-	//save a ticket in the database
+	// save a ticket in the database
 	public boolean ticketDAOTest_SaveATicketInDB(Ticket ticket) {
 
 		Connection connection = null;
@@ -123,7 +121,7 @@ public class DataBasePrepareServiceTestsTicketDAO {
 		}
 		return true;
 	}
-	
+
 	public void clearDataBaseEntries() {
 		Connection connection = null;
 		PreparedStatement ps1 = null;

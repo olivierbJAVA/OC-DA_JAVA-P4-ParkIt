@@ -1,9 +1,8 @@
 package com.parkit.parkingsystem;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.within;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import java.time.LocalDateTime;
 
@@ -33,7 +32,8 @@ public class FareCalculatorServiceUS1Test {
 	@Test
 	public void calculateFareCar_LessThanThirtyMinutes_RecurringUserNo() {
 		// ARRANGE
-		LocalDateTime inTime = LocalDateTime.now().minusMinutes(25);// 25 minutes parking time should give a fare equals to 0
+		// 25 minutes parking time should give a fare equals to 0
+		LocalDateTime inTime = LocalDateTime.now().minusMinutes(25);
 		LocalDateTime outTime = LocalDateTime.now();
 		ParkingSpot parkingSpot = new ParkingSpot(1, ParkingType.CAR, false);
 
@@ -51,7 +51,8 @@ public class FareCalculatorServiceUS1Test {
 	@Test
 	public void calculateFareCar_MoreThanThirtyMinutes_RecurringUserNo() {
 		// ARRANGE
-		LocalDateTime inTime = LocalDateTime.now().minusMinutes(45);// 45 minutes parking time should give 3/4th parking fare
+		// 45 minutes parking time should give 3/4th parking fare
+		LocalDateTime inTime = LocalDateTime.now().minusMinutes(45);
 		LocalDateTime outTime = LocalDateTime.now();
 		ParkingSpot parkingSpot = new ParkingSpot(1, ParkingType.CAR, false);
 
@@ -70,7 +71,8 @@ public class FareCalculatorServiceUS1Test {
 	@Test
 	public void calculateFareCar_ThirtyMinutesMinusOneSecond_RecurringUserNo() {
 		// ARRANGE
-		LocalDateTime inTime = LocalDateTime.now().minusMinutes(30).plusSeconds(1);// 30 minutes minus 1 second parking time should give a fare equals to 0
+		// 30 minutes minus 1 second parking time should give a fare equals to 0
+		LocalDateTime inTime = LocalDateTime.now().minusMinutes(30).plusSeconds(1);
 		LocalDateTime outTime = LocalDateTime.now();
 		ParkingSpot parkingSpot = new ParkingSpot(1, ParkingType.CAR, false);
 
@@ -88,7 +90,8 @@ public class FareCalculatorServiceUS1Test {
 	@Test
 	public void calculateFareCar_ThirtyMinutes_RecurringUserNo() {
 		// ARRANGE
-		LocalDateTime inTime = LocalDateTime.now().minusMinutes(30);// 30 minutes parking time should give 1/2 parking fare
+		// 30 minutes parking time should give 1/2 parking fare
+		LocalDateTime inTime = LocalDateTime.now().minusMinutes(30);
 		LocalDateTime outTime = LocalDateTime.now();
 		ParkingSpot parkingSpot = new ParkingSpot(1, ParkingType.CAR, false);
 
@@ -106,7 +109,9 @@ public class FareCalculatorServiceUS1Test {
 	@Test
 	public void calculateFareCar_ThirtyMinutesPlusOneSecond_RecurringUserNo() {
 		// ARRANGE
-		LocalDateTime inTime = LocalDateTime.now().minusMinutes(30).minusSeconds(1);// 30 minutes plus 1 second parking time should give a positive parking fare (slightly to 1/2 parking fare) 
+		// 30 minutes plus 1 second parking time should give a positive parking fare
+		// (slightly above 1/2 parking fare)
+		LocalDateTime inTime = LocalDateTime.now().minusMinutes(30).minusSeconds(1);
 		LocalDateTime outTime = LocalDateTime.now();
 		ParkingSpot parkingSpot = new ParkingSpot(1, ParkingType.CAR, false);
 
@@ -128,7 +133,8 @@ public class FareCalculatorServiceUS1Test {
 	@Test
 	public void calculateFareCar_LessThanThirtyMinutes_RecurringUserYes() {
 		// ARRANGE
-		LocalDateTime inTime = LocalDateTime.now().minusMinutes(25);// 25 minutes parking time should give a fare equals to 0
+		// 25 minutes parking time should give a fare equals to 0
+		LocalDateTime inTime = LocalDateTime.now().minusMinutes(25);
 		LocalDateTime outTime = LocalDateTime.now();
 		ParkingSpot parkingSpot = new ParkingSpot(1, ParkingType.CAR, false);
 
@@ -146,7 +152,8 @@ public class FareCalculatorServiceUS1Test {
 	@Test
 	public void calculateFareCar_MoreThanThirtyMinutes_RecurringUserYes() {
 		// ARRANGE
-		LocalDateTime inTime = LocalDateTime.now().minusMinutes(45);// 45 minutes parking time should give 3/4th parking fare
+		// 45 minutes parking time should give 3/4th parking fare
+		LocalDateTime inTime = LocalDateTime.now().minusMinutes(45);
 		LocalDateTime outTime = LocalDateTime.now();
 		ParkingSpot parkingSpot = new ParkingSpot(1, ParkingType.CAR, false);
 
@@ -158,14 +165,16 @@ public class FareCalculatorServiceUS1Test {
 		fareCalculatorServiceUnderTest.calculateFare(ticket, true);
 
 		// ASSERT
-		assertEquals(0.95 * 0.75 * Fare.CAR_RATE_PER_HOUR, ticket.getPrice());//the user shall have a 5% discount as recurring user
+		// The user shall have a 5% discount as recurring user
+		assertEquals(0.95 * 0.75 * Fare.CAR_RATE_PER_HOUR, ticket.getPrice());
 	}
 
 	// EDGE CASES
 	@Test
 	public void calculateFareCar_ThirtyMinutesMinusOneSecond_RecurringUserYes() {
 		// ARRANGE
-		LocalDateTime inTime = LocalDateTime.now().minusMinutes(30).plusSeconds(1);// 30 minutes minus 1 second parking time should give a fare equals to 0
+		// 30 minutes minus 1 second parking time should give a fare equals to 0
+		LocalDateTime inTime = LocalDateTime.now().minusMinutes(30).plusSeconds(1);
 		LocalDateTime outTime = LocalDateTime.now();
 		ParkingSpot parkingSpot = new ParkingSpot(1, ParkingType.CAR, false);
 
@@ -183,7 +192,8 @@ public class FareCalculatorServiceUS1Test {
 	@Test
 	public void calculateFareCar_ThirtyMinutes_RecurringUserYes() {
 		// ARRANGE
-		LocalDateTime inTime = LocalDateTime.now().minusMinutes(30);// 30 minutes parking time should give 1/2 parking fare
+		// 30 minutes parking time should give 1/2 parking fare
+		LocalDateTime inTime = LocalDateTime.now().minusMinutes(30);
 		LocalDateTime outTime = LocalDateTime.now();
 		ParkingSpot parkingSpot = new ParkingSpot(1, ParkingType.CAR, false);
 
@@ -195,13 +205,16 @@ public class FareCalculatorServiceUS1Test {
 		fareCalculatorServiceUnderTest.calculateFare(ticket, true);
 
 		// ASSERT
-		assertEquals(0.95 * 0.5 * Fare.CAR_RATE_PER_HOUR, ticket.getPrice());//the user shall have a 5% discount as recurring user
+		// The user shall have a 5% discount as recurring user
+		assertEquals(0.95 * 0.5 * Fare.CAR_RATE_PER_HOUR, ticket.getPrice());
 	}
 
 	@Test
 	public void calculateFareCar_ThirtyMinutesPlusOneSecond_RecurringUserYes() {
 		// ARRANGE
-		LocalDateTime inTime = LocalDateTime.now().minusMinutes(30).minusSeconds(1);// 30 minutes plus 1 second parking time should give a positive parking fare (slightly to 1/2 parking fare) 
+		// 30 minutes plus 1 second parking time should give a positive parking fare
+		// (slightly above 1/2 parking fare)
+		LocalDateTime inTime = LocalDateTime.now().minusMinutes(30).minusSeconds(1);
 		LocalDateTime outTime = LocalDateTime.now();
 		ParkingSpot parkingSpot = new ParkingSpot(1, ParkingType.CAR, false);
 
@@ -213,8 +226,9 @@ public class FareCalculatorServiceUS1Test {
 		fareCalculatorServiceUnderTest.calculateFare(ticket, true);
 
 		// ASSERT
+		// The user shall have a 5% discount as recurring user
 		// Use of AssertJ for the approximation / 0.5002778 = 30mins+1s in hour
-		assertThat(ticket.getPrice()).isCloseTo(0.95 * 0.5002778 * Fare.CAR_RATE_PER_HOUR, within(0.01));//the user shall have a 5% discount as recurring user
+		assertThat(ticket.getPrice()).isCloseTo(0.95 * 0.5002778 * Fare.CAR_RATE_PER_HOUR, within(0.01));
 	}
 
 }
