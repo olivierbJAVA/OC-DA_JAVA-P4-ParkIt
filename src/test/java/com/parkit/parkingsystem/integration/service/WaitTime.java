@@ -12,6 +12,7 @@ public class WaitTime extends Thread {
 		try {
 			sleep(wait);
 		} catch (InterruptedException e) {
+			e.printStackTrace();
 		}
 	}
 

@@ -116,6 +116,8 @@ public class ParkingServiceCarTest {
 			verify(ticketDAO, never()).saveTicket(any(Ticket.class));
 
 		} catch (Exception e) {
+			e.printStackTrace();
+			throw new RuntimeException("Failed to set up test mock objects");
 		}
 	}
 
@@ -208,6 +210,8 @@ public class ParkingServiceCarTest {
 			Mockito.verify(ticketDAO, never()).updateTicket(any(Ticket.class));
 			Mockito.verify(parkingSpotDAO, never()).updateParking(any(ParkingSpot.class));
 		} catch (Exception e) {
+			e.printStackTrace();
+			throw new RuntimeException("Failed to set up test mock objects");
 		}
 	}
 
