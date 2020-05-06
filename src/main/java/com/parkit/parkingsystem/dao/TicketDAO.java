@@ -16,7 +16,7 @@ import com.parkit.parkingsystem.model.ParkingSpot;
 import com.parkit.parkingsystem.model.Ticket;
 
 /**
- * Class managing interactions with the database linked to the ticket.
+ * Class managing interactions with the database linked to ticket.
  */
 public class TicketDAO {
 
@@ -25,9 +25,9 @@ public class TicketDAO {
 	public DataBaseConfig dataBaseConfig = new DataBaseConfig();
 
 	/**
-	 * Save a ticket when a vehicle enters in the parking.
+	 * Save a ticket in the database when a vehicle enters in the parking.
 	 * 
-	 * @param ticket The ticket to save when a vehicle enters in the parking
+	 * @param ticket The ticket to save
 	 * 
 	 * @return True if the ticket was saved with success, false if it failed
 	 */
@@ -37,8 +37,8 @@ public class TicketDAO {
 		try {
 			con = dataBaseConfig.getConnection();
 			ps = con.prepareStatement(DBConstants.SAVE_TICKET);
-			// ID, PARKING_NUMBER, VEHICLE_REG_NUMBER, PRICE, IN_TIME, OUT_TIME)
-			ps.setInt(1, ticket.getParkingSpot().getId());
+			// PARKING_NUMBER, VEHICLE_REG_NUMBER, PRICE, IN_TIME, OUT_TIME)
+			ps.setInt(1, ticket.getParkingSpot().getNumber());
 			ps.setString(2, ticket.getVehicleRegNumber());
 			ps.setDouble(3, ticket.getPrice());
 			ps.setTimestamp(4, Timestamp.valueOf(ticket.getInTime()));
@@ -55,13 +55,13 @@ public class TicketDAO {
 	}
 
 	/**
-	 * Get the ticket when a vehicle wants to exit from the parking.
+	 * Get the ticket from the database when a vehicle wants to exit from the
+	 * parking.
 	 * 
 	 * @param vehicleRegNumber The vehicle registration number which wants to exit
 	 *                         from the parking
 	 * 
-	 * @return The ticket corresponding to the vehicle registration number which
-	 *         wants to exit from the parking
+	 * @return The ticket
 	 */
 	public Ticket getTicket(String vehicleRegNumber) {
 		Connection con = null;
@@ -71,10 +71,10 @@ public class TicketDAO {
 		try {
 			con = dataBaseConfig.getConnection();
 			ps = con.prepareStatement(DBConstants.GET_TICKET);
-			// PARKING_NUMBER, ID, PRICE, IN_TIME, OUT_TIME, TYPE
 			ps.setString(1, vehicleRegNumber);
 			rs = ps.executeQuery();
 			if (rs.next()) {
+				// PARKING_NUMBER, TICKET_ID, PRICE, IN_TIME, OUT_TIME, TYPE
 				ticket = new Ticket();
 				ParkingSpot parkingSpot = new ParkingSpot(rs.getInt(1), ParkingType.valueOf(rs.getString(6)), false);
 				ticket.setParkingSpot(parkingSpot);
@@ -97,8 +97,7 @@ public class TicketDAO {
 	/**
 	 * Update the ticket when a vehicle wants to exit from the parking.
 	 * 
-	 * @param ticket The ticket to update when a vehicle wants to exit from the
-	 *               parking
+	 * @param ticket The ticket to update
 	 * 
 	 * @return True if the ticket was updated with success, false if it failed
 	 */
@@ -107,6 +106,7 @@ public class TicketDAO {
 		PreparedStatement ps = null;
 		try {
 			con = dataBaseConfig.getConnection();
+			// PRICE, OUT_TIME, TICKET_ID
 			ps = con.prepareStatement(DBConstants.UPDATE_TICKET);
 			ps.setDouble(1, ticket.getPrice());
 			ps.setTimestamp(2, Timestamp.valueOf(ticket.getOutTime()));
@@ -126,7 +126,7 @@ public class TicketDAO {
 	 * Indicates if the vehicle registration number already came in the parking.
 	 * 
 	 * @param vehicleRegNumberUser The vehicle registration number for which we want
-	 *                             to know if he already came in the parking
+	 *                             to know if it already came in the parking
 	 * 
 	 * @return True if the vehicle already came in the parking, false if it never
 	 *         came before
@@ -159,7 +159,7 @@ public class TicketDAO {
 	 * Indicates if the vehicle registration number is currently inside the parking.
 	 * 
 	 * @param vehicleRegNumberUser The vehicle registration number for which we want
-	 *                             to know if he is currently inside the parking
+	 *                             to know if it is currently inside the parking
 	 * 
 	 * @return True if the vehicle is currently inside the parking, false if it is
 	 *         currently not inside the parking

@@ -14,8 +14,7 @@ public class App {
 	/**
 	 * Launch the program.
 	 * 
-	 * @param args
-	 * Potential command line arguments None arguments are needed
+	 * @param args Command line arguments None arguments are needed
 	 */
 	public static void main(String[] args) {
 		logger.info("Initializing Parking System");

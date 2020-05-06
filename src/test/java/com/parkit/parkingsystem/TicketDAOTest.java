@@ -59,7 +59,7 @@ public class TicketDAOTest {
 		Assertions.assertEquals(priceToGetFromDB, ticketGetFromDB.getPrice());
 		Assertions.assertEquals(inTimeToGetFromDB, ticketGetFromDB.getInTime());
 		Assertions.assertEquals(outTimeToGetFromDB, ticketGetFromDB.getOutTime());
-		Assertions.assertEquals(parkingSpotToGetFromDB.getId(), ticketGetFromDB.getParkingSpot().getId());
+		Assertions.assertEquals(parkingSpotToGetFromDB.getNumber(), ticketGetFromDB.getParkingSpot().getNumber());
 		Assertions.assertEquals(parkingSpotToGetFromDB.getParkingType(), ticketGetFromDB.getParkingSpot().getParkingType());
 	}
 
@@ -138,7 +138,7 @@ public class TicketDAOTest {
 		Assertions.assertEquals(priceToSaveInDB, ticketGetFromDB.getPrice());
 		Assertions.assertEquals(inTimeToSaveInDB, ticketGetFromDB.getInTime());
 		Assertions.assertEquals(outTimeToSaveInDB, ticketGetFromDB.getOutTime());
-		Assertions.assertEquals(parkingSpotToSaveInDB.getId(), ticketGetFromDB.getParkingSpot().getId());
+		Assertions.assertEquals(parkingSpotToSaveInDB.getNumber(), ticketGetFromDB.getParkingSpot().getNumber());
 		Assertions.assertEquals(parkingSpotToSaveInDB.getParkingType(),	ticketGetFromDB.getParkingSpot().getParkingType());
 		//We check that the method return true as the execution went well
 		Assertions.assertTrue(resultFromMethodUnderTest);

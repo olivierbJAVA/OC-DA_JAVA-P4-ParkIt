@@ -14,7 +14,7 @@ import com.parkit.parkingsystem.constants.ParkingType;
 import com.parkit.parkingsystem.model.ParkingSpot;
 
 /**
- * Class managing interactions with the database linked to the parking.
+ * Class managing interactions with the database linked to parking.
  */
 public class ParkingSpotDAO {
 	private static final Logger logger = LogManager.getLogger("ParkingSpotDAO");
@@ -24,7 +24,7 @@ public class ParkingSpotDAO {
 	/**
 	 * Get the next available parking slot for the given parking type if any.
 	 * 
-	 * @param parkingType The parkingType for which we are looking for the next
+	 * @param parkingType The parking type for which we are looking for the next
 	 *                    available slot
 	 * 
 	 * @return The next available parking number if any, otherwise -1 if no parking
@@ -54,10 +54,9 @@ public class ParkingSpotDAO {
 	}
 
 	/**
-	 * Update a parking spot as available if a vehicle exited from the parking or
-	 * not available if a vehicle entered in the parking.
+	 * Update the availability of a parking spot.
 	 * 
-	 * @param parkingSpot The parkingType we want to update availability
+	 * @param parkingSpot The parking spot we want to update availability
 	 * 
 	 * @return True if the parking spot update succeed, false if it failed
 	 */
@@ -68,7 +67,7 @@ public class ParkingSpotDAO {
 			con = dataBaseConfig.getConnection();
 			ps = con.prepareStatement(DBConstants.UPDATE_PARKING_SPOT);
 			ps.setBoolean(1, parkingSpot.isAvailable());
-			ps.setInt(2, parkingSpot.getId());
+			ps.setInt(2, parkingSpot.getNumber());
 			int updateRowCount = ps.executeUpdate();
 			return (updateRowCount == 1);
 		} catch (SQLException | ClassNotFoundException | NullPointerException ex) {

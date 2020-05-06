@@ -30,7 +30,7 @@ public class ParkingSpot {
 	 * 
 	 * @return The number of the parking spot
 	 */
-	public int getId() {
+	public int getNumber() {
 		return number;
 	}
 
@@ -39,7 +39,7 @@ public class ParkingSpot {
 	 * 
 	 * @param number The number of the parking spot
 	 */
-	public void setId(int number) {
+	public void setNumber(int number) {
 		this.number = number;
 	}
 
@@ -90,10 +90,10 @@ public class ParkingSpot {
 	public boolean equals(Object object) {
 		if (this == object) {
 			return true;
-		} 
+		}
 		if (object == null || getClass() != object.getClass()) {
 			return false;
-		}	
+		}
 		ParkingSpot that = (ParkingSpot) object;
 		return number == that.number;
 	}

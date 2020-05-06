@@ -151,7 +151,7 @@ public class ParkingServiceBikeTest {
 		ArgumentCaptor<ParkingSpot> argumentCaptorParkingSpot = ArgumentCaptor.forClass(ParkingSpot.class);
 		verify(parkingSpotDAO, Mockito.times(1)).updateParking(argumentCaptorParkingSpot.capture());
 		ParkingSpot parkingSpotTest = argumentCaptorParkingSpot.getValue();
-		assertEquals(1, parkingSpotTest.getId());
+		assertEquals(1, parkingSpotTest.getNumber());
 		assertEquals(ParkingType.BIKE, parkingSpotTest.getParkingType());
 		assertTrue(parkingSpotTest.isAvailable());
 	}

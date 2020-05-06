@@ -53,8 +53,8 @@ public class ParkingService {
 	 */
 	public void processIncomingVehicle() {
 		try {
-			ParkingSpot parkingSpot = getNextParkingNumberIfAvailable();
-			if (parkingSpot != null && parkingSpot.getId() > 0) {
+			ParkingSpot parkingSpot = getNextParkingSpotIfAvailable();
+			if (parkingSpot != null && parkingSpot.getNumber() > 0) {
 				String vehicleRegNumber = getVehichleRegNumber();
 
 				// We check that the vehicle which wants to enter into the parking is not
@@ -73,7 +73,6 @@ public class ParkingService {
 
 				LocalDateTime inTime = LocalDateTime.now();
 				Ticket ticket = new Ticket();
-				// ID, PARKING_NUMBER, VEHICLE_REG_NUMBER, PRICE, IN_TIME, OUT_TIME)
 				ticket.setParkingSpot(parkingSpot);
 				ticket.setVehicleRegNumber(vehicleRegNumber);
 				ticket.setPrice(0);
@@ -84,11 +83,11 @@ public class ParkingService {
 				// If the user already came in the parking, we welcome him back
 				boolean recurringUser = ticketDAO.recurringUser(vehicleRegNumber);
 				if (recurringUser) {
-					System.out.println("\n"
-							+ "Welcome back! As a recurring user of our parking lot, you'll benefit from a 5% discount.");
+					System.out.println(
+							"\nWelcome back! As a recurring user of our parking lot, you'll benefit from a 5% discount.");
 				}
 				System.out.println("Generated Ticket and saved in DB");
-				System.out.println("Please park your vehicle in spot number: " + parkingSpot.getId());
+				System.out.println("Please park your vehicle in spot number: " + parkingSpot.getNumber());
 				System.out.println("Recorded in-time for vehicle number: " + vehicleRegNumber + " is: " + inTime);
 				System.out.println("For your information : a stay less than 30 minutes is free !" + "\n");
 
@@ -98,12 +97,14 @@ public class ParkingService {
 		}
 	}
 
+	// Get the vehicle registration number from the user
 	private String getVehichleRegNumber() throws Exception {
 		System.out.println("Please type the vehicle registration number and press enter key");
 		return inputReaderUtil.readVehicleRegistrationNumber();
 	}
 
-	private ParkingSpot getNextParkingNumberIfAvailable() {
+	// Return the next available parking spot, if any
+	private ParkingSpot getNextParkingSpotIfAvailable() {
 		int parkingNumber = 0;
 		ParkingSpot parkingSpot = null;
 		try {
@@ -113,7 +114,7 @@ public class ParkingService {
 				parkingSpot = new ParkingSpot(parkingNumber, parkingType, true);
 			} else {
 				System.out.println(
-						"Unfortunately the parking is full. We are sorry for the disagrement.\nDo not hesitate to come back later");
+						"Unfortunately the parking is full. We are sorry for the disagrement.\nDo not hesitate to come back later.");
 				throw new Exception("Error fetching parking number from DB. Parking slots might be full");
 			}
 		} catch (IllegalArgumentException ie) {
@@ -124,8 +125,9 @@ public class ParkingService {
 		return parkingSpot;
 	}
 
+	// Get the vehicle type from the user
 	private ParkingType getVehichleType() {
-		System.out.println("Please select vehicle type from menu");
+		System.out.println("Please select vehicle type from menu:");
 		System.out.println("1 CAR");
 		System.out.println("2 BIKE");
 		int input = inputReaderUtil.readSelection();
@@ -145,11 +147,11 @@ public class ParkingService {
 
 	/**
 	 * Method processing the exit of a vehicle in the parking, with the following
-	 * steps : get the entry vehicle registration number, check that the vehicle
-	 * is currently in the parking, get the ticket corresponding to the vehicle
-	 * registration number, check if the user already came in the parking,
-	 * calculate the fare price, update the ticket with price and out time and
-	 * update it in the database, update the parking spot as available.
+	 * steps : get the entry vehicle registration number, check that the vehicle is
+	 * currently in the parking, get the ticket corresponding to the vehicle
+	 * registration number, check if the user already came in the parking, calculate
+	 * the fare price, update the ticket with price and out time in the database,
+	 * update the parking spot as available.
 	 */
 	public void processExitingVehicle() {
 		try {
@@ -159,8 +161,8 @@ public class ParkingService {
 			// parked
 			boolean vehicleInTheParking = ticketDAO.vehicleInTheParking(vehicleRegNumber);
 			if (!vehicleInTheParking) {
-				System.out.println(
-						"\n" + "There is an issue as your vehicle number is not in the parking. Please try again");
+				System.out
+						.println("\nThere is an issue as your vehicle number is not in the parking. Please try again.");
 				throw new IllegalArgumentException("Issue with exit : vehicle number is not in the parking.");
 			}
 
@@ -191,7 +193,6 @@ public class ParkingService {
 					System.out.println("Please pay the parking fare:" + df.format(ticket.getPrice()));
 				}
 
-				// System.out.println("Full parking fare for info:" + ticket.getPrice());
 				System.out.println("Recorded out-time for vehicle number: " + ticket.getVehicleRegNumber() + " is: "
 						+ outTime + "\n");
 			} else {

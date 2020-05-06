@@ -42,7 +42,7 @@ public class DataBasePrepareServiceTestsTicketDAO {
 
 			ps = connection.prepareStatement(SAVE_TICKET_TEST);
 			// PARKING_NUMBER, VEHICLE_REG_NUMBER, PRICE, IN_TIME, OUT_TIME
-			ps.setInt(1, ticketTest.getParkingSpot().getId());
+			ps.setInt(1, ticketTest.getParkingSpot().getNumber());
 			ps.setString(2, ticketTest.getVehicleRegNumber());
 			ps.setDouble(3, ticketTest.getPrice());
 			ps.setTimestamp(4, Timestamp.valueOf(ticketTest.getInTime()));
@@ -104,7 +104,7 @@ public class DataBasePrepareServiceTestsTicketDAO {
 
 			ps = connection.prepareStatement(SAVE_TICKET_TEST);
 			// PARKING_NUMBER, VEHICLE_REG_NUMBER, PRICE, IN_TIME, OUT_TIME
-			ps.setInt(1, ticket.getParkingSpot().getId());
+			ps.setInt(1, ticket.getParkingSpot().getNumber());
 			ps.setString(2, ticket.getVehicleRegNumber());
 			ps.setDouble(3, ticket.getPrice());
 			ps.setTimestamp(4, Timestamp.valueOf(ticket.getInTime()));

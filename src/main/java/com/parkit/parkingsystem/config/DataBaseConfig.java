@@ -44,7 +44,7 @@ public class DataBaseConfig {
 	}
 
 	/**
-	 * Close the preparedStatement.
+	 * Close the prepared statement.
 	 * 
 	 * @param preparedStatement A preparedStatement for the DataBase
 	 */
@@ -60,7 +60,7 @@ public class DataBaseConfig {
 	}
 
 	/**
-	 * Close the resultSet.
+	 * Close the result set.
 	 * 
 	 * @param resultSet A resultSet for the DataBase
 	 */
