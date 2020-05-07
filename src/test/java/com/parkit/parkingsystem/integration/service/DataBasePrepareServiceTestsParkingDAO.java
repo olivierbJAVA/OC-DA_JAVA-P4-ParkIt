@@ -11,13 +11,13 @@ public class DataBasePrepareServiceTestsParkingDAO {
 
 	private DataBaseTestConfig dataBaseTestConfig = new DataBaseTestConfig();
 
+	// set parking one availability at TRUE
 	public void updateParkingSpotDAOTest_SetParkingOneAvailabilityToTrue() {
 		Connection connection = null;
 		PreparedStatement ps = null;
 		try {
 			connection = dataBaseTestConfig.getConnection();
 
-			// set entry for parking 1 available = TRUE
 			ps = connection.prepareStatement("update parking set AVAILABLE = true where PARKING_NUMBER = 1");
 			ps.execute();
 
@@ -29,13 +29,13 @@ public class DataBasePrepareServiceTestsParkingDAO {
 		}
 	}
 
+	// set parking one availability at FALSE
 	public void updateParkingSpotDAOTest_SetParkingOneAvailabilityToFalse() {
 		Connection connection = null;
 		PreparedStatement ps = null;
 		try {
 			connection = dataBaseTestConfig.getConnection();
 
-			// set entry for parking 1 available = FALSE
 			ps = connection.prepareStatement("update parking set AVAILABLE = false where PARKING_NUMBER = 1");
 			ps.execute();
 
@@ -47,6 +47,7 @@ public class DataBasePrepareServiceTestsParkingDAO {
 		}
 	}
 
+	// get availability of parking one
 	public boolean getParkingSpotDAOTest_GetAvailabilityParkingOne() {
 		Connection connection = null;
 		PreparedStatement ps = null;
@@ -55,14 +56,11 @@ public class DataBasePrepareServiceTestsParkingDAO {
 		try {
 			connection = dataBaseTestConfig.getConnection();
 
-			// get availability of parking 1
 			ps = connection.prepareStatement("select AVAILABLE from parking where PARKING_NUMBER = 1");
 			rs = ps.executeQuery();
-
 			if (rs.next()) {
 				result = rs.getBoolean(1);
 			}
-
 		} catch (SQLException | ClassNotFoundException | NullPointerException e) {
 			e.printStackTrace();
 		} finally {
@@ -73,13 +71,13 @@ public class DataBasePrepareServiceTestsParkingDAO {
 		return result;
 	}
 
-	public void updateParkingSpotDAOTest_SetAllToTrue() {
+	// set all parking availability at TRUE
+	public void updateParkingSpotDAOTest_SetAvailabilityAllToTrue() {
 		Connection connection = null;
 		PreparedStatement ps = null;
 		try {
 			connection = dataBaseTestConfig.getConnection();
 
-			// set entry for all parking available = TRUE
 			ps = connection.prepareStatement("update parking set AVAILABLE = true");
 			ps.execute();
 
@@ -91,13 +89,13 @@ public class DataBasePrepareServiceTestsParkingDAO {
 		}
 	}
 
-	public void updateParkingSpotDAOTest_SetAllToFalse() {
+	// set all parking availability at FALSE
+	public void updateParkingSpotDAOTest_SetAvailabilityAllToFalse() {
 		Connection connection = null;
 		PreparedStatement ps = null;
 		try {
 			connection = dataBaseTestConfig.getConnection();
 
-			// set entry for all parking available = FALSE
 			ps = connection.prepareStatement("update parking set AVAILABLE = false");
 			ps.execute();
 
@@ -109,6 +107,7 @@ public class DataBasePrepareServiceTestsParkingDAO {
 		}
 	}
 
+	// clear all database entries
 	public void clearDataBaseEntries() {
 		Connection connection = null;
 		PreparedStatement ps1 = null;

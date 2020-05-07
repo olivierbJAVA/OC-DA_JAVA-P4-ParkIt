@@ -174,10 +174,8 @@ public class TicketDAO {
 			ps = con.prepareStatement(DBConstants.GET_VEHICLE_IN_PARKING);
 			ps.setString(1, vehicleRegNumberUser);
 			rs = ps.executeQuery();
-			if (rs.next()) {
-				if (rs.getTimestamp(2) == null) {
-					result = true;
-				}
+			if (rs.next() && rs.getTimestamp(2) == null) {
+				result = true;
 			}
 		} catch (SQLException | ClassNotFoundException | NullPointerException ex) {
 			logger.error("Error getting user in the parking", ex);

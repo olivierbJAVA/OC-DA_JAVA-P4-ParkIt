@@ -330,7 +330,7 @@ public class FareCalculatorServiceTest {
 		fareCalculatorServiceUnderTest.calculateFare(ticket, true);
 
 		// ASSERT
-		// the user shall have a 5% discount as recurring user
+		// The user shall have a 5% discount as recurring user
 		assertEquals((0.95 * 0.75 * Fare.CAR_RATE_PER_HOUR), ticket.getPrice());
 	}
 
