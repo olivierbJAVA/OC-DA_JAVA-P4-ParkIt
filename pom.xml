@@ -222,6 +222,11 @@
 		</plugins>
 	</reporting>
 
+	<name>Park'It Application - Move'It</name>
+	<description>
+        Application de gestion automatisé de parking
+    </description>
+
 	<distributionManagement>
 		<site>
 			<id>site-projet</id>

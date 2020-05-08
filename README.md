@@ -2,6 +2,12 @@
 A command line app for managing the parking system. 
 This app uses Java to run and stores the data in Mysql DB.
 
+# New features
+Two new features have been added :
+
+- A say in the parking under 30 minutes is free
+- Recurring users benefit from a 5% discount
+
 ## Getting Started
 
 These instructions will get you a copy of the project up and running on your local machine for development and testing purposes. See deployment for notes on how to deploy the project on a live system.
@@ -42,8 +48,22 @@ Finally, you will be ready to import the code into an IDE of your choice and run
 
 ### Testing
 
-The app has unit tests and integration tests written. More of these need to be added and in some places that can be seen mentioend as `TODO` comments. The existing tests need to be triggered from maven-surefire plugin while we try to generate the final executable jar file.
+The app has unit tests and integration tests written. These tests need to be triggered from maven-surefire plugin.
 
-To run the tests from maven, go to the folder that contains the pom.xml file and execute the below command.
+To run the tests from Maven, go to the folder that contains the pom.xml file and execute the below command.
 
 `mvn test`
+
+### Executable Jar file
+
+In order to generate an executable Jar file for the app from Maven, go to the folder that contains the pom.xml file and execute the below command.
+
+`mvn package`
+
+### Web site
+
+A web site describing the project including the JavaDoc and some reports (tests, code coverage, bugs detection) can be generated.
+
+In order to generate the web site for the project from Maven, go to the folder that contains the pom.xml file and execute the below command.
+
+`mvn site`
