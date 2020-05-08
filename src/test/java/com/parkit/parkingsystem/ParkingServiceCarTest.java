@@ -152,13 +152,14 @@ public class ParkingServiceCarTest {
 
 		// ASSERT correct arguments
 		// We check that methods have been called with correct arguments
+		// Ticket
 		ArgumentCaptor<Ticket> argumentCaptorTicket = ArgumentCaptor.forClass(Ticket.class);
 		verify(ticketDAO, Mockito.times(1)).updateTicket(argumentCaptorTicket.capture());
 		Ticket ticketTest = argumentCaptorTicket.getValue();
 		assertEquals(inTimeTest, ticketTest.getInTime());
 		assertEquals(new ParkingSpot(1, ParkingType.CAR, false), ticketTest.getParkingSpot());
 		assertEquals("ABCDEF", ticketTest.getVehicleRegNumber());
-
+		// Parking spot
 		ArgumentCaptor<ParkingSpot> argumentCaptorParkingSpot = ArgumentCaptor.forClass(ParkingSpot.class);
 		verify(parkingSpotDAO, Mockito.times(1)).updateParking(argumentCaptorParkingSpot.capture());
 		ParkingSpot parkingSpotTest = argumentCaptorParkingSpot.getValue();

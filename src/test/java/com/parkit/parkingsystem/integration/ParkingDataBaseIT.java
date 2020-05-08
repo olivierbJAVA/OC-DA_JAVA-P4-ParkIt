@@ -82,6 +82,7 @@ public class ParkingDataBaseIT {
 		LocalDateTime inTime = LocalDateTime.now();
 
 		// ACT
+		// We process the income of the vehicle
 		parkingService.processIncomingVehicle();
 
 		// ASSERT
@@ -91,8 +92,6 @@ public class ParkingDataBaseIT {
 		assertThat(getSavedTicket.getVehicleRegNumber()).isEqualTo("ABCDEF");
 		assertThat(getSavedTicket.getPrice()).isEqualTo(0.0);
 		assertThat(getSavedTicket.getOutTime()).isNull();
-		// assertThat(getTicketSaved.getInTime()).isBetween(now.minusSeconds(1),
-		// now.plusSeconds(10));
 		assertThat(getSavedTicket.getInTime()).isBetween(inTime.truncatedTo(ChronoUnit.SECONDS),
 				inTime.truncatedTo(ChronoUnit.SECONDS).plusSeconds(5));
 
@@ -122,6 +121,7 @@ public class ParkingDataBaseIT {
 		LocalDateTime outTime = LocalDateTime.now();
 
 		// ACT
+		// We process the exit of the vehicle
 		parkingService.processExitingVehicle();
 
 		// ASSERT
@@ -161,6 +161,7 @@ public class ParkingDataBaseIT {
 		LocalDateTime outTime = LocalDateTime.now();
 
 		// ACT
+		// We process the exit of the vehicle
 		parkingService.processExitingVehicle();
 
 		// ASSERT
@@ -182,13 +183,65 @@ public class ParkingDataBaseIT {
 	}
 
 	@Test
-	public void testParkingLotExit_StayMoreThanThirtyMinutes_RecurringUserYes() {
+	public void testParkingLotExit_StayLessThanThirtyMinutes_RecurringUserYes() {
 
 		// We simulate two stays : during the first one the user is not a recurring user
-		// (no discount) whereas in the second one he is a recurring user (5% discount)
+		// whereas in the second one he is a recurring user. As both stays are less than
+		// 30 minutes fare should be equal to 0 in both cases
 		for (int i = 0; i < 2; i++) {
 
 			// ARRANGE
+			// We create and save in the database a ticket with entry time 15
+			// minutes before the test
+			Ticket ticketTest = new Ticket();
+			ParkingSpot parkingSpot = new ParkingSpot(1, ParkingType.CAR, false);
+			ticketTest.setParkingSpot(parkingSpot);
+			ticketTest.setVehicleRegNumber("ABCDEF");
+			ticketTest.setPrice(0.0);
+			ticketTest.setInTime(LocalDateTime.now().minusMinutes(15));
+			ticketTest.setOutTime(null);
+
+			dataBasePrepareServiceTestsTicketDAO.ticketDAOTest_SaveATicketInDB(ticketTest);
+
+			// ACT
+			// We process the income of the vehicle
+			parkingService.processIncomingVehicle();
+
+			LocalDateTime outTime = LocalDateTime.now();
+
+			// Then we process the exit of the vehicle
+			parkingService.processExitingVehicle();
+
+			// ASSERT
+			// Ticket : we check that the fare generated and out time are populated
+			// correctly in the database
+			Ticket ticketUpdatedInDB = dataBasePrepareServiceTestsTicketDAO.ticketDAOTest_GetATicketFromDB("ABCDEF");
+			assertThat(ticketUpdatedInDB.getVehicleRegNumber()).isEqualTo("ABCDEF");
+			assertThat(ticketUpdatedInDB.getOutTime()).isBetween(outTime.truncatedTo(ChronoUnit.SECONDS),
+					outTime.truncatedTo(ChronoUnit.SECONDS).plusSeconds(5));
+			// Fare should be equal to 0 for both stays as the stay time in the parking is
+			// less than 30 minutes
+			assertThat(ticketUpdatedInDB.getPrice()).isEqualTo(0.0);
+
+			// Parking : we check that the availability of parking one has correctly been
+			// updated at true
+			boolean availabilityParking = dataBasePrepareServiceTestsParkingDAO
+					.getParkingSpotDAOTest_GetAvailabilityParkingOne();
+			assertThat(availabilityParking).isTrue();
+		}
+	}
+
+	@Test
+	public void testParkingLotExit_StayMoreThanThirtyMinutes_RecurringUserYes() {
+
+		// We simulate two stays of more then 30 minutes : during the first one the user
+		// is not a recurring user (no discount) whereas in the second one he is a
+		// recurring user (5% discount)
+		for (int i = 0; i < 2; i++) {
+
+			// ARRANGE
+			// We create and save in the database a ticket with entry time 45
+			// minutes before the test
 			Ticket ticketTest = new Ticket();
 			ParkingSpot parkingSpot = new ParkingSpot(1, ParkingType.CAR, false);
 			ticketTest.setParkingSpot(parkingSpot);
@@ -200,10 +253,12 @@ public class ParkingDataBaseIT {
 			dataBasePrepareServiceTestsTicketDAO.ticketDAOTest_SaveATicketInDB(ticketTest);
 
 			// ACT
+			// We process the income of the vehicle
 			parkingService.processIncomingVehicle();
 
 			LocalDateTime outTime = LocalDateTime.now();
 
+			// We process the exit of the vehicle
 			parkingService.processExitingVehicle();
 
 			// ASSERT
@@ -218,7 +273,7 @@ public class ParkingDataBaseIT {
 				// First stay, not a recurring user -> no discount
 				assertThat(ticketUpdatedInDB.getPrice()).isCloseTo(0.75 * Fare.CAR_RATE_PER_HOUR, within(0.01));
 			} else {
-				// second stay, recurring user -> 5% discount
+				// Second stay, recurring user -> 5% discount
 				assertThat(ticketUpdatedInDB.getPrice()).isCloseTo(0.95 * 0.75 * Fare.CAR_RATE_PER_HOUR, within(0.01));
 			}
 
@@ -231,144 +286,132 @@ public class ParkingDataBaseIT {
 	}
 
 	/*
-	 * import org.junit.jupiter.api.Disabled;
-	 * import com.parkit.parkingsystem.integration.service.WaitTime;
-	@Test
-	public void testParkingACar_UserInParking() {
-
-		// ARRANGE
-		when(inputReaderUtil.readSelection()).thenReturn(1);
-
-		// ASSERT : user is not already in the parking before entry
-		boolean userInTheParkingBeforeEntry = ticketDAO.vehicleInTheParking("ABCDEF");
-		assertThat(userInTheParkingBeforeEntry).isFalse();
-
-		// ACT - User entry
-		parkingService.processIncomingVehicle();
-
-		// ASSERT : user is in the parking following its entry
-		boolean userInTheParkingAfterEntry = ticketDAO.vehicleInTheParking("ABCDEF");
-		assertThat(userInTheParkingAfterEntry).isTrue();
-
-		// Wait time for test purposes
-		WaitTime waitTimeBeforeProcessExistingVehicle = new WaitTime(1000);
-		waitTimeBeforeProcessExistingVehicle.run();
-
-		// ACT - User exit
-		parkingService.processExitingVehicle();
-
-		// ASSERT - user is not in the parking anymore following its exit
-		boolean userInTheParkingAfterExit = ticketDAO.vehicleInTheParking("ABCDEF");
-		assertThat(userInTheParkingAfterExit).isFalse();
-	}
-
-	@Test
-	public void testParkingLotExit_StayLessThanThirtyMinutes_EffectiveStayTime_RecurringUserNo() {
-
-		// ARRANGE
-		when(inputReaderUtil.readSelection()).thenReturn(1);
-
-		LocalDateTime outTime = LocalDateTime.now();
-
-		parkingService.processIncomingVehicle();
-
-		// Wait time for test purposes
-		WaitTime waitTimeBeforeProcessExistingVehicle = new WaitTime(1000);
-		waitTimeBeforeProcessExistingVehicle.run();
-
-		// ACT
-		parkingService.processExitingVehicle();
-
-		// ASSERT
-		// Ticket : we check that the fare generated and out time are populated
-		// correctly in the database
-		Ticket ticketUpdatedInDB = dataBasePrepareServiceTestsTicketDAO.ticketDAOTest_GetATicketFromDB("ABCDEF");
-
-		assertThat(ticketUpdatedInDB.getVehicleRegNumber()).isEqualTo("ABCDEF");
-		assertThat(ticketUpdatedInDB.getOutTime()).isBetween(outTime.truncatedTo(ChronoUnit.SECONDS),
-				outTime.truncatedTo(ChronoUnit.SECONDS).plusSeconds(5));
-		assertThat(ticketUpdatedInDB.getPrice()).isEqualTo(0.0);
-
-		// Parking : we check that the availability of parking one has correctly been
-		// updated at true
-		boolean availabilityParking = dataBasePrepareServiceTestsParkingDAO
-				.getParkingSpotDAOTest_GetAvailabilityParkingOne();
-		assertThat(availabilityParking).isTrue();
-	}
-
-	@Disabled("WARNING : long test which last 45 minutes as the program wait an effective time of 45 minutes to simulate an effective stay of more than 30 minutes")
-	@Test
-	public void testParkingLotExit_StayMoreThanThirtyMinutes_EffectiveStayTime_RecurringUserNo() {
-
-		// ARRANGE
-		when(inputReaderUtil.readSelection()).thenReturn(1);
-
-		LocalDateTime outTime = LocalDateTime.now();
-
-		parkingService.processIncomingVehicle();
-
-		// Wait 45 minutes to simulate an effective stay in the parking of 45 minutes
-		// for tests purposes
-		WaitTime waitTimeBeforeProcessExistingVehicle = new WaitTime(45 * 60 * 1000);
-		waitTimeBeforeProcessExistingVehicle.run();
-
-		// ACT
-		parkingService.processExitingVehicle();
-
-		// ASSERT
-		// Ticket : we check that the fare generated and out time are populated
-		// correctly in the database
-		Ticket ticketUpdatedInDB = dataBasePrepareServiceTestsTicketDAO.ticketDAOTest_GetATicketFromDB("ABCDEF");
-
-		assertThat(ticketUpdatedInDB.getVehicleRegNumber()).isEqualTo("ABCDEF");
-		assertThat(ticketUpdatedInDB.getOutTime()).isBetween(outTime.truncatedTo(ChronoUnit.SECONDS),
-				outTime.truncatedTo(ChronoUnit.SECONDS).plusMinutes(45).plusSeconds(5));
-		assertThat(ticketUpdatedInDB.getPrice()).isCloseTo(0.75 * Fare.CAR_RATE_PER_HOUR, within(0.01));
-
-		// Parking : we check that the availability of parking one has correctly been
-		// updated at true
-		boolean availabilityParking = dataBasePrepareServiceTestsParkingDAO
-				.getParkingSpotDAOTest_GetAvailabilityParkingOne();
-		assertThat(availabilityParking).isTrue();
-	}
-
-	@Test
-	public void testParkingLotExit_StayLessThanThirtyMinutes_WithEffectiveStayTime_RecurringUserYes() {
-
-		// ARRANGE
-		when(inputReaderUtil.readSelection()).thenReturn(1);
-
-		// ACT
-		// We simulate two stays : during the first one the user is not a recurring user
-		// whereas in the second one he is a recurring user (same price at 0 for both
-		// cases, as stay is less than 30 minutes)
-		for (int i = 0; i < 2; i++) {
-			parkingService.processIncomingVehicle();
-
-			// Wait time for test purposes
-			WaitTime waitTimeBeforeProcessExistingVehicle = new WaitTime(1000);
-			waitTimeBeforeProcessExistingVehicle.run();
-
-			LocalDateTime outTime = LocalDateTime.now();
-
-			parkingService.processExitingVehicle();
-
-			// ASSERT
-			// Ticket : we check that the fare generated and out time are populated
-			// correctly in the database
-			Ticket ticketUpdatedInDB = dataBasePrepareServiceTestsTicketDAO.ticketDAOTest_GetATicketFromDB("ABCDEF");
-
-			assertThat(ticketUpdatedInDB.getVehicleRegNumber()).isEqualTo("ABCDEF");
-			assertThat(ticketUpdatedInDB.getOutTime()).isBetween(outTime.truncatedTo(ChronoUnit.SECONDS),
-					outTime.truncatedTo(ChronoUnit.SECONDS).plusSeconds(5));
-			assertThat(ticketUpdatedInDB.getPrice()).isEqualTo(0.0);
-
-			// Parking : we check that the availability of parking one has correctly been
-			// updated at true
-			boolean availabilityParking = dataBasePrepareServiceTestsParkingDAO
-					.getParkingSpotDAOTest_GetAvailabilityParkingOne();
-			assertThat(availabilityParking).isTrue();
-		}
-	}
-	*/
+	 * import org.junit.jupiter.api.Disabled; import
+	 * com.parkit.parkingsystem.integration.service.WaitTime;
+	 * 
+	 * @Test public void testParkingACar_UserInParking() {
+	 * 
+	 * // ARRANGE when(inputReaderUtil.readSelection()).thenReturn(1);
+	 * 
+	 * // ASSERT : user is not already in the parking before entry boolean
+	 * userInTheParkingBeforeEntry = ticketDAO.vehicleInTheParking("ABCDEF");
+	 * assertThat(userInTheParkingBeforeEntry).isFalse();
+	 * 
+	 * // ACT - User entry parkingService.processIncomingVehicle();
+	 * 
+	 * // ASSERT : user is in the parking following its entry boolean
+	 * userInTheParkingAfterEntry = ticketDAO.vehicleInTheParking("ABCDEF");
+	 * assertThat(userInTheParkingAfterEntry).isTrue();
+	 * 
+	 * // Wait time for test purposes WaitTime waitTimeBeforeProcessExistingVehicle
+	 * = new WaitTime(1000); waitTimeBeforeProcessExistingVehicle.run();
+	 * 
+	 * // ACT - User exit parkingService.processExitingVehicle();
+	 * 
+	 * // ASSERT - user is not in the parking anymore following its exit boolean
+	 * userInTheParkingAfterExit = ticketDAO.vehicleInTheParking("ABCDEF");
+	 * assertThat(userInTheParkingAfterExit).isFalse(); }
+	 * 
+	 * @Test public void
+	 * testParkingLotExit_StayLessThanThirtyMinutes_EffectiveStayTime_RecurringUserNo
+	 * () {
+	 * 
+	 * // ARRANGE when(inputReaderUtil.readSelection()).thenReturn(1);
+	 * 
+	 * LocalDateTime outTime = LocalDateTime.now();
+	 * 
+	 * parkingService.processIncomingVehicle();
+	 * 
+	 * // Wait time for test purposes WaitTime waitTimeBeforeProcessExistingVehicle
+	 * = new WaitTime(1000); waitTimeBeforeProcessExistingVehicle.run();
+	 * 
+	 * // ACT parkingService.processExitingVehicle();
+	 * 
+	 * // ASSERT // Ticket : we check that the fare generated and out time are
+	 * populated // correctly in the database Ticket ticketUpdatedInDB =
+	 * dataBasePrepareServiceTestsTicketDAO.ticketDAOTest_GetATicketFromDB("ABCDEF")
+	 * ;
+	 * 
+	 * assertThat(ticketUpdatedInDB.getVehicleRegNumber()).isEqualTo("ABCDEF");
+	 * assertThat(ticketUpdatedInDB.getOutTime()).isBetween(outTime.truncatedTo(
+	 * ChronoUnit.SECONDS), outTime.truncatedTo(ChronoUnit.SECONDS).plusSeconds(5));
+	 * assertThat(ticketUpdatedInDB.getPrice()).isEqualTo(0.0);
+	 * 
+	 * // Parking : we check that the availability of parking one has correctly been
+	 * // updated at true boolean availabilityParking =
+	 * dataBasePrepareServiceTestsParkingDAO
+	 * .getParkingSpotDAOTest_GetAvailabilityParkingOne();
+	 * assertThat(availabilityParking).isTrue(); }
+	 * 
+	 * @Disabled("WARNING : long test which last 45 minutes as the program wait an effective time of 45 minutes to simulate an effective stay of more than 30 minutes"
+	 * )
+	 * 
+	 * @Test public void
+	 * testParkingLotExit_StayMoreThanThirtyMinutes_EffectiveStayTime_RecurringUserNo
+	 * () {
+	 * 
+	 * // ARRANGE when(inputReaderUtil.readSelection()).thenReturn(1);
+	 * 
+	 * LocalDateTime outTime = LocalDateTime.now();
+	 * 
+	 * parkingService.processIncomingVehicle();
+	 * 
+	 * // Wait 45 minutes to simulate an effective stay in the parking of 45 minutes
+	 * // for tests purposes WaitTime waitTimeBeforeProcessExistingVehicle = new
+	 * WaitTime(45 * 60 * 1000); waitTimeBeforeProcessExistingVehicle.run();
+	 * 
+	 * // ACT parkingService.processExitingVehicle();
+	 * 
+	 * // ASSERT // Ticket : we check that the fare generated and out time are
+	 * populated // correctly in the database Ticket ticketUpdatedInDB =
+	 * dataBasePrepareServiceTestsTicketDAO.ticketDAOTest_GetATicketFromDB("ABCDEF")
+	 * ;
+	 * 
+	 * assertThat(ticketUpdatedInDB.getVehicleRegNumber()).isEqualTo("ABCDEF");
+	 * assertThat(ticketUpdatedInDB.getOutTime()).isBetween(outTime.truncatedTo(
+	 * ChronoUnit.SECONDS),
+	 * outTime.truncatedTo(ChronoUnit.SECONDS).plusMinutes(45).plusSeconds(5));
+	 * assertThat(ticketUpdatedInDB.getPrice()).isCloseTo(0.75 *
+	 * Fare.CAR_RATE_PER_HOUR, within(0.01));
+	 * 
+	 * // Parking : we check that the availability of parking one has correctly been
+	 * // updated at true boolean availabilityParking =
+	 * dataBasePrepareServiceTestsParkingDAO
+	 * .getParkingSpotDAOTest_GetAvailabilityParkingOne();
+	 * assertThat(availabilityParking).isTrue(); }
+	 * 
+	 * @Test public void
+	 * testParkingLotExit_StayLessThanThirtyMinutes_WithEffectiveStayTime_RecurringUserYes
+	 * () {
+	 * 
+	 * // ARRANGE when(inputReaderUtil.readSelection()).thenReturn(1);
+	 * 
+	 * // ACT // We simulate two stays : during the first one the user is not a
+	 * recurring user // whereas in the second one he is a recurring user (same
+	 * price at 0 for both // cases, as stay is less than 30 minutes) for (int i =
+	 * 0; i < 2; i++) { parkingService.processIncomingVehicle();
+	 * 
+	 * // Wait time for test purposes WaitTime waitTimeBeforeProcessExistingVehicle
+	 * = new WaitTime(1000); waitTimeBeforeProcessExistingVehicle.run();
+	 * 
+	 * LocalDateTime outTime = LocalDateTime.now();
+	 * 
+	 * parkingService.processExitingVehicle();
+	 * 
+	 * // ASSERT // Ticket : we check that the fare generated and out time are
+	 * populated // correctly in the database Ticket ticketUpdatedInDB =
+	 * dataBasePrepareServiceTestsTicketDAO.ticketDAOTest_GetATicketFromDB("ABCDEF")
+	 * ;
+	 * 
+	 * assertThat(ticketUpdatedInDB.getVehicleRegNumber()).isEqualTo("ABCDEF");
+	 * assertThat(ticketUpdatedInDB.getOutTime()).isBetween(outTime.truncatedTo(
+	 * ChronoUnit.SECONDS), outTime.truncatedTo(ChronoUnit.SECONDS).plusSeconds(5));
+	 * assertThat(ticketUpdatedInDB.getPrice()).isEqualTo(0.0);
+	 * 
+	 * // Parking : we check that the availability of parking one has correctly been
+	 * // updated at true boolean availabilityParking =
+	 * dataBasePrepareServiceTestsParkingDAO
+	 * .getParkingSpotDAOTest_GetAvailabilityParkingOne();
+	 * assertThat(availabilityParking).isTrue(); } }
+	 */
 }
