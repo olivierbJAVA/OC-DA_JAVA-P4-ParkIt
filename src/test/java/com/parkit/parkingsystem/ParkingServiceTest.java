@@ -28,7 +28,7 @@ import com.parkit.parkingsystem.service.ParkingService;
 import com.parkit.parkingsystem.util.InputReaderUtil;
 
 @ExtendWith(MockitoExtension.class)
-public class ParkingServiceCarTest {
+public class ParkingServiceTest {
 
 	private ParkingService parkingServiceUnderTest;
 	private LocalDateTime inTimeTest = LocalDateTime.now().minusHours(1);
