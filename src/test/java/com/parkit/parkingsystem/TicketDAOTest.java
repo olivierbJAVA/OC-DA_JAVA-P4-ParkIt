@@ -16,6 +16,9 @@ import com.parkit.parkingsystem.integration.service.DataBasePrepareServiceTestsT
 import com.parkit.parkingsystem.model.ParkingSpot;
 import com.parkit.parkingsystem.model.Ticket;
 
+/**
+ * Class including unit tests for the TicketDAO Class.
+ */
 public class TicketDAOTest {
 
 	private static DataBasePrepareServiceTestsTicketDAO dataBasePrepareServiceTestsTicketDAO;
@@ -94,22 +97,6 @@ public class TicketDAOTest {
 		// ASSERT
 		// We check that the method return null as there is no connection to the
 		// database
-		Assertions.assertNull(ticketGetFromDB);
-	}
-
-	@Test
-	public void getTicket_TicketDoesNotExist_NoConnectionToDB() {
-
-		// ARRANGE
-		ticketDAOUnderTest.dataBaseConfig = new DataBaseTestConfigReturnNullConnection();
-
-		// ACT
-		// We try to get a ticket that is not in the database
-		Ticket ticketGetFromDB = ticketDAOUnderTest.getTicket("NOTINDB");
-
-		// ASSERT
-		// We check that the method return null as the ticket is not in the database and
-		// there is no connection to the database
 		Assertions.assertNull(ticketGetFromDB);
 	}
 
@@ -253,38 +240,6 @@ public class TicketDAOTest {
 		// the execution (no connection to database)
 		Assertions.assertEquals(0.0, ticketTestUpdated.getPrice());
 		Assertions.assertNull(ticketTestUpdated.getOutTime());
-		// We check that the method return false as there was an issue in the execution
-		Assertions.assertFalse(result);
-	}
-
-	@Test
-	public void updateTicket_NoTicketExist_NoConnection() {
-
-		// ARRANGE
-		ticketDAOUnderTest.dataBaseConfig = new DataBaseTestConfigReturnNullConnection();
-		// We create a ticket test to update that is not in database
-		Ticket ticketTestNotInDB = new Ticket();
-		ParkingSpot parkingSpot = new ParkingSpot(1, ParkingType.CAR, true);
-		double price = 333.0;
-		LocalDateTime inTime = LocalDateTime.of(2019, 4, 26, 3, 6, 9);
-		LocalDateTime outTime = LocalDateTime.of(2019, 4, 26, 7, 6, 9);
-		ticketTestNotInDB.setParkingSpot(parkingSpot);
-		ticketTestNotInDB.setId(1);
-		ticketTestNotInDB.setVehicleRegNumber("NOTINDB");
-		ticketTestNotInDB.setPrice(price);
-		ticketTestNotInDB.setInTime(inTime);
-		ticketTestNotInDB.setOutTime(outTime);
-
-		// ACT
-		// We try to update the test ticket that is not in the database
-		Boolean result = ticketDAOUnderTest.updateTicket(ticketTestNotInDB);
-
-		// ASSERT
-		// We get from the database the test ticket that should have been updated
-		Ticket ticketTestUpdated = dataBasePrepareServiceTestsTicketDAO.ticketDAOTest_GetATicketFromDB("NOTINDB");
-		// As the ticket to update was not in the database and as there was no
-		// connection, we check that the ticket is still null
-		Assertions.assertNull(ticketTestUpdated);
 		// We check that the method return false as there was an issue in the execution
 		Assertions.assertFalse(result);
 	}

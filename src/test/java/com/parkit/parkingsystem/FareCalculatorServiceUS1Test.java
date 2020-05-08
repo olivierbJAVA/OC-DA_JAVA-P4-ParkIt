@@ -15,7 +15,10 @@ import com.parkit.parkingsystem.model.ParkingSpot;
 import com.parkit.parkingsystem.model.Ticket;
 import com.parkit.parkingsystem.service.FareCalculatorService;
 
-// TESTS for implementation of User Story 1 : a stay less than 30 minutes is free
+/**
+ * Class including unit tests for the FareCalculatorService Class. Tests for
+ * implementation of User Story 1 : a stay less than 30 minutes is free.
+ */
 public class FareCalculatorServiceUS1Test {
 
 	private FareCalculatorService fareCalculatorServiceUnderTest;

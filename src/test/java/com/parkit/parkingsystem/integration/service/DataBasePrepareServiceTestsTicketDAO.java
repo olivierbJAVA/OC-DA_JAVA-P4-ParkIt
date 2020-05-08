@@ -12,6 +12,9 @@ import com.parkit.parkingsystem.integration.config.DataBaseTestConfig;
 import com.parkit.parkingsystem.model.ParkingSpot;
 import com.parkit.parkingsystem.model.Ticket;
 
+/**
+ * Class including database services for TicketDAO tests.
+ */
 public class DataBasePrepareServiceTestsTicketDAO {
 
 	public static final String SAVE_TICKET_TEST = "insert into ticket(PARKING_NUMBER, VEHICLE_REG_NUMBER, PRICE, IN_TIME, OUT_TIME) values(?,?,?,?,?)";

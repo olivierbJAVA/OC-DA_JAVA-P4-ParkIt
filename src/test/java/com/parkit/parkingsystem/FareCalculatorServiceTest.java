@@ -14,6 +14,9 @@ import com.parkit.parkingsystem.model.ParkingSpot;
 import com.parkit.parkingsystem.model.Ticket;
 import com.parkit.parkingsystem.service.FareCalculatorService;
 
+/**
+ * Class including unit tests for the FareCalculatorService Class.
+ */
 public class FareCalculatorServiceTest {
 
 	private FareCalculatorService fareCalculatorServiceUnderTest;

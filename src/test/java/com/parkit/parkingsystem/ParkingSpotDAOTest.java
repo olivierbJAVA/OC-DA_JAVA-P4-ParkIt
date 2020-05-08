@@ -4,7 +4,6 @@ import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 
 import com.parkit.parkingsystem.constants.ParkingType;
@@ -14,6 +13,9 @@ import com.parkit.parkingsystem.integration.config.DataBaseTestConfigReturnNullC
 import com.parkit.parkingsystem.integration.service.DataBasePrepareServiceTestsParkingDAO;
 import com.parkit.parkingsystem.model.ParkingSpot;
 
+/**
+ * Class including unit tests for the ParkingSpotDAO Class.
+ */
 public class ParkingSpotDAOTest {
 
 	private static DataBasePrepareServiceTestsParkingDAO dataBasePrepareServiceTestsParkingDAO;

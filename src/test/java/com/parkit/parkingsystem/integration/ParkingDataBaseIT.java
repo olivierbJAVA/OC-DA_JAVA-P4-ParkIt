@@ -27,6 +27,9 @@ import com.parkit.parkingsystem.model.Ticket;
 import com.parkit.parkingsystem.service.ParkingService;
 import com.parkit.parkingsystem.util.InputReaderUtil;
 
+/**
+ * Class including integration tests for Parking System application.
+ */
 @ExtendWith(MockitoExtension.class)
 public class ParkingDataBaseIT {
 

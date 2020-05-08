@@ -7,6 +7,9 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
+/**
+ * Class including database services for ParkingSpotDAO tests.
+ */
 public class DataBasePrepareServiceTestsParkingDAO {
 
 	private DataBaseTestConfig dataBaseTestConfig = new DataBaseTestConfig();
