@@ -40,7 +40,7 @@ For this, please run the sql commands present in the `Data.sql` file under the `
 
 Finally, you will be ready to import the code into an IDE of your choice and run the App.java to launch the application.
 
-### ! IMPORTANT - Potential Timezone issue
+### ! IMPORTANT - Potential Time zone issue
 
 During installing, application running or tests launching you may have an issue (depending on your configuration) related to Time zone configuration.
 It is an issue due the configuration of MySQL server.
@@ -54,7 +54,7 @@ Please find below two solutions to solve this issue :
 Please ensure to add this line in the [mysqld] section of the configuration file.
 
 
-2 - Or you can add the following line in the code in the method *getConnection()* of the class *DataBaseConfig*, in the URL, just after the name of the database (*prod*) :
+2 - Or you can add the following line in the code in the method *getConnection()* of the class *DataBaseConfig* (package *com.parkit.parkingsystem.config*), in the URL, just after the name of the database (*prod*) :
 
 *?zeroDateTimeBehavior=CONVERT_TO_NULL&serverTimezone=UTC*
 
@@ -62,11 +62,11 @@ so that you have :
 
 DriverManager.getConnection("jdbc:mysql://localhost:3306/prod?zeroDateTimeBehavior=CONVERT_TO_NULL&serverTimezone=UTC", "root", "rootroot");
 
-Please ensure to do the same for the test database as well in the class *DataBaseTestConfig* :
+Please ensure to do the same for the test database as well in the class *DataBaseTestConfig* (package *com.parkit.parkingsystem.integration.config*) :
 
 DriverManager.getConnection("jdbc:mysql://localhost:3306/test?zeroDateTimeBehavior=CONVERT_TO_NULL&serverTimezone=UTC", "root", "rootroot");
 
-You may adjust the Timezone to your own Timezone obviously.
+You may adjust the Time zone to your own Time zone obviously.
 
 
 ### Testing
@@ -96,6 +96,11 @@ A web site describing the project including the JavaDoc and some reports (tests,
 In order to generate the web site for the project from Maven, go to the folder that contains the pom.xml file and execute the below command.
 
 `mvn site`
+
+For generating the Surefire report, please execute the below command.
+
+`mvn surefire-report:report-only`
+
 
 # New features !
 Two new features have recently been added :
