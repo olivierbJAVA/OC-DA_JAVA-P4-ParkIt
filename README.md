@@ -2,12 +2,6 @@
 A command line app for managing the parking system. 
 This app uses Java to run and stores the data in Mysql DB.
 
-# New features
-Two new features have been added :
-
-- A say in the parking under 30 minutes is free
-- Recurring users benefit from a 5% discount
-
 ## Getting Started
 
 These instructions will get you a copy of the project up and running on your local machine for development and testing purposes. See deployment for notes on how to deploy the project on a live system.
@@ -46,13 +40,48 @@ For this, please run the sql commands present in the `Data.sql` file under the `
 
 Finally, you will be ready to import the code into an IDE of your choice and run the App.java to launch the application.
 
+### ! IMPORTANT - Potential Timezone issue
+
+During installing, application running or tests launching you may have an issue (depending on your configuration) related to Time zone configuration.
+It is an issue due the configuration of MySQL server.
+
+Please find below two solutions to solve this issue :
+
+1 - Either you can add the following line in the MySQL server configuration file (*my.ini* or *my.cfg*) that is in your MySQL directory :
+
+*default-time-zone='+02:00'*
+ 
+Please ensure to add this line in the [mysqld] section of the configuration file.
+
+
+2 - Or you can add the following line in the code in the method *getConnection()* of the class *DataBaseConfig*, in the URL, just after the name of the database (*prod*) :
+
+*?zeroDateTimeBehavior=CONVERT_TO_NULL&serverTimezone=UTC*
+
+so that you have :
+
+DriverManager.getConnection("jdbc:mysql://localhost:3306/prod?zeroDateTimeBehavior=CONVERT_TO_NULL&serverTimezone=UTC", "root", "rootroot");
+
+Please ensure to do the same for the test database as well in the class *DataBaseTestConfig* :
+
+DriverManager.getConnection("jdbc:mysql://localhost:3306/test?zeroDateTimeBehavior=CONVERT_TO_NULL&serverTimezone=UTC", "root", "rootroot");
+
+You may adjust the Timezone to your own Timezone obviously.
+
+
 ### Testing
 
 The app has unit tests and integration tests written. These tests need to be triggered from maven-surefire plugin.
 
 To run the tests from Maven, go to the folder that contains the pom.xml file and execute the below command.
 
+For unit tests :
+
 `mvn test`
+
+ For both unit and integration tests :
+
+`mvn verify`
 
 ### Executable Jar file
 
@@ -67,3 +96,9 @@ A web site describing the project including the JavaDoc and some reports (tests,
 In order to generate the web site for the project from Maven, go to the folder that contains the pom.xml file and execute the below command.
 
 `mvn site`
+
+# New features !
+Two new features have recently been added :
+
+- A say in the parking under 30 minutes is free
+- Recurring users benefit from a 5% discount

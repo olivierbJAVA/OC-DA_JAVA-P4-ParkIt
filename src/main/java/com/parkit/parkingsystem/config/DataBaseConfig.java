@@ -10,16 +10,16 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 /**
- * Class managing the connection and the closures with the database.
+ * Class managing the connection and the closures with the production database.
  */
 public class DataBaseConfig {
 
 	private static final Logger logger = LogManager.getLogger("DataBaseConfig");
 
 	/**
-	 * Get a connection to the DataBase.
+	 * Get a connection to the production DataBase.
 	 * 
-	 * @return A Connection to the DataBase
+	 * @return A Connection to the production DataBase
 	 */
 	public Connection getConnection() throws ClassNotFoundException, SQLException {
 		logger.info("Create DB connection");

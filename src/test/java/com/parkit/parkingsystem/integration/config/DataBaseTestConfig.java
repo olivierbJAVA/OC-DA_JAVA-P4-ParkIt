@@ -12,13 +12,13 @@ import org.apache.logging.log4j.Logger;
 import com.parkit.parkingsystem.config.DataBaseConfig;
 
 /**
- * Class including database configuration for tests.
+ * Class managing the connection and the closures with the test database.
  */
 public class DataBaseTestConfig extends DataBaseConfig {
 
 	private static final Logger logger = LogManager.getLogger("DataBaseTestConfig");
 
-	// return a connection to the database
+	// return a connection to the test database
 	public Connection getConnection() throws ClassNotFoundException, SQLException {
 		logger.info("Create DB connection");
 		Class.forName("com.mysql.cj.jdbc.Driver");
