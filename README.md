@@ -1,6 +1,6 @@
 # Parking System
-A command line app for managing the parking system. 
-This app uses Java to run and stores the data in Mysql DB.
+A command line application for managing the parking system. 
+This application uses Java to run and stores the data in MySQL DB.
 
 ## Getting Started
 
@@ -8,15 +8,15 @@ These instructions will get you a copy of the project up and running on your loc
 
 ### Prerequisites
 
-What things you need to install the software and how to install them
+What things you need to install the software and how to install them.
 
 - Java 1.8
 - Maven 3.6.2
-- Mysql 8.0.17
+- MySQL 8.0.17
 
 ### Installing
 
-A step by step series of examples that tell you how to get a development env running:
+A step by step explanation that tell you how to get a development environment running:
 
 1.Install Java:
 
@@ -26,12 +26,12 @@ https://docs.oracle.com/javase/8/docs/technotes/guides/install/install_overview.
 
 https://maven.apache.org/install.html
 
-3.Install MySql:
+3.Install MySQL:
 
 https://dev.mysql.com/downloads/mysql/
 
-After downloading the mysql 8 installer and installing it, you will be asked to configure the password for the default `root` account.
-This code uses the default root account to connect and the password can be set as `rootroot`. If you add another user/credentials make sure to change the same in the code base.
+After downloading the MySQL 8 installer and installing it, you will be asked to configure the password for the default `root` account.
+This code uses the default root account to connect and the password can be set as `rootroot`. If you add another user/credentials make sure to change the same in the code base (in class *DataBaseConfig* of the package *com.parkit.parkingsystem.config* for the production database and in class *DataBaseTestConfig* of the package *com.parkit.parkingsystem.integration.config* for the test database).
 
 ### Running App
 
@@ -66,12 +66,12 @@ Please ensure to do the same for the test database as well in the class *DataBas
 
 DriverManager.getConnection("jdbc:mysql://localhost:3306/test?zeroDateTimeBehavior=CONVERT_TO_NULL&serverTimezone=UTC", "root", "rootroot");
 
-You may adjust the Time zone to your own Time zone obviously.
+You can adjust the Time zone to your own Time zone obviously.
 
 
 ### Testing
 
-The app has unit tests and integration tests written. These tests need to be triggered from maven-surefire plugin.
+The application has unit tests and integration tests written. These tests need to be triggered from maven-surefire plugin.
 
 To run the tests from Maven, go to the folder that contains the pom.xml file and execute the below command.
 
@@ -85,7 +85,7 @@ For unit tests :
 
 ### Executable Jar file
 
-In order to generate an executable Jar file for the app from Maven, go to the folder that contains the pom.xml file and execute the below command.
+In order to generate an executable Jar file for the application from Maven, go to the folder that contains the pom.xml file and execute the below command.
 
 `mvn package`
 
@@ -100,6 +100,12 @@ In order to generate the web site for the project from Maven, go to the folder t
 For generating the Surefire report, please execute the below command.
 
 `mvn surefire-report:report-only`
+
+### Logging
+
+The tool Log4J2 is used for logging. Logs are sent to the console and to a file (*C:\logs\parkit-app.log* by default).
+
+You can adapt logging to your needs by editing the Log4J2 properties file : *log4j2.xml* (in the *src/main/resources/* directory).
 
 
 # New features !
