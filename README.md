@@ -1,4 +1,4 @@
-# Parking System
+# ParkIt - Parking System
 A command line application for managing the parking system. 
 This application uses Java to run and stores the data in MySQL DB.
 
